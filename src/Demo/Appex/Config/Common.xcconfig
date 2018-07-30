@@ -1,0 +1,12 @@
+//
+//  Copyright © 2018 Avast. All rights reserved.
+//
+
+#include "../../../../config/App/Common.xcconfig"
+
+CODE_SIGN_ENTITLEMENTS = $(SRCROOT)/Appex/Support/Appex.entitlements
+INFOPLIST_FILE = $(SRCROOT)/Appex/Support/Info.plist
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks
+PRODUCT_BUNDLE_IDENTIFIER = com.avast.topee.Demo.Appex
+PRODUCT_MODULE_NAME = Appex
+PRODUCT_NAME = Appex
