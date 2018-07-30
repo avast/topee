@@ -1,0 +1,5 @@
+//
+//  Copyright © 2018 Avast. All rights reserved.
+//
+
+#include "../Common/Release.xcconfig"

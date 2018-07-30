@@ -1,0 +1,11 @@
+//
+//  Copyright © 2018 Biluminate. All rights reserved.
+//
+
+#include "../Common/Global.xcconfig"
+
+ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES
+BUNDLE_LOADER = $(TEST_HOST)
+COPY_PHASE_STRIP = NO
+ENABLE_TESTABILITY = NO
+ONLY_ACTIVE_ARCH = YES
