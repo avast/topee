@@ -1,1 +1,16 @@
 ChromeApi/background.js
+
+# Xcode
+xcuserdata/
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
+
+# Carthage
+Carthage/
+
+# OSX
+.DS_Store
+
