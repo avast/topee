@@ -11,10 +11,6 @@
 		EF80A72C210F281E002C6F3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF80A72B210F281E002C6F3F /* Assets.xcassets */; };
 		EF80A72F210F281E002C6F3F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = EF80A72D210F281E002C6F3F /* MainMenu.xib */; };
 		EF80A73B210F281F002C6F3F /* DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A73A210F281F002C6F3F /* DemoTests.swift */; };
-		EF80A74D210F28E0002C6F3F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A749210F28E0002C6F3F /* Debug.xcconfig */; };
-		EF80A74E210F28E0002C6F3F /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A74A210F28E0002C6F3F /* Common.xcconfig */; };
-		EF80A74F210F28E0002C6F3F /* Tests.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A74B210F28E0002C6F3F /* Tests.xcconfig */; };
-		EF80A750210F28E0002C6F3F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A74C210F28E0002C6F3F /* Release.xcconfig */; };
 		EF80A78A210F2F55002C6F3F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF80A789210F2F55002C6F3F /* Cocoa.framework */; };
 		EF80A78D210F2F55002C6F3F /* SafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A78C210F2F55002C6F3F /* SafariExtensionHandler.swift */; };
 		EF80A78F210F2F55002C6F3F /* SafariExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A78E210F2F55002C6F3F /* SafariExtensionViewController.swift */; };
@@ -22,9 +18,6 @@
 		EF80A795210F2F55002C6F3F /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = EF80A794210F2F55002C6F3F /* script.js */; };
 		EF80A797210F2F55002C6F3F /* ToolbarItemIcon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */; };
 		EF80A79B210F2F55002C6F3F /* Appex.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EF80A787210F2F55002C6F3F /* Appex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		EF80A7A8210F3259002C6F3F /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A7A4210F3259002C6F3F /* Common.xcconfig */; };
-		EF80A7A9210F3259002C6F3F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A7A5210F3259002C6F3F /* Release.xcconfig */; };
-		EF80A7AA210F3259002C6F3F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A7A6210F3259002C6F3F /* Debug.xcconfig */; };
 		EFA1C7E5210F3BE0008AC6BD /* Topee.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFA1C7E4210F3BE0008AC6BD /* Topee.framework */; };
 /* End PBXBuildFile section */
 
@@ -348,11 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF80A72C210F281E002C6F3F /* Assets.xcassets in Resources */,
-				EF80A74F210F28E0002C6F3F /* Tests.xcconfig in Resources */,
-				EF80A750210F28E0002C6F3F /* Release.xcconfig in Resources */,
 				EF80A72F210F281E002C6F3F /* MainMenu.xib in Resources */,
-				EF80A74D210F28E0002C6F3F /* Debug.xcconfig in Resources */,
-				EF80A74E210F28E0002C6F3F /* Common.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,9 +356,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF80A7A8210F3259002C6F3F /* Common.xcconfig in Resources */,
-				EF80A7AA210F3259002C6F3F /* Debug.xcconfig in Resources */,
-				EF80A7A9210F3259002C6F3F /* Release.xcconfig in Resources */,
 				EF80A797210F2F55002C6F3F /* ToolbarItemIcon.pdf in Resources */,
 				EF80A792210F2F55002C6F3F /* SafariExtensionViewController.xib in Resources */,
 				EF80A795210F2F55002C6F3F /* script.js in Resources */,
