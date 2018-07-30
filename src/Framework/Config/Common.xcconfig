@@ -1,0 +1,11 @@
+//
+//  Copyright © 2018 Avast. All rights reserved.
+//
+
+#include "../../../config/Framework/Common.xcconfig"
+
+INFOPLIST_FILE = $SRCROOT/Support/Sources/Info.plist
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks
+PRODUCT_BUNDLE_IDENTIFIER = com.avast.topee.Topee
+PRODUCT_MODULE_NAME = Topee
+PRODUCT_NAME = Topee

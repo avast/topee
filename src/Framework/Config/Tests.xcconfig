@@ -1,0 +1,9 @@
+//
+//  Copyright © 2018 Avast. All rights reserved.
+//
+
+#include "../../../config/Tests/Common.xcconfig"
+
+INFOPLIST_FILE = $(SRCROOT)/Support/Tests/Info.plist
+PRODUCT_BUNDLE_IDENTIFIER = com.avast.topee.TopeeTests
+PRODUCT_NAME = TopeeTests
