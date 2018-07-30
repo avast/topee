@@ -25,6 +25,7 @@
 		EF80A7A8210F3259002C6F3F /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A7A4210F3259002C6F3F /* Common.xcconfig */; };
 		EF80A7A9210F3259002C6F3F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A7A5210F3259002C6F3F /* Release.xcconfig */; };
 		EF80A7AA210F3259002C6F3F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A7A6210F3259002C6F3F /* Debug.xcconfig */; };
+		EFA1C7E5210F3BE0008AC6BD /* Topee.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFA1C7E4210F3BE0008AC6BD /* Topee.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +85,7 @@
 		EF80A7A4210F3259002C6F3F /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		EF80A7A5210F3259002C6F3F /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		EF80A7A6210F3259002C6F3F /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		EFA1C7E4210F3BE0008AC6BD /* Topee.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Topee.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFA1C7E5210F3BE0008AC6BD /* Topee.framework in Frameworks */,
 				EF80A78A210F2F55002C6F3F /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -193,6 +196,7 @@
 		EF80A788210F2F55002C6F3F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EFA1C7E4210F3BE0008AC6BD /* Topee.framework */,
 				EF80A789210F2F55002C6F3F /* Cocoa.framework */,
 			);
 			name = Frameworks;

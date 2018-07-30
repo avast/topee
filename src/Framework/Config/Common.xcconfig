@@ -4,6 +4,7 @@
 
 #include "../../../config/Framework/Common.xcconfig"
 
+APPLICATION_EXTENSION_API_ONLY = YES
 INFOPLIST_FILE = $SRCROOT/Support/Sources/Info.plist
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks
 PRODUCT_BUNDLE_IDENTIFIER = com.avast.topee.Topee
