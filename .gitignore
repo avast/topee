@@ -14,3 +14,6 @@ Carthage/
 # OSX
 .DS_Store
 
+
+# Build
+src/Framework/Build/

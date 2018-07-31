@@ -11,7 +11,6 @@
 		EF80A78D210F2F55002C6F3F /* SafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A78C210F2F55002C6F3F /* SafariExtensionHandler.swift */; };
 		EF80A78F210F2F55002C6F3F /* SafariExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A78E210F2F55002C6F3F /* SafariExtensionViewController.swift */; };
 		EF80A792210F2F55002C6F3F /* SafariExtensionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EF80A790210F2F55002C6F3F /* SafariExtensionViewController.xib */; };
-		EF80A795210F2F55002C6F3F /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = EF80A794210F2F55002C6F3F /* script.js */; };
 		EF80A797210F2F55002C6F3F /* ToolbarItemIcon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */; };
 		EF80A79B210F2F55002C6F3F /* Appex.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EF80A787210F2F55002C6F3F /* Appex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EFA1C7E5210F3BE0008AC6BD /* Topee.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFA1C7E4210F3BE0008AC6BD /* Topee.framework */; };
@@ -19,6 +18,7 @@
 		EFB6939C211037BF00F402FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EFB69392211037BE00F402FC /* Assets.xcassets */; };
 		EFB6939D211037BF00F402FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB69393211037BE00F402FC /* AppDelegate.swift */; };
 		EFB6939E211038CC00F402FC /* DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB69388211037BE00F402FC /* DemoTests.swift */; };
+		FD66CF8521105A73003E0819 /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = FD66CF8421105A73003E0819 /* content.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,7 +61,6 @@
 		EF80A78E210F2F55002C6F3F /* SafariExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariExtensionViewController.swift; sourceTree = "<group>"; };
 		EF80A791210F2F55002C6F3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SafariExtensionViewController.xib; sourceTree = "<group>"; };
 		EF80A793210F2F55002C6F3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EF80A794210F2F55002C6F3F /* script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
 		EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = ToolbarItemIcon.pdf; sourceTree = "<group>"; };
 		EF80A798210F2F55002C6F3F /* Appex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Appex.entitlements; sourceTree = "<group>"; };
 		EF80A7A4210F3259002C6F3F /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
@@ -79,6 +78,7 @@
 		EFB69390211037BE00F402FC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EFB69392211037BE00F402FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EFB69393211037BE00F402FC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		FD66CF8421105A73003E0819 /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = content.js; path = ../../../Framework/Build/content.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,7 +246,7 @@
 		FD66CF7D2110515E003E0819 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				EF80A794210F2F55002C6F3F /* script.js */,
+				FD66CF8421105A73003E0819 /* content.js */,
 				EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */,
 			);
 			path = Resources;
@@ -372,9 +372,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD66CF8521105A73003E0819 /* content.js in Resources */,
 				EF80A797210F2F55002C6F3F /* ToolbarItemIcon.pdf in Resources */,
 				EF80A792210F2F55002C6F3F /* SafariExtensionViewController.xib in Resources */,
-				EF80A795210F2F55002C6F3F /* script.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
