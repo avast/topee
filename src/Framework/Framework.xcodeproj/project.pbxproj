@@ -11,10 +11,6 @@
 		EF80A76A210F2B68002C6F3F /* TopeeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A769210F2B68002C6F3F /* TopeeTests.swift */; };
 		EF80A76C210F2B68002C6F3F /* Topee.h in Headers */ = {isa = PBXBuildFile; fileRef = EF80A75E210F2B67002C6F3F /* Topee.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF80A777210F2BE0002C6F3F /* Sentinel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A776210F2BE0002C6F3F /* Sentinel.swift */; };
-		EF80A77F210F2C37002C6F3F /* Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A77B210F2C37002C6F3F /* Debug.xcconfig */; };
-		EF80A780210F2C37002C6F3F /* Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A77C210F2C37002C6F3F /* Release.xcconfig */; };
-		EF80A781210F2C37002C6F3F /* Tests.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A77D210F2C37002C6F3F /* Tests.xcconfig */; };
-		EF80A782210F2C37002C6F3F /* Common.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EF80A77E210F2C37002C6F3F /* Common.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -202,7 +198,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EF80A755210F2B67002C6F3F /* Build configuration list for PBXProject "Topee" */;
+			buildConfigurationList = EF80A755210F2B67002C6F3F /* Build configuration list for PBXProject "Framework" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -225,10 +221,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF80A780210F2C37002C6F3F /* Release.xcconfig in Resources */,
-				EF80A77F210F2C37002C6F3F /* Debug.xcconfig in Resources */,
-				EF80A781210F2C37002C6F3F /* Tests.xcconfig in Resources */,
-				EF80A782210F2C37002C6F3F /* Common.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,7 +304,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EF80A755210F2B67002C6F3F /* Build configuration list for PBXProject "Topee" */ = {
+		EF80A755210F2B67002C6F3F /* Build configuration list for PBXProject "Framework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EF80A76D210F2B68002C6F3F /* Debug */,
