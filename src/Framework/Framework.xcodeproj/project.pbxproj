@@ -11,6 +11,8 @@
 		EF80A76A210F2B68002C6F3F /* TopeeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A769210F2B68002C6F3F /* TopeeTests.swift */; };
 		EF80A76C210F2B68002C6F3F /* Topee.h in Headers */ = {isa = PBXBuildFile; fileRef = EF80A75E210F2B67002C6F3F /* Topee.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EFF799BA2110868F00646663 /* TopeeSafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */; };
+		EFF799BC2110963600646663 /* SafariExtensionBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BB2110963600646663 /* SafariExtensionBridge.swift */; };
+		EFF799BE2110966A00646663 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BD2110966A00646663 /* Message.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +37,8 @@
 		EF80A77D210F2C37002C6F3F /* Tests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Tests.xcconfig; sourceTree = "<group>"; };
 		EF80A77E210F2C37002C6F3F /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopeeSafariExtensionHandler.swift; sourceTree = "<group>"; };
+		EFF799BB2110963600646663 /* SafariExtensionBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariExtensionBridge.swift; sourceTree = "<group>"; };
+		EFF799BD2110966A00646663 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		FD66CF81211053CE003E0819 /* script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -134,6 +138,8 @@
 		FD66CF7E211052AE003E0819 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
+				EFF799BD2110966A00646663 /* Message.swift */,
+				EFF799BB2110963600646663 /* SafariExtensionBridge.swift */,
 				EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */,
 			);
 			path = Swift;
@@ -282,6 +288,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFF799BE2110966A00646663 /* Message.swift in Sources */,
+				EFF799BC2110963600646663 /* SafariExtensionBridge.swift in Sources */,
 				EFF799BA2110868F00646663 /* TopeeSafariExtensionHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
