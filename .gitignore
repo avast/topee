@@ -1,5 +1,3 @@
-ChromeApi/background.js
-
 # Xcode
 xcuserdata/
 *.xcodeproj/*
@@ -14,6 +12,8 @@ Carthage/
 # OSX
 .DS_Store
 
-
 # Build
 src/Framework/Build/
+
+# JavaScript
+node_modules

@@ -11,8 +11,6 @@
 		EF80A76A210F2B68002C6F3F /* TopeeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A769210F2B68002C6F3F /* TopeeTests.swift */; };
 		EF80A76C210F2B68002C6F3F /* Topee.h in Headers */ = {isa = PBXBuildFile; fileRef = EF80A75E210F2B67002C6F3F /* Topee.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF80A777210F2BE0002C6F3F /* Sentinel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A776210F2BE0002C6F3F /* Sentinel.swift */; };
-		FD66CF82211053CE003E0819 /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = FD66CF81211053CE003E0819 /* script.js */; };
-		FD66CF8721105DFF003E0819 /* _tabId.js in Resources */ = {isa = PBXBuildFile; fileRef = FD66CF8621105DFF003E0819 /* _tabId.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -252,8 +250,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD66CF82211053CE003E0819 /* script.js in Resources */,
-				FD66CF8721105DFF003E0819 /* _tabId.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,7 +275,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "SRC_DIR=\"$SRCROOT/Sources/JavaScript/Content\"\nDST_FILE=\"content.js\"\nDST_DIR=\"$SRCROOT/Build\"\necho \"Building ${DST_DIR}/${DST_FILE}\"\nmkdir -p \"$DST_DIR\"\necho > \"${DST_DIR}/${DST_FILE}\"\nfor SRC in \"${SRC_DIR}\"/*.js ; do cat \"$SRC\" >> \"${DST_DIR}/${DST_FILE}\"; done";
+			shellScript = "make -C \"$SRCROOT/Sources/JavaScript\" build\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
