@@ -2,19 +2,15 @@
 <html>
 <head>
     <title>iframe</title>
+    <script src="_tabId.js"></script>
 </head>
 <body>
     <h1>iframe</h1>
-    <p>window.top.tabId is <span id='tabId'>undefined</span></p>
+    <p>top.tabId is <span id='tabId'>undefined</span></p>
     <script>
-        window.addEventListener('message', function (msg) {
-            if (msg.data.type === 'topee.tabId') {
-                document.getElementById('tabId').textContent = msg.data.detail;
-            }
+        topee.tabId.then(function (tabId) {
+            document.getElementById('tabId').textContent = tabId;
         });
-        setTimeout(function () {
-            window.top.postMessage({ type: 'topee.getTabId' }, '*');
-        }, 200);
     </script>
 </body>
 </html>
