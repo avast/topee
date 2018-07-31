@@ -141,6 +141,7 @@
 			isa = PBXGroup;
 			children = (
 				EF80A7A2210F3248002C6F3F /* Config */,
+				FD66CF7D2110515E003E0819 /* Resources */,
 				EF80A7A0210F3230002C6F3F /* Sources */,
 				EF80A7A1210F323E002C6F3F /* Support */,
 			);
@@ -161,8 +162,6 @@
 			children = (
 				EF80A790210F2F55002C6F3F /* SafariExtensionViewController.xib */,
 				EF80A793210F2F55002C6F3F /* Info.plist */,
-				EF80A794210F2F55002C6F3F /* script.js */,
-				EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */,
 				EF80A798210F2F55002C6F3F /* Appex.entitlements */,
 			);
 			path = Support;
@@ -242,6 +241,15 @@
 				EFB69393211037BE00F402FC /* AppDelegate.swift */,
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		FD66CF7D2110515E003E0819 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EF80A794210F2F55002C6F3F /* script.js */,
+				EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
