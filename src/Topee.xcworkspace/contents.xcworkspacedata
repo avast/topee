@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:Framework/Topee.xcodeproj">
+      location = "group:Framework/Framework.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Demo/Demo.xcodeproj">

@@ -2,9 +2,9 @@
 //  Copyright © 2018 Avast. All rights reserved.
 //
 
-#include "../../../config/Tests/Common.xcconfig"
+#include "../../../../config/Tests/Common.xcconfig"
 
-INFOPLIST_FILE = $(SRCROOT)/Support/Tests/Info.plist
+INFOPLIST_FILE = $(SRCROOT)/App/Support/Tests/Info.plist
 PRODUCT_BUNDLE_IDENTIFIER = com.avast.topee.DemoTests
 PRODUCT_NAME = $(TARGET_NAME)
 TEST_HOST = $(BUILT_PRODUCTS_DIR)/Demo.app/Contents/MacOS/Demo

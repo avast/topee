@@ -1,8 +1,4 @@
 //
-//  DemoTests.swift
-//  DemoTests
-//
-//  Created by Felix J. Acero on 30/07/2018.
 //  Copyright © 2018 Avast. All rights reserved.
 //
 

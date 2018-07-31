@@ -3,4 +3,4 @@
 //
 
 #include "Common.xcconfig"
-#include "../../../config/App/Debug.xcconfig"
+#include "../../../../config/App/Debug.xcconfig"

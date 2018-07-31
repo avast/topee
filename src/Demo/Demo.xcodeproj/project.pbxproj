@@ -7,10 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EF80A72A210F281D002C6F3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A729210F281D002C6F3F /* AppDelegate.swift */; };
-		EF80A72C210F281E002C6F3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF80A72B210F281E002C6F3F /* Assets.xcassets */; };
-		EF80A72F210F281E002C6F3F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = EF80A72D210F281E002C6F3F /* MainMenu.xib */; };
-		EF80A73B210F281F002C6F3F /* DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A73A210F281F002C6F3F /* DemoTests.swift */; };
 		EF80A78A210F2F55002C6F3F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF80A789210F2F55002C6F3F /* Cocoa.framework */; };
 		EF80A78D210F2F55002C6F3F /* SafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A78C210F2F55002C6F3F /* SafariExtensionHandler.swift */; };
 		EF80A78F210F2F55002C6F3F /* SafariExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A78E210F2F55002C6F3F /* SafariExtensionViewController.swift */; };
@@ -19,6 +15,10 @@
 		EF80A797210F2F55002C6F3F /* ToolbarItemIcon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */; };
 		EF80A79B210F2F55002C6F3F /* Appex.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = EF80A787210F2F55002C6F3F /* Appex.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		EFA1C7E5210F3BE0008AC6BD /* Topee.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFA1C7E4210F3BE0008AC6BD /* Topee.framework */; };
+		EFB6939A211037BF00F402FC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = EFB6938E211037BE00F402FC /* MainMenu.xib */; };
+		EFB6939C211037BF00F402FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EFB69392211037BE00F402FC /* Assets.xcassets */; };
+		EFB6939D211037BF00F402FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB69393211037BE00F402FC /* AppDelegate.swift */; };
+		EFB6939E211038CC00F402FC /* DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB69388211037BE00F402FC /* DemoTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,18 +54,7 @@
 
 /* Begin PBXFileReference section */
 		EF80A726210F281D002C6F3F /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		EF80A729210F281D002C6F3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		EF80A72B210F281E002C6F3F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		EF80A72E210F281E002C6F3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		EF80A730210F281E002C6F3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EF80A731210F281E002C6F3F /* Demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
 		EF80A736210F281F002C6F3F /* DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		EF80A73A210F281F002C6F3F /* DemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTests.swift; sourceTree = "<group>"; };
-		EF80A73C210F281F002C6F3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EF80A749210F28E0002C6F3F /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
-		EF80A74A210F28E0002C6F3F /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
-		EF80A74B210F28E0002C6F3F /* Tests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Tests.xcconfig; sourceTree = "<group>"; };
-		EF80A74C210F28E0002C6F3F /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		EF80A787210F2F55002C6F3F /* Appex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Appex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A789210F2F55002C6F3F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		EF80A78C210F2F55002C6F3F /* SafariExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariExtensionHandler.swift; sourceTree = "<group>"; };
@@ -79,6 +68,17 @@
 		EF80A7A5210F3259002C6F3F /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		EF80A7A6210F3259002C6F3F /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		EFA1C7E4210F3BE0008AC6BD /* Topee.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Topee.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFB69383211037BE00F402FC /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
+		EFB69384211037BE00F402FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		EFB69385211037BE00F402FC /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		EFB69386211037BE00F402FC /* Tests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Tests.xcconfig; sourceTree = "<group>"; };
+		EFB69388211037BE00F402FC /* DemoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoTests.swift; sourceTree = "<group>"; };
+		EFB6938B211037BE00F402FC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EFB6938D211037BE00F402FC /* Demo.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Demo.entitlements; sourceTree = "<group>"; };
+		EFB6938F211037BE00F402FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		EFB69390211037BE00F402FC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EFB69392211037BE00F402FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EFB69393211037BE00F402FC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,13 +111,10 @@
 		EF80A71D210F281D002C6F3F = {
 			isa = PBXGroup;
 			children = (
-				EF80A748210F28B2002C6F3F /* Config */,
+				EFB69381211037BE00F402FC /* App */,
 				EF80A78B210F2F55002C6F3F /* Appex */,
 				EF80A788210F2F55002C6F3F /* Frameworks */,
 				EF80A727210F281D002C6F3F /* Products */,
-				EF80A728210F281D002C6F3F /* Sources */,
-				EF80A745210F287B002C6F3F /* Support */,
-				EF80A739210F281F002C6F3F /* Tests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -129,61 +126,6 @@
 				EF80A787210F2F55002C6F3F /* Appex.appex */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		EF80A728210F281D002C6F3F /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				EF80A729210F281D002C6F3F /* AppDelegate.swift */,
-				EF80A72B210F281E002C6F3F /* Assets.xcassets */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		EF80A739210F281F002C6F3F /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				EF80A73A210F281F002C6F3F /* DemoTests.swift */,
-			);
-			path = Tests;
-			sourceTree = "<group>";
-		};
-		EF80A745210F287B002C6F3F /* Support */ = {
-			isa = PBXGroup;
-			children = (
-				EF80A746210F2885002C6F3F /* Sources */,
-				EF80A747210F288B002C6F3F /* Tests */,
-			);
-			path = Support;
-			sourceTree = "<group>";
-		};
-		EF80A746210F2885002C6F3F /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				EF80A72D210F281E002C6F3F /* MainMenu.xib */,
-				EF80A730210F281E002C6F3F /* Info.plist */,
-				EF80A731210F281E002C6F3F /* Demo.entitlements */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		EF80A747210F288B002C6F3F /* Tests */ = {
-			isa = PBXGroup;
-			children = (
-				EF80A73C210F281F002C6F3F /* Info.plist */,
-			);
-			path = Tests;
-			sourceTree = "<group>";
-		};
-		EF80A748210F28B2002C6F3F /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				EF80A74A210F28E0002C6F3F /* Common.xcconfig */,
-				EF80A749210F28E0002C6F3F /* Debug.xcconfig */,
-				EF80A74C210F28E0002C6F3F /* Release.xcconfig */,
-				EF80A74B210F28E0002C6F3F /* Tests.xcconfig */,
-			);
-			path = Config;
 			sourceTree = "<group>";
 		};
 		EF80A788210F2F55002C6F3F /* Frameworks */ = {
@@ -234,6 +176,72 @@
 				EF80A7A5210F3259002C6F3F /* Release.xcconfig */,
 			);
 			path = Config;
+			sourceTree = "<group>";
+		};
+		EFB69381211037BE00F402FC /* App */ = {
+			isa = PBXGroup;
+			children = (
+				EFB69382211037BE00F402FC /* Config */,
+				EFB69391211037BE00F402FC /* Sources */,
+				EFB69389211037BE00F402FC /* Support */,
+				EFB69387211037BE00F402FC /* Tests */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		EFB69382211037BE00F402FC /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				EFB69383211037BE00F402FC /* Common.xcconfig */,
+				EFB69384211037BE00F402FC /* Debug.xcconfig */,
+				EFB69385211037BE00F402FC /* Release.xcconfig */,
+				EFB69386211037BE00F402FC /* Tests.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		EFB69387211037BE00F402FC /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				EFB69388211037BE00F402FC /* DemoTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		EFB69389211037BE00F402FC /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				EFB6938C211037BE00F402FC /* Sources */,
+				EFB6938A211037BE00F402FC /* Tests */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		EFB6938A211037BE00F402FC /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				EFB6938B211037BE00F402FC /* Info.plist */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		EFB6938C211037BE00F402FC /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				EFB69392211037BE00F402FC /* Assets.xcassets */,
+				EFB6938D211037BE00F402FC /* Demo.entitlements */,
+				EFB69390211037BE00F402FC /* Info.plist */,
+				EFB6938E211037BE00F402FC /* MainMenu.xib */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		EFB69391211037BE00F402FC /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				EFB69393211037BE00F402FC /* AppDelegate.swift */,
+			);
+			path = Sources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -340,8 +348,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF80A72C210F281E002C6F3F /* Assets.xcassets in Resources */,
-				EF80A72F210F281E002C6F3F /* MainMenu.xib in Resources */,
+				EFB6939C211037BF00F402FC /* Assets.xcassets in Resources */,
+				EFB6939A211037BF00F402FC /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,7 +377,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF80A72A210F281D002C6F3F /* AppDelegate.swift in Sources */,
+				EFB6939D211037BF00F402FC /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -377,7 +385,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EF80A73B210F281F002C6F3F /* DemoTests.swift in Sources */,
+				EFB6939E211038CC00F402FC /* DemoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -406,20 +414,20 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		EF80A72D210F281E002C6F3F /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EF80A72E210F281E002C6F3F /* Base */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
 		EF80A790210F2F55002C6F3F /* SafariExtensionViewController.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				EF80A791210F2F55002C6F3F /* Base */,
 			);
 			name = SafariExtensionViewController.xib;
+			sourceTree = "<group>";
+		};
+		EFB6938E211037BE00F402FC /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EFB6938F211037BE00F402FC /* Base */,
+			);
+			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -439,28 +447,28 @@
 		};
 		EF80A740210F281F002C6F3F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EF80A749210F28E0002C6F3F /* Debug.xcconfig */;
+			baseConfigurationReference = EFB69384211037BE00F402FC /* Debug.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
 		};
 		EF80A741210F281F002C6F3F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EF80A74C210F28E0002C6F3F /* Release.xcconfig */;
+			baseConfigurationReference = EFB69385211037BE00F402FC /* Release.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
 		};
 		EF80A743210F281F002C6F3F /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EF80A74B210F28E0002C6F3F /* Tests.xcconfig */;
+			baseConfigurationReference = EFB69386211037BE00F402FC /* Tests.xcconfig */;
 			buildSettings = {
 			};
 			name = Debug;
 		};
 		EF80A744210F281F002C6F3F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EF80A74B210F28E0002C6F3F /* Tests.xcconfig */;
+			baseConfigurationReference = EFB69386211037BE00F402FC /* Tests.xcconfig */;
 			buildSettings = {
 			};
 			name = Release;
