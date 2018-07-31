@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		EF80A78A210F2F55002C6F3F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF80A789210F2F55002C6F3F /* Cocoa.framework */; };
-		EF80A78D210F2F55002C6F3F /* SafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A78C210F2F55002C6F3F /* SafariExtensionHandler.swift */; };
 		EF80A78F210F2F55002C6F3F /* SafariExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A78E210F2F55002C6F3F /* SafariExtensionViewController.swift */; };
 		EF80A792210F2F55002C6F3F /* SafariExtensionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EF80A790210F2F55002C6F3F /* SafariExtensionViewController.xib */; };
 		EF80A797210F2F55002C6F3F /* ToolbarItemIcon.pdf in Resources */ = {isa = PBXBuildFile; fileRef = EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */; };
@@ -57,7 +56,6 @@
 		EF80A736210F281F002C6F3F /* DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A787210F2F55002C6F3F /* Appex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Appex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A789210F2F55002C6F3F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		EF80A78C210F2F55002C6F3F /* SafariExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariExtensionHandler.swift; sourceTree = "<group>"; };
 		EF80A78E210F2F55002C6F3F /* SafariExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariExtensionViewController.swift; sourceTree = "<group>"; };
 		EF80A791210F2F55002C6F3F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/SafariExtensionViewController.xib; sourceTree = "<group>"; };
 		EF80A793210F2F55002C6F3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -151,7 +149,6 @@
 		EF80A7A0210F3230002C6F3F /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				EF80A78C210F2F55002C6F3F /* SafariExtensionHandler.swift */,
 				EF80A78E210F2F55002C6F3F /* SafariExtensionViewController.swift */,
 			);
 			path = Sources;
@@ -402,7 +399,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF80A78F210F2F55002C6F3F /* SafariExtensionViewController.swift in Sources */,
-				EF80A78D210F2F55002C6F3F /* SafariExtensionHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
