@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Single iframes</title>
+</head>
+<body>
+    <h1>Single iframe; open on http://localhost:8000</h1>
+    <iframe src="http://localhost:8001/xorigin/postMessage/iframe.html"></iframe>
+    <p>window.tabId is <span id='tabId'>undefined</span></p>
+    <script>
+        window.tabId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+        document.getElementById('tabId').textContent = window.tabId;
+        window.addEventListener('message', function (msg) {
+            if (msg.data.type === 'topee.getTabId') {
+                msg.source.postMessage({ type: 'topee.tabId', detail: window.tabId }, msg.origin);
+            }
+        });
+    </script>
+</body>
+</html>
