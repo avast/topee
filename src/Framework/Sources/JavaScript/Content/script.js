@@ -1,3 +1,4 @@
+window.chrome = require('./chrome/index.js');
 var tabInfo = require('./tabInfo.js');
 
 window.addEventListener("pageshow", function(event) {
@@ -14,3 +15,7 @@ if (window === window.top) {
         });
     });
 }
+
+
+// TODO: move to demo code
+chrome.runtime.sendMessage('ping', console.log.bind(console));
