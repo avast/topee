@@ -12,6 +12,7 @@
 		EF80A76C210F2B68002C6F3F /* Topee.h in Headers */ = {isa = PBXBuildFile; fileRef = EF80A75E210F2B67002C6F3F /* Topee.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EF80A777210F2BE0002C6F3F /* Sentinel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A776210F2BE0002C6F3F /* Sentinel.swift */; };
 		FD66CF82211053CE003E0819 /* script.js in Resources */ = {isa = PBXBuildFile; fileRef = FD66CF81211053CE003E0819 /* script.js */; };
+		FD66CF8721105DFF003E0819 /* _tabId.js in Resources */ = {isa = PBXBuildFile; fileRef = FD66CF8621105DFF003E0819 /* _tabId.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,6 +38,7 @@
 		EF80A77D210F2C37002C6F3F /* Tests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Tests.xcconfig; sourceTree = "<group>"; };
 		EF80A77E210F2C37002C6F3F /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		FD66CF81211053CE003E0819 /* script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
+		FD66CF8621105DFF003E0819 /* _tabId.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = _tabId.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +153,7 @@
 		FD66CF83211053D5003E0819 /* Content */ = {
 			isa = PBXGroup;
 			children = (
+				FD66CF8621105DFF003E0819 /* _tabId.js */,
 				FD66CF81211053CE003E0819 /* script.js */,
 			);
 			path = Content;
@@ -250,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD66CF82211053CE003E0819 /* script.js in Resources */,
+				FD66CF8721105DFF003E0819 /* _tabId.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

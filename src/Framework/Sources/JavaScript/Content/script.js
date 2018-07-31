@@ -1,3 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
-    safari.extension.dispatchMessage("Hello World!");
+    topee.tabId.then(tabId => safari.extension.dispatchMessage('hello', {
+        tabId: tabId,
+        frameId: topee.frameId
+    }));
 });
