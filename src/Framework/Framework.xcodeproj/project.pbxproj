@@ -13,6 +13,11 @@
 		EFF799BA2110868F00646663 /* TopeeSafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */; };
 		EFF799BC2110963600646663 /* SafariExtensionBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BB2110963600646663 /* SafariExtensionBridge.swift */; };
 		EFF799BE2110966A00646663 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BD2110966A00646663 /* Message.swift */; };
+		EFF799C32110ADBC00646663 /* WKUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799C22110ADBC00646663 /* WKUserScript.swift */; };
+		EFF799C52110ADDE00646663 /* WKWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799C42110ADDE00646663 /* WKWebView.swift */; };
+		EFF799CB2110B0A100646663 /* runtime.js in Resources */ = {isa = PBXBuildFile; fileRef = EFF799C92110B0A100646663 /* runtime.js */; };
+		EFF799CC2110B0A100646663 /* index.js in Resources */ = {isa = PBXBuildFile; fileRef = EFF799CA2110B0A100646663 /* index.js */; };
+		EFF799CE2110B0A600646663 /* tabInfo.js in Resources */ = {isa = PBXBuildFile; fileRef = EFF799CD2110B0A600646663 /* tabInfo.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +44,11 @@
 		EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopeeSafariExtensionHandler.swift; sourceTree = "<group>"; };
 		EFF799BB2110963600646663 /* SafariExtensionBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariExtensionBridge.swift; sourceTree = "<group>"; };
 		EFF799BD2110966A00646663 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		EFF799C22110ADBC00646663 /* WKUserScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKUserScript.swift; sourceTree = "<group>"; };
+		EFF799C42110ADDE00646663 /* WKWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKWebView.swift; sourceTree = "<group>"; };
+		EFF799C92110B0A100646663 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
+		EFF799CA2110B0A100646663 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
+		EFF799CD2110B0A600646663 /* tabInfo.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabInfo.js; sourceTree = "<group>"; };
 		FD66CF81211053CE003E0819 /* script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -135,9 +145,28 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
+		EFF799C12110ADAB00646663 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				EFF799C22110ADBC00646663 /* WKUserScript.swift */,
+				EFF799C42110ADDE00646663 /* WKWebView.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		EFF799C82110B0A100646663 /* chrome */ = {
+			isa = PBXGroup;
+			children = (
+				EFF799C92110B0A100646663 /* runtime.js */,
+				EFF799CA2110B0A100646663 /* index.js */,
+			);
+			path = chrome;
+			sourceTree = "<group>";
+		};
 		FD66CF7E211052AE003E0819 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
+				EFF799C12110ADAB00646663 /* Extensions */,
 				EFF799BD2110966A00646663 /* Message.swift */,
 				EFF799BB2110963600646663 /* SafariExtensionBridge.swift */,
 				EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */,
@@ -156,7 +185,9 @@
 		FD66CF83211053D5003E0819 /* Content */ = {
 			isa = PBXGroup;
 			children = (
+				EFF799C82110B0A100646663 /* chrome */,
 				FD66CF81211053CE003E0819 /* script.js */,
+				EFF799CD2110B0A600646663 /* tabInfo.js */,
 			);
 			path = Content;
 			sourceTree = "<group>";
@@ -254,6 +285,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFF799CE2110B0A600646663 /* tabInfo.js in Resources */,
+				EFF799CB2110B0A100646663 /* runtime.js in Resources */,
+				EFF799CC2110B0A100646663 /* index.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -290,6 +324,8 @@
 			files = (
 				EFF799BE2110966A00646663 /* Message.swift in Sources */,
 				EFF799BC2110963600646663 /* SafariExtensionBridge.swift in Sources */,
+				EFF799C52110ADDE00646663 /* WKWebView.swift in Sources */,
+				EFF799C32110ADBC00646663 /* WKUserScript.swift in Sources */,
 				EFF799BA2110868F00646663 /* TopeeSafariExtensionHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

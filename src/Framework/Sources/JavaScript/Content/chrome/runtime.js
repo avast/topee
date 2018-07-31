@@ -12,7 +12,12 @@ runtime.sendMessage = function(message, callback) {
         	tabId: tabId,
         	frameId: tabInfo.frameId,
         	messageId: messageId,
-        	message: JSON.stringify(message)
+        	payload: JSON.stringify({
+        		tabId: tabId,
+        		frameId: tabInfo.frameId,
+        		messageId: messageId,
+        		message: message
+        	})
     	});
     });
 
