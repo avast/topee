@@ -14,11 +14,11 @@
 
     if (window === window.top) {
         topee.frameId = 0;
-        var topLevelTabId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-        topee.tabId = Promise.resolve(topLevelTabId);
+        topee.topLevelTabId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+        topee.tabId = Promise.resolve(topee.topLevelTabId);
         window.addEventListener('message', function (msg) {
             if (msg.data.type === topee.Event.getTabId) {
-                msg.source.postMessage({ type: topee.Event.tabId, detail: topLevelTabId }, msg.origin);
+                msg.source.postMessage({ type: topee.Event.tabId, detail: topee.topLevelTabId }, msg.origin);
             }
         });
     }
