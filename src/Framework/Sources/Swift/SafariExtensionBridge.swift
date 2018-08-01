@@ -25,7 +25,7 @@ class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessag
     private var pages: [UInt64: SFSafariPage] = [:]
     private let messageHandlerName: String = "sendResponse"
     private let backgroundScriptName: String = "background"
-    private let webViewURL: String = "about:blank"
+    private let webViewURL: URL = URL(string: "about:blank")!
     private var webView: WKWebView!
 
     // MARK: - Initializers
@@ -42,7 +42,7 @@ class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessag
             contentController.add(self, name: messageHandlerName)
             webConfiguration.userContentController = contentController
             let webView = WKWebView(frame: .zero, configuration: webConfiguration)
-            webView.load(string: webViewURL)
+            webView.loadHTMLString("<html><body></body></html>", baseURL: webViewURL)
             return webView
         }()
     }
