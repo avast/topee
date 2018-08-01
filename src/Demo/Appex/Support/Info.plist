@@ -34,6 +34,10 @@
 				<key>Script</key>
 				<string>content.js</string>
 			</dict>
+			<dict>
+				<key>Script</key>
+				<string>demo-content.js</string>
+			</dict>
 		</array>
 		<key>SFSafariToolbarItem</key>
 		<dict>
