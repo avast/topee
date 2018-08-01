@@ -19,3 +19,6 @@ if (window === window.top) {
 
 // TODO: move to demo code
 chrome.runtime.sendMessage('ping', console.log.bind(console));
+
+chrome.runtime.sendMessage({type: 'ping', value: 1}, console.log.bind(console, 'first'));
+chrome.runtime.sendMessage({type: 'ping', value: 2}, console.log.bind(console, 'second'));
