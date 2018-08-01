@@ -10,7 +10,7 @@ function manageRequest(stringifiedPayload) {
     chrome.runtime.onMessage._emit(payload.message, {id: 'topee', url: payload.url, tlsChannelId: undefined }, sendResponse);
 
     function sendResponse(response) {
-        window.webkit.messageHandlers.sendResponse.postMessage({
+        window.webkit.messageHandlers.content.postMessage({
             tabId: payload.tabId,
             messageId: payload.messageId,
             response: response
@@ -22,6 +22,7 @@ window.topee = {
     manageRequest: manageRequest
 };
 
+window.webkit.messageHandlers.appex.postMessage({ type: "ready" })
 
 // TODO: move to demo
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
