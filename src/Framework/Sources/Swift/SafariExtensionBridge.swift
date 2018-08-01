@@ -34,7 +34,9 @@ class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessag
         super.init()
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
-            let script = WKUserScript(fileName: backgroundScriptName, injectionTime: .atDocumentEnd)
+            let script = WKUserScript(fileName: backgroundScriptName,
+                                      bundle: Bundle(for: SafariExtensionBridge.self),
+                                      injectionTime: .atDocumentEnd)
             let contentController: WKUserContentController = WKUserContentController()
             contentController.addUserScript(script)
             contentController.add(self, name: messageHandlerName)

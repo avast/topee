@@ -9,6 +9,6 @@ function manageRequest(stringifiedPayload) {
     window.webkit.messageHandlers.sendResponse.postMessage({
         tabId: payload.tabId,
         messageId: payload.messageId,
-        response: "background pong" + message.value
+        response: "background pong #" + message.value
     });
 }

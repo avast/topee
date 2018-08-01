@@ -17,7 +17,6 @@
 		EFB6939C211037BF00F402FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EFB69392211037BE00F402FC /* Assets.xcassets */; };
 		EFB6939D211037BF00F402FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB69393211037BE00F402FC /* AppDelegate.swift */; };
 		EFB6939E211038CC00F402FC /* DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB69388211037BE00F402FC /* DemoTests.swift */; };
-		EFF799C72110AEFC00646663 /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = EFF799C62110AEFC00646663 /* background.js */; };
 		FD66CF8521105A73003E0819 /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = FD66CF8421105A73003E0819 /* content.js */; };
 /* End PBXBuildFile section */
 
@@ -77,7 +76,6 @@
 		EFB69390211037BE00F402FC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EFB69392211037BE00F402FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EFB69393211037BE00F402FC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		EFF799C62110AEFC00646663 /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
 		FD66CF8421105A73003E0819 /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = content.js; path = ../../../Framework/Build/content.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -245,7 +243,6 @@
 		FD66CF7D2110515E003E0819 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				EFF799C62110AEFC00646663 /* background.js */,
 				FD66CF8421105A73003E0819 /* content.js */,
 				EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */,
 			);
@@ -377,7 +374,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EFF799C72110AEFC00646663 /* background.js in Resources */,
 				FD66CF8521105A73003E0819 /* content.js in Resources */,
 				EF80A797210F2F55002C6F3F /* ToolbarItemIcon.pdf in Resources */,
 				EF80A792210F2F55002C6F3F /* SafariExtensionViewController.xib in Resources */,
