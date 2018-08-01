@@ -25,7 +25,7 @@ class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessag
     private var pages: [UInt64: SFSafariPage] = [:]
     private let messageHandlerName: String = "sendResponse"
     private let backgroundScriptName: String = "background"
-    private let webViewURL: URL = URL(string: "about:blank")!
+    private let webViewURL: URL = URL(string: "https://topee.local")!
     private var webView: WKWebView!
 
     // MARK: - Initializers
