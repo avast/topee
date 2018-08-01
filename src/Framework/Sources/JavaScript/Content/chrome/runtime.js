@@ -10,12 +10,11 @@ runtime.sendMessage = function(message, callback) {
 	tabInfo.tabId.then(tabId => {
 		safari.extension.dispatchMessage('request', {
         	tabId: tabId,
-        	frameId: tabInfo.frameId,
-        	messageId: messageId,
         	payload: JSON.stringify({
         		tabId: tabId,
         		frameId: tabInfo.frameId,
-        		messageId: messageId,
+				messageId: messageId,
+				url: window.location.href,
         		message: message
         	})
     	});
