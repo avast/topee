@@ -31,6 +31,7 @@
 /* Begin PBXFileReference section */
 		80BEB8A42111B3E600DA4C7B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
 		80BEB8A92111B68600DA4C7B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = background.js; path = Build/background.js; sourceTree = SOURCE_ROOT; };
+		80BEB8A62111B58900DA4C7B /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = content.js; sourceTree = "<group>"; };
 		EF80A75B210F2B67002C6F3F /* Topee.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Topee.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A75E210F2B67002C6F3F /* Topee.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Topee.h; sourceTree = "<group>"; };
 		EF80A75F210F2B67002C6F3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -49,7 +50,6 @@
 		EFF799C92110B0A100646663 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
 		EFF799CA2110B0A100646663 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
 		EFF799CD2110B0A600646663 /* tabInfo.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabInfo.js; sourceTree = "<group>"; };
-		FD66CF81211053CE003E0819 /* script.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = script.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -203,9 +203,9 @@
 		FD66CF83211053D5003E0819 /* Content */ = {
 			isa = PBXGroup;
 			children = (
-				EFF799C82110B0A100646663 /* chrome */,
-				FD66CF81211053CE003E0819 /* script.js */,
+				80BEB8A62111B58900DA4C7B /* content.js */,
 				EFF799CD2110B0A600646663 /* tabInfo.js */,
+				EFF799C82110B0A100646663 /* chrome */,
 			);
 			path = Content;
 			sourceTree = "<group>";
