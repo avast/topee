@@ -12,3 +12,7 @@ function manageRequest(stringifiedPayload) {
         response: "background pong #" + message.value
     });
 }
+
+window.topee = {
+    manageRequest: manageRequest
+};

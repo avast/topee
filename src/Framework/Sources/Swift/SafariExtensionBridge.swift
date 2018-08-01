@@ -78,7 +78,7 @@ class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessag
     // MARK: - Private API
 
     private func invokeMethod(payload: String) {
-        webView.evaluateJavaScript("manageRequest('\(payload)')"){ result, error in
+        webView.evaluateJavaScript("topee.manageRequest('\(payload)')"){ result, error in
             guard error == nil else {
                 NSLog("Received JS error: \(error! as NSError)")
                 return
