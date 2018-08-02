@@ -7,7 +7,7 @@ module.exports = {
     },
     mode: 'none',
     output: {
-        filename: '[name].js',
+        filename: 'topee-[name].js',
         path: path.resolve(__dirname, '../../Build')
     }
 };

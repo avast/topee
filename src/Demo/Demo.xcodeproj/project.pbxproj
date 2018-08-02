@@ -20,7 +20,7 @@
 		EFC86EC9211308C90049CD8B /* demo-background.js in Resources */ = {isa = PBXBuildFile; fileRef = EFC86EC8211308C90049CD8B /* demo-background.js */; };
 		EFC86ECB211309030049CD8B /* SafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFC86ECA211309030049CD8B /* SafariExtensionHandler.swift */; };
 		FD32FABB2111DF6E00C69486 /* demo-content.js in Resources */ = {isa = PBXBuildFile; fileRef = FD32FABA2111DF6E00C69486 /* demo-content.js */; };
-		FD66CF8521105A73003E0819 /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = FD66CF8421105A73003E0819 /* content.js */; };
+		FD66CF8521105A73003E0819 /* topee-content.js in Resources */ = {isa = PBXBuildFile; fileRef = FD66CF8421105A73003E0819 /* topee-content.js */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,7 +82,7 @@
 		EFC86EC8211308C90049CD8B /* demo-background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "demo-background.js"; sourceTree = "<group>"; };
 		EFC86ECA211309030049CD8B /* SafariExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariExtensionHandler.swift; sourceTree = "<group>"; };
 		FD32FABA2111DF6E00C69486 /* demo-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "demo-content.js"; sourceTree = "<group>"; };
-		FD66CF8421105A73003E0819 /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = content.js; path = ../../../Framework/Build/content.js; sourceTree = "<group>"; };
+		FD66CF8421105A73003E0819 /* topee-content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "topee-content.js"; path = "../../../Framework/Build/topee-content.js"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,7 +250,7 @@
 		FD66CF7D2110515E003E0819 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				FD66CF8421105A73003E0819 /* content.js */,
+				FD66CF8421105A73003E0819 /* topee-content.js */,
 				EFC86EC8211308C90049CD8B /* demo-background.js */,
 				FD32FABA2111DF6E00C69486 /* demo-content.js */,
 				EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */,
@@ -383,7 +383,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD66CF8521105A73003E0819 /* content.js in Resources */,
+				FD66CF8521105A73003E0819 /* topee-content.js in Resources */,
 				EFC86EC9211308C90049CD8B /* demo-background.js in Resources */,
 				EF80A797210F2F55002C6F3F /* ToolbarItemIcon.pdf in Resources */,
 				EF80A792210F2F55002C6F3F /* SafariExtensionViewController.xib in Resources */,

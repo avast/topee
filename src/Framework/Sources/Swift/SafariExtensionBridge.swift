@@ -54,8 +54,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         super.init()
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
-            let backgroundEndURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "background-end", withExtension: "js")!
-            let backgroundURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "background", withExtension: "js")!
+            let backgroundEndURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "topee-background-end", withExtension: "js")!
+            let backgroundURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "topee-background", withExtension: "js")!
             let urls = [backgroundURL] + backgroundScripts + [backgroundEndURL]
             let script = WKUserScript(urls: urls)
             let contentController: WKUserContentController = WKUserContentController()
