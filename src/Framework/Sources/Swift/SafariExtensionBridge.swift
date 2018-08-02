@@ -67,6 +67,12 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             webView.loadHTMLString("<html><body></body></html>", baseURL: webViewURL)
             return webView
         }()
+        DispatchQueue.global().asyncAfter(deadline: .now() + 10) { [unowned self] in
+            guard self.isBackgroundReady else {
+                NSLog("Backgrounds scripts are taking too long to load. Check files for possible errors")
+                return
+            }
+        }
     }
     
     // MARK: - Public API
