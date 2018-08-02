@@ -13,8 +13,4 @@ class SafariExtensionHandler: TopeeSafariExtensionHandler {
         let fileExtension = "js"
         return [Bundle.main.url(forResource: fileName, withExtension: fileExtension)!]
     }
-
-    override init() {
-        super.init()
-    }
 }
