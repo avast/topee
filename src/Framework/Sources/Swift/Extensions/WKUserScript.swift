@@ -6,17 +6,10 @@ import Foundation
 import WebKit
 
 extension WKUserScript {
-    convenience init(fileName: String,
-                     fileExtension: String = "js",
-                     bundle: Bundle = .main,
+    convenience init(urls: [URL],
                      injectionTime: WKUserScriptInjectionTime = .atDocumentStart,
                      forMainFrameOnly: Bool = true) {
-        guard let url = bundle.url(forResource: fileName, withExtension: fileExtension) else {
-            fatalError("Could not find \(fileName).\(fileExtension) in the bundle")
-        }
-        guard let script = try? String(contentsOf: url, encoding: .utf8) else {
-            fatalError("Could not decode \(fileName).\(fileExtension) as utf8 string")
-        }
+        let script = urls.map { try! String(contentsOf: $0, encoding: .utf8) }.joined(separator: "\n")
         self.init(source: script, injectionTime: injectionTime, forMainFrameOnly: forMainFrameOnly)
     }
 }

@@ -21,10 +21,3 @@ function manageRequest(stringifiedPayload) {
 window.topee = {
     manageRequest: manageRequest
 };
-
-window.webkit.messageHandlers.appex.postMessage({ type: "ready" })
-
-// TODO: move to demo
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    sendResponse("background pong #" + message.value);
-});

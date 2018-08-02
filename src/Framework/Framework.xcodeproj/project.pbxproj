@@ -11,6 +11,7 @@
 		EF80A765210F2B68002C6F3F /* Topee.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF80A75B210F2B67002C6F3F /* Topee.framework */; };
 		EF80A76A210F2B68002C6F3F /* TopeeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A769210F2B68002C6F3F /* TopeeTests.swift */; };
 		EF80A76C210F2B68002C6F3F /* Topee.h in Headers */ = {isa = PBXBuildFile; fileRef = EF80A75E210F2B67002C6F3F /* Topee.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EFC86ECD21131A0B0049CD8B /* background-end.js in Resources */ = {isa = PBXBuildFile; fileRef = EFC86ECC21131A0B0049CD8B /* background-end.js */; };
 		EFF799BA2110868F00646663 /* TopeeSafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */; };
 		EFF799BC2110963600646663 /* SafariExtensionBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BB2110963600646663 /* SafariExtensionBridge.swift */; };
 		EFF799BE2110966A00646663 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BD2110966A00646663 /* Message.swift */; };
@@ -30,8 +31,8 @@
 
 /* Begin PBXFileReference section */
 		80BEB8A42111B3E600DA4C7B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
-		80BEB8A92111B68600DA4C7B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = background.js; path = Build/background.js; sourceTree = SOURCE_ROOT; };
 		80BEB8A62111B58900DA4C7B /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = content.js; sourceTree = "<group>"; };
+		80BEB8A92111B68600DA4C7B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = background.js; path = Build/background.js; sourceTree = SOURCE_ROOT; };
 		EF80A75B210F2B67002C6F3F /* Topee.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Topee.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A75E210F2B67002C6F3F /* Topee.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Topee.h; sourceTree = "<group>"; };
 		EF80A75F210F2B67002C6F3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -42,6 +43,7 @@
 		EF80A77C210F2C37002C6F3F /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		EF80A77D210F2C37002C6F3F /* Tests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Tests.xcconfig; sourceTree = "<group>"; };
 		EF80A77E210F2C37002C6F3F /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
+		EFC86ECC21131A0B0049CD8B /* background-end.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "background-end.js"; sourceTree = "<group>"; };
 		EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopeeSafariExtensionHandler.swift; sourceTree = "<group>"; };
 		EFF799BB2110963600646663 /* SafariExtensionBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariExtensionBridge.swift; sourceTree = "<group>"; };
 		EFF799BD2110966A00646663 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 			isa = PBXGroup;
 			children = (
 				80BEB8A92111B68600DA4C7B /* background.js */,
+				EFC86ECC21131A0B0049CD8B /* background-end.js */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -303,6 +306,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFC86ECD21131A0B0049CD8B /* background-end.js in Resources */,
 				80BEB8AA2111B68600DA4C7B /* background.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,7 +8,8 @@ import WebKit
 
 // MARK: -
 
-protocol SafariExtensionBridgeType {
+public protocol SafariExtensionBridgeType {
+    var backgroundScripts: [URL]  { get }
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?)
 }
 
@@ -19,32 +20,44 @@ enum MessageHandler: String {
 
 // MARK: -
 
-class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessageHandler {
+public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessageHandler {
     
-    // MARK: - Public Class Members
-    
-    static let shared: SafariExtensionBridge = SafariExtensionBridge()
-    
+    // MARK: - Public Members
+
+    public let backgroundScripts: [URL]
+
     // MARK: - Private Members
     
     private var pages: [UInt64: SFSafariPage] = [:]
-    private let backgroundScriptName: String = "background"
     private let webViewURL: URL = URL(string: "https://topee.local")!
     private var webView: WKWebView!
     private var isBackgroundReady: Bool = false
     // Accumulates messages until the background scripts
     // informs us that is ready
     private var messageQueue: [String] = []
-    
+
+    private static var shared: SafariExtensionBridgeType?
+
     // MARK: - Initializers
+
+    static func shared(backgroundScripts: [URL]) -> SafariExtensionBridgeType {
+        if shared == nil {
+            shared = SafariExtensionBridge(backgroundScripts: backgroundScripts)
+        } else if backgroundScripts != shared!.backgroundScripts {
+            fatalError("You can only inject one set of background scripts")
+        }
+        return shared!
+    }
     
-    override init() {
+    public init(backgroundScripts: [URL]) {
+        self.backgroundScripts = backgroundScripts
         super.init()
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
-            let script = WKUserScript(fileName: backgroundScriptName,
-                                      bundle: Bundle(for: SafariExtensionBridge.self),
-                                      injectionTime: .atDocumentEnd)
+            let backgroundEndURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "background-end", withExtension: "js")!
+            let backgroundURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "background", withExtension: "js")!
+            let urls = [backgroundURL] + backgroundScripts + [backgroundEndURL]
+            let script = WKUserScript(urls: urls)
             let contentController: WKUserContentController = WKUserContentController()
             contentController.addUserScript(script)
             contentController.add(self, name: MessageHandler.content.rawValue)
@@ -56,9 +69,9 @@ class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessag
         }()
     }
     
-    // MARK: - SafariExtensionBridgeType
-    
-    func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
+    // MARK: - Public API
+
+    public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
         assert(Thread.isMainThread)
         NSLog("#appex(content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
         if let message = Message.Content.Request(rawValue: messageName) {
@@ -110,7 +123,7 @@ class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessag
     
     // MARK: - WKScriptMessageHandler
     
-    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         assert(Thread.isMainThread)
         NSLog("#appex(background): { 'name': \(message.name), 'body': \(message.body) }")
         guard let handler = MessageHandler(rawValue: message.name) else { return }

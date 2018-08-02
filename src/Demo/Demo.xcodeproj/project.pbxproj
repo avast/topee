@@ -17,6 +17,8 @@
 		EFB6939C211037BF00F402FC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EFB69392211037BE00F402FC /* Assets.xcassets */; };
 		EFB6939D211037BF00F402FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB69393211037BE00F402FC /* AppDelegate.swift */; };
 		EFB6939E211038CC00F402FC /* DemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB69388211037BE00F402FC /* DemoTests.swift */; };
+		EFC86EC9211308C90049CD8B /* demo-background.js in Resources */ = {isa = PBXBuildFile; fileRef = EFC86EC8211308C90049CD8B /* demo-background.js */; };
+		EFC86ECB211309030049CD8B /* SafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFC86ECA211309030049CD8B /* SafariExtensionHandler.swift */; };
 		FD32FABB2111DF6E00C69486 /* demo-content.js in Resources */ = {isa = PBXBuildFile; fileRef = FD32FABA2111DF6E00C69486 /* demo-content.js */; };
 		FD66CF8521105A73003E0819 /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = FD66CF8421105A73003E0819 /* content.js */; };
 /* End PBXBuildFile section */
@@ -77,6 +79,8 @@
 		EFB69390211037BE00F402FC /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EFB69392211037BE00F402FC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EFB69393211037BE00F402FC /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		EFC86EC8211308C90049CD8B /* demo-background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "demo-background.js"; sourceTree = "<group>"; };
+		EFC86ECA211309030049CD8B /* SafariExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariExtensionHandler.swift; sourceTree = "<group>"; };
 		FD32FABA2111DF6E00C69486 /* demo-content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "demo-content.js"; sourceTree = "<group>"; };
 		FD66CF8421105A73003E0819 /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = content.js; path = ../../../Framework/Build/content.js; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -151,6 +155,7 @@
 		EF80A7A0210F3230002C6F3F /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				EFC86ECA211309030049CD8B /* SafariExtensionHandler.swift */,
 				EF80A78E210F2F55002C6F3F /* SafariExtensionViewController.swift */,
 			);
 			path = Sources;
@@ -246,6 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				FD66CF8421105A73003E0819 /* content.js */,
+				EFC86EC8211308C90049CD8B /* demo-background.js */,
 				FD32FABA2111DF6E00C69486 /* demo-content.js */,
 				EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */,
 			);
@@ -378,6 +384,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FD66CF8521105A73003E0819 /* content.js in Resources */,
+				EFC86EC9211308C90049CD8B /* demo-background.js in Resources */,
 				EF80A797210F2F55002C6F3F /* ToolbarItemIcon.pdf in Resources */,
 				EF80A792210F2F55002C6F3F /* SafariExtensionViewController.xib in Resources */,
 				FD32FABB2111DF6E00C69486 /* demo-content.js in Resources */,
@@ -407,6 +414,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFC86ECB211309030049CD8B /* SafariExtensionHandler.swift in Sources */,
 				EF80A78F210F2F55002C6F3F /* SafariExtensionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
