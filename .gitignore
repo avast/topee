@@ -14,6 +14,7 @@ Carthage/
 
 # Build
 src/Framework/Build/
+build/
 
 # JavaScript
 node_modules
