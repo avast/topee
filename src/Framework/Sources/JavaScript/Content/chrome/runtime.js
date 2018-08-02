@@ -12,6 +12,7 @@ runtime.sendMessage = function(message, callback) {
         	tabId: tabId,
         	payload: JSON.stringify({
         		tabId: tabId,
+                eventName: 'sendMessage',
         		frameId: tabInfo.frameId,
 				messageId: messageId,
 				url: window.location.href,

@@ -7,7 +7,10 @@ function manageRequest(stringifiedPayload) {
     var payload = JSON.parse(stringifiedPayload);
     var message = payload.message;
 
-    chrome.runtime.onMessage._emit(payload.message, {id: 'topee', url: payload.url, tlsChannelId: undefined }, sendResponse);
+    if (payload.eventName === 'sendMessage') {
+        chrome.runtime.onMessage._emit(payload.message, {id: 'topee', url: payload.url, tlsChannelId: undefined }, sendResponse);
+        return;
+    }
 
     function sendResponse(response) {
         window.webkit.messageHandlers.content.postMessage({
