@@ -8,9 +8,21 @@ function manageRequest(stringifiedPayload) {
     var message = payload.message;
 
     if (payload.eventName === 'sendMessage') {
-        chrome.runtime.onMessage._emit(payload.message, {id: 'topee', url: payload.url, tlsChannelId: undefined }, sendResponse);
+        chrome.runtime.onMessage._emit(payload.message, {
+            tab: {
+                id: payload.tabId,
+            },
+            frameId: payload.frameId,
+            id: 'topee',
+            url: payload.url,
+            tlsChannelId: undefined
+        }, sendResponse);
         return;
     }
+    if (payload.eventName === 'messageResponse') {
+        chrome.tabs.sendMessage._emit(payload);
+        return;
+    } 
 
     function sendResponse(response) {
         window.webkit.messageHandlers.content.postMessage({

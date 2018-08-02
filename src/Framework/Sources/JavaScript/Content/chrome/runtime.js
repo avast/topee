@@ -1,8 +1,11 @@
 'use strict';
 
+var EventEmitter = require('events');
 var tabInfo = require('../tabInfo.js');
 
 var runtime = {};
+
+var eventEmitter = new EventEmitter();
 
 // TODO: once tabId is fulfilled, sendMessage should call dispatchMessage right away, not in then(), that might be performed asynchronously
 runtime.sendMessage = function(message, callback) {
@@ -32,5 +35,36 @@ runtime.sendMessage = function(message, callback) {
     	}
     }
 };
+
+runtime.onMessage = {
+    addListener: function(callback) {
+        eventEmitter.addListener('message', function (message, sender, sendResponse) {
+            callback(message, sender, sendResponse);
+        });
+    },
+/*    removeListener: function(callback) {
+        eventEmitter.removeListener('message', ...)
+    }*/
+};
+
+safari.self.addEventListener("message", function (event) {
+    if (event.name === 'request' && (!event.message.frameId || event.message.frameId === tabInfo.frameId)) {
+        tabInfo.tabId.then(tabId => {
+            eventEmitter.emit('message', event.message.payload, {id: 'topee'}, function (message) {
+                safari.extension.dispatchMessage('request', {
+                    tabId: tabId,
+                    payload: JSON.stringify({
+                        tabId: tabId,
+                        eventName: 'messageResponse',
+                        frameId: tabInfo.frameId,
+                        messageId: event.message.messageId,
+                        url: window.location.href,
+                        message: message
+                    })
+                });
+            });
+        });
+    }
+});
 
 module.exports = runtime;
