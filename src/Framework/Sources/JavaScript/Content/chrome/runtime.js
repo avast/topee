@@ -26,7 +26,7 @@ runtime.sendMessage = function(message, callback) {
 
     function listener(event) {
     	if (event.name === 'response' && event.message.messageId === messageId) {
-    		callback(event.message.response);
+    		callback(event.message.payload);
     		safari.self.removeEventListener(listener);
     	}
     }

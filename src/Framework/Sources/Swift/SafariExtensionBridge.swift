@@ -137,8 +137,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         switch handler {
         case .content:
             guard let tabId = userInfo["tabId"] as? UInt64 else { return }
+            guard let eventName = userInfo["eventName"] as? String else { return }
             guard let page = self.pages[tabId] else { return }
-            page.dispatchMessageToScript(withName: Message.Content.Response.response.rawValue, userInfo: userInfo)
+            page.dispatchMessageToScript(withName: eventName, userInfo: userInfo)
         case .appex:
             guard let type = userInfo["type"] as? String else { return }
             if type == "ready" {

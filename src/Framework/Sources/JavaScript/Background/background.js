@@ -12,8 +12,9 @@ function manageRequest(stringifiedPayload) {
     function sendResponse(response) {
         window.webkit.messageHandlers.content.postMessage({
             tabId: payload.tabId,
+            eventName: 'response',
             messageId: payload.messageId,
-            response: response
+            payload: response
         });
     }
 }

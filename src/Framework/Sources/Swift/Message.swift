@@ -11,11 +11,5 @@ enum Message {
             case bye
             case request
         }
-        enum Response: String {
-            case response
-        }
-    }
-    enum Background {
-        case empty
     }
 }
