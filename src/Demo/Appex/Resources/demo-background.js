@@ -83,7 +83,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 });
 
 setTimeout(function () {
-	chrome.tabs.query({}, function (tabs) {
+	chrome.tabs.query({ url: 'http://localhost:8000/ifra*'}, function (tabs) {
 		tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, {type: 'query'} ));
 	});
 }, 10000);

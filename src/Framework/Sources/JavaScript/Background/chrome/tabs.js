@@ -42,11 +42,19 @@ eventEmitter.addListener('hello', function (payload) {
 });
 
 tabs.query = function(queryInfo, callback) {
-	var browerTabsArray = [];
+	var tabs = [];
 	for (var tab in browserTabs) {
-		browerTabsArray.push(browserTabs[tab]);
+		tabs.push(browserTabs[tab]);	
 	}
-	callback(browerTabsArray);
+	if (queryInfo.url) {
+		// matches: google.com/*
+		var components = queryInfo.url.split('*');
+		var isPrefixPattern = components.length === 2 && components[1] === "";
+		tabs = tabs.filter(tab => {
+			return isPrefixPattern && tab.url.startsWith(components[0]);
+		});
+	}
+	callback(tabs);
 }
 
 tabs.sendMessage._emit = function (payload) {
