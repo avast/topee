@@ -1,9 +1,7 @@
 'use strict';
-var EventEmitter = require('events');
+var eventEmitter = require('../event-bus.js');
 
 var runtime = {};
-
-var eventEmitter = new EventEmitter();
 
 runtime.onMessage = {
     addListener: function (listener) {

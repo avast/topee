@@ -1,10 +1,8 @@
 'use strict';
 
-var EventEmitter = require('events');
+var eventEmitter = require('../event-bus.js');
 
 var tabs = {};
-
-var eventEmitter = new EventEmitter();
 
 tabs.sendMessage = function (tabId, message, options, responseCallback) {
 	var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);

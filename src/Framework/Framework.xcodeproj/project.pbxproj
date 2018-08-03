@@ -14,6 +14,7 @@
 		EF80A765210F2B68002C6F3F /* Topee.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF80A75B210F2B67002C6F3F /* Topee.framework */; };
 		EF80A76A210F2B68002C6F3F /* TopeeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A769210F2B68002C6F3F /* TopeeTests.swift */; };
 		EF80A76C210F2B68002C6F3F /* Topee.h in Headers */ = {isa = PBXBuildFile; fileRef = EF80A75E210F2B67002C6F3F /* Topee.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EF83A0C5211479D7002C7AF1 /* event-bus.js in Resources */ = {isa = PBXBuildFile; fileRef = EF83A0C4211479D7002C7AF1 /* event-bus.js */; };
 		EFC86ECD21131A0B0049CD8B /* topee-background-end.js in Resources */ = {isa = PBXBuildFile; fileRef = EFC86ECC21131A0B0049CD8B /* topee-background-end.js */; };
 		EFC86ECF21133BB40049CD8B /* topee-content.js in Resources */ = {isa = PBXBuildFile; fileRef = EFC86ECE21133BB40049CD8B /* topee-content.js */; };
 		EFF799BA2110868F00646663 /* TopeeSafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */; };
@@ -50,6 +51,7 @@
 		EF80A77C210F2C37002C6F3F /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		EF80A77D210F2C37002C6F3F /* Tests.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Tests.xcconfig; sourceTree = "<group>"; };
 		EF80A77E210F2C37002C6F3F /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
+		EF83A0C4211479D7002C7AF1 /* event-bus.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "event-bus.js"; sourceTree = "<group>"; };
 		EFC86ECC21131A0B0049CD8B /* topee-background-end.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "topee-background-end.js"; sourceTree = "<group>"; };
 		EFC86ECE21133BB40049CD8B /* topee-content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "topee-content.js"; path = "Build/topee-content.js"; sourceTree = SOURCE_ROOT; };
 		EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopeeSafariExtensionHandler.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 		80BEB8A32111B3E600DA4C7B /* Background */ = {
 			isa = PBXGroup;
 			children = (
+				EF83A0C4211479D7002C7AF1 /* event-bus.js */,
 				80BEB8A42111B3E600DA4C7B /* background.js */,
 				EF1FACCF211467FD005876A2 /* chrome */,
 			);
@@ -332,6 +335,7 @@
 				EF1FACD5211467FD005876A2 /* index.js in Resources */,
 				EF1FACD4211467FD005876A2 /* tabs.js in Resources */,
 				80BEB8AA2111B68600DA4C7B /* topee-background.js in Resources */,
+				EF83A0C5211479D7002C7AF1 /* event-bus.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
