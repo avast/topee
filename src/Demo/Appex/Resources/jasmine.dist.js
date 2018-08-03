@@ -6965,24 +6965,31 @@ jasmineRequire.html = function(j$) {
   
 (function () {
     if (window.location.hostname === 'htmlpreview.github.io' && window.location.search.match(/avast[/]topee[/].*[/]api.html/)) {
-        document.addEventListener("DOMContentLoaded", function(event) {
-            var list = document.querySelector('body > ul.collapsible-list');
-            var p = document.querySelector('body > p');
-            if (!list || !p) {
-                return;
-            }
+        if (!document.body) {
+            document.addEventListener("DOMContentLoaded", injectTestButton);
+        }
+        else {
+            injectTestButton();
+        }
+    }
 
-            var button = document.createElement('button');
-            button.innerText = 'Run tests';
-            button.addEventListener('click', function () {
-                list.style.display = 'none';
-                jasmine.getEnv().htmlReporter.initialize();
-                jasmine.getEnv().execute();
-                p.removeChild(button);                    
-            });
-            button.style.marginLeft = '5em';
+    function injectTestButton() {
+        var list = document.querySelector('body > ul.collapsible-list');
+        var p = document.querySelector('body > p');
+        if (!list || !p) {
+            return;
+        }
 
-            p.appendChild(button);
+        var button = document.createElement('button');
+        button.innerText = 'Run tests';
+        button.addEventListener('click', function () {
+            list.style.display = 'none';
+            jasmine.getEnv().htmlReporter.initialize();
+            jasmine.getEnv().execute();
+            p.removeChild(button);                    
         });
+        button.style.marginLeft = '5em';
+
+        p.appendChild(button);
     }
 })();
