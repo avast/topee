@@ -1,6 +1,7 @@
 'use strict';
 
 var eventEmitter = require('../event-bus.js');
+var urlMatcher = require('../url-matcher.js');
 
 var tabs = {};
 
@@ -47,12 +48,7 @@ tabs.query = function(queryInfo, callback) {
 		tabs.push(browserTabs[tab]);	
 	}
 	if (queryInfo.url) {
-		// matches: google.com/*
-		var components = queryInfo.url.split('*');
-		var isPrefixPattern = components.length === 2 && components[1] === "";
-		tabs = tabs.filter(tab => {
-			return isPrefixPattern && tab.url.startsWith(components[0]);
-		});
+		tabs = tabs.filter(tab => urlMatcher.match(queryInfo.url, tab.url));
 	}
 	callback(tabs);
 }

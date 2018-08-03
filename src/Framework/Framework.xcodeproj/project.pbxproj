@@ -353,7 +353,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "make -C \"$SRCROOT/Sources/JavaScript\" build\n";
+			shellScript = "make -C \"$SRCROOT/Sources/JavaScript\" test build\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
