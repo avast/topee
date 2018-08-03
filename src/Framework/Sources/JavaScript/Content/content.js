@@ -25,6 +25,12 @@ if (window === window.top) {
 function sayHello(tabId) {
     safari.extension.dispatchMessage('hello', {
         tabId: tabId,
-        frameId: tabInfo.frameId
+        frameId: tabInfo.frameId,
+        payload: JSON.stringify({
+            tabId: tabId,
+            frameId: tabInfo.frameId,
+            eventName: 'hello',
+            url: window.location.href
+        })
     });
 }

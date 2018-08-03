@@ -81,6 +81,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         assert(Thread.isMainThread)
         NSLog("#appex(content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
         if let message = Message.Content.Request(rawValue: messageName) {
+            // Manages the registry of pages based on the type of message received
             switch message {
             case .hello:
                 if let tabId = userInfo?["tabId"] as? UInt64 {
@@ -95,17 +96,18 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 if let tabId = userInfo?["tabId"] as? UInt64 {
                     pages[tabId] = page
                 }
-                if let payload = userInfo?["payload"] as? String {
-                    // TODO: It would be nice if we didn't have to
-                    // replicate the message structure inside the
-                    // payload. Instead we could try to encode
-                    // the userInfo into a JSON object at the swift level.
-                    // e.g: https://stackoverflow.com/questions/48297263/how-to-use-any-in-codable-type
-                    if isBackgroundReady {
-                        invokeMethod(payload: payload)
-                    } else {
-                        messageQueue.append(payload)
-                    }
+            }
+            // Relays the messages to the background script
+            if let payload = userInfo?["payload"] as? String {
+                // TODO: It would be nice if we didn't have to
+                // replicate the message structure inside the
+                // payload. Instead we could try to encode
+                // the userInfo into a JSON object at the swift level.
+                // e.g: https://stackoverflow.com/questions/48297263/how-to-use-any-in-codable-type
+                if isBackgroundReady {
+                    invokeMethod(payload: payload)
+                } else {
+                    messageQueue.append(payload)
                 }
             }
         }

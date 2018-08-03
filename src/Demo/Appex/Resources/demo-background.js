@@ -82,3 +82,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     }, 200);
 });
 
+setTimeout(function () {
+	chrome.tabs.query({}, function (tabs) {
+		tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, {type: 'query'} ));
+	});
+}, 10000);

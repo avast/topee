@@ -31,6 +31,24 @@ tabs.sendMessage = function (tabId, message, options, responseCallback) {
     }
 };
 
+var browserTabs = {};
+
+eventEmitter.addListener('hello', function (payload) {
+	if (payload.frameId !== 0) { return; }
+	browserTabs[payload.tabId] = {
+		id: payload.tabId,
+		url: payload.url
+	};
+});
+
+tabs.query = function(queryInfo, callback) {
+	var browerTabsArray = [];
+	for (var tab in browserTabs) {
+		browerTabsArray.push(browserTabs[tab]);
+	}
+	callback(browerTabsArray);
+}
+
 tabs.sendMessage._emit = function (payload) {
 	eventEmitter.emit('messageResponse', payload);
 };

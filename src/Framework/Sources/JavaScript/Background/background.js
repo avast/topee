@@ -1,6 +1,9 @@
 //
 //  Copyright © 2018 Avast. All rights reserved.
 //
+
+var eventEmitter = require('./event-bus.js');
+
 window.chrome = require('./chrome/index.js');
 
 function manageRequest(stringifiedPayload) {
@@ -22,7 +25,10 @@ function manageRequest(stringifiedPayload) {
     if (payload.eventName === 'messageResponse') {
         chrome.tabs.sendMessage._emit(payload);
         return;
-    } 
+    }
+    if (payload.eventName === 'hello') {
+        eventEmitter.emit('hello', payload);
+    }
 
     function sendResponse(response) {
         window.webkit.messageHandlers.content.postMessage({
