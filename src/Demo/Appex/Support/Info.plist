@@ -24,6 +24,15 @@
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSExtension</key>
 	<dict>
+		<key>SFSafariStyleSheet</key>
+		<array>
+			<dict>
+				<key>Style Sheet</key>
+				<string>jasmine.css</string>
+				<key>Allowed URL Patterns</key>
+				<string>*:///htmlpreview.github.io/*</string>
+			</dict>
+		</array>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.Safari.extension</string>
 		<key>NSExtensionPrincipalClass</key>
@@ -37,6 +46,18 @@
 			<dict>
 				<key>Script</key>
 				<string>demo-content.js</string>
+			</dict>
+			<dict>
+				<key>Allowed URL Patterns</key>
+				<string>*:///htmlpreview.github.io/*</string>
+				<key>Script</key>
+				<string>jasmine.dist.js</string>
+			</dict>
+			<dict>
+				<key>Allowed URL Patterns</key>
+				<string>*://htmlpreview.github.io/*</string>
+				<key>Script</key>
+				<string>test.js</string>
 			</dict>
 		</array>
 		<key>SFSafariToolbarItem</key>
