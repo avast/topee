@@ -84,16 +84,16 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             switch message {
             case .hello:
                 if let tabId = userInfo?["tabId"] as? UInt64 {
-                    self.pages[tabId] = page
+                    pages[tabId] = page
                 }
             case .bye:
                 if let tabId = userInfo?["tabId"] as? UInt64 {
-                    self.pages[tabId] = nil
+                    pages[tabId] = nil
                 }
             case .request:
                 // messages may come out of order, so that e.g. request is faster than hello here
                 if let tabId = userInfo?["tabId"] as? UInt64 {
-                    self.pages[tabId] = page
+                    pages[tabId] = page
                 }
                 if let payload = userInfo?["payload"] as? String {
                     // TODO: It would be nice if we didn't have to
@@ -102,7 +102,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     // the userInfo into a JSON object at the swift level.
                     // e.g: https://stackoverflow.com/questions/48297263/how-to-use-any-in-codable-type
                     if isBackgroundReady {
-                        self.invokeMethod(payload: payload)
+                        invokeMethod(payload: payload)
                     } else {
                         messageQueue.append(payload)
                     }
