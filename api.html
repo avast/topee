@@ -22,7 +22,13 @@
 }
 .all-done:after {
     content: "\2713";
+    font-weight: bolder;
     color: green;
+}
+.some-done:after {
+    content: "\2713";
+    font-weight: bolder;
+    color: orange;
 }
 
 .collapsible-list li ul {
@@ -398,7 +404,7 @@
       <li class="not-done">onProxyError</li>    </ul>
   </li>
 
-    <li id="runtime"><a href="#runtime" class="unfold">runtime</a><a href="#" class="collapse">runtime</a>
+    <li id="runtime" class="some-done"><a href="#runtime" class="unfold">runtime</a><a href="#" class="collapse">runtime</a>
     <ul>
       <li class="not-done">lastError</li>
       <li class="not-done">id</li>
@@ -439,14 +445,14 @@
       <li class="not-done">onChanged</li>    </ul>
   </li>
 
-    <li id="tabs" class="not-done"><a href="#tabs" class="unfold">tabs</a><a href="#" class="collapse">tabs</a>
+    <li id="tabs" class="some-done"><a href="#tabs" class="unfold">tabs</a><a href="#" class="collapse">tabs</a>
     <ul>
       <li class="not-done">TAB_ID_NONE</li>
       <li class="not-done">get</li>
       <li class="not-done">getCurrent</li>
       <li class="not-done">connect</li>
       <li class="not-done">sendRequest</li>
-      <li class="not-done">sendMessage</li>
+      <li class="all-done">sendMessage</li>
       <li class="not-done">getSelected</li>
       <li class="not-done">getAllInWindow</li>
       <li class="not-done">create</li>
