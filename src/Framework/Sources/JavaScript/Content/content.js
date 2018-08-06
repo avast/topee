@@ -28,6 +28,38 @@ window.addEventListener("pageshow", function(event) {
 });
 
 if (window === window.top) {
+    var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+    safari.self.addEventListener("message", function (event) {
+    	if (event.name === 'response' && event.message.messageId === messageId) {
+            console.log('topee.keepalive reponse');
+    	}
+    });    
+    setInterval(function () {
+        console.log('send topee.keepalive');
+        safari.extension.dispatchMessage('request', {
+            tabId: tabInfo.topLevelTabId,
+            payload: JSON.stringify({
+                tabId: tabInfo.topLevelTabId,
+                eventName: 'topee.keepalive',
+                frameId: tabInfo.frameId,
+                messageId: messageId,
+                url: window.location.href,
+                message: {}
+            })
+        });
+    }, 100);    
+    console.log('send topee.keepalive');
+    safari.extension.dispatchMessage('request', {
+        tabId: tabInfo.topLevelTabId,
+        payload: JSON.stringify({
+            tabId: tabInfo.topLevelTabId,
+            eventName: 'topee.keepalive',
+            frameId: tabInfo.frameId,
+            messageId: messageId,
+            url: window.location.href,
+            message: {}
+        })
+    });
     window.addEventListener('beforeunload', function () {
         safari.extension.dispatchMessage('bye', {
             tabId: tabInfo.topLevelTabId

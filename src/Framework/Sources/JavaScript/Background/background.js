@@ -7,6 +7,16 @@ function manageRequest(stringifiedPayload) {
     var payload = JSON.parse(stringifiedPayload);
     var message = payload.message;
 
+    if (payload.eventName === 'topee.keepalive') {
+        window.webkit.messageHandlers.content.postMessage({
+            tabId: payload.tabId,
+            eventName: 'response',
+            messageId: payload.messageId,
+            payload: {}
+        });
+        return;
+    }
+
     if (payload.eventName === 'sendMessage') {
         chrome.runtime.onMessage._emit(payload.message, {
             tab: {
