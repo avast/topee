@@ -59,4 +59,9 @@ tabs.sendMessage._emit = function (payload) {
     eventEmitter.emit('messageResponse', payload);
 };
 
+tabs.onUpdated = {
+    // TODO: Implementation
+    addListener: function () {}
+};
+
 module.exports = tabs;

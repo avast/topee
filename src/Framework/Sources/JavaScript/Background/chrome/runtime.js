@@ -16,4 +16,18 @@ runtime.onMessage = {
     }
 };
 
+runtime.onUpdateAvailable = {
+    addListener: function () {
+        // Not available in Safari
+    }
+};
+
+// TODO: Implementation
+runtime.getManifest = function () {
+    return {
+        name: 'MyExtension',
+        version: '0.0.1'
+    };
+};
+
 module.exports = runtime;
