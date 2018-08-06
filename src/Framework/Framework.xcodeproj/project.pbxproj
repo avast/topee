@@ -34,6 +34,7 @@
 		80BEB8A42111B3E600DA4C7B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
 		80BEB8A62111B58900DA4C7B /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = content.js; sourceTree = "<group>"; };
 		80BEB8A92111B68600DA4C7B /* topee-background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "topee-background.js"; path = "Build/topee-background.js"; sourceTree = SOURCE_ROOT; };
+		EF1A65C821186D390021E013 /* url-matcher.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "url-matcher.js"; sourceTree = "<group>"; };
 		EF1FACD0211467FD005876A2 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
 		EF1FACD1211467FD005876A2 /* tabs.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabs.js; sourceTree = "<group>"; };
 		EF1FACD2211467FD005876A2 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
@@ -82,8 +83,9 @@
 		80BEB8A32111B3E600DA4C7B /* Background */ = {
 			isa = PBXGroup;
 			children = (
-				EF83A0C4211479D7002C7AF1 /* event-bus.js */,
 				80BEB8A42111B3E600DA4C7B /* background.js */,
+				EF83A0C4211479D7002C7AF1 /* event-bus.js */,
+				EF1A65C821186D390021E013 /* url-matcher.js */,
 				EF1FACCF211467FD005876A2 /* chrome */,
 			);
 			path = Background;
