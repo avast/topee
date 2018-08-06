@@ -29,7 +29,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     // MARK: - Private Members
     
     private var pages: [UInt64: SFSafariPage] = [:]
-    private let webViewURL: URL = URL(string: "https://topee.local")!
+    private let webViewURL: URL = URL(string: "http://topee.local")!
     private var webView: WKWebView!
     private var isBackgroundReady: Bool = false
     // Accumulates messages until the background scripts
