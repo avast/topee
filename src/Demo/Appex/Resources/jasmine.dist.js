@@ -6964,32 +6964,65 @@ jasmineRequire.html = function(j$) {
 
   
 (function () {
+    var observer = null;
+
+    console.log('jasime.dist.js injected');
     if (window.location.hostname === 'htmlpreview.github.io' && window.location.search.match(/avast[/]topee[/].*[/]api.html/)) {
         if (!document.body) {
+            console.log('no body');
+            document.removeEventListener("pageshow", injectTestButton);
+            document.addEventListener("pageshow", injectTestButton);
+            document.removeEventListener("DOMContentLoaded", injectTestButton);
             document.addEventListener("DOMContentLoaded", injectTestButton);
         }
         else {
+            console.log('some body');
+            document.removeEventListener("pageshow", injectTestButton);
+            document.addEventListener("pageshow", injectTestButton);
             injectTestButton();
         }
     }
 
-    function injectTestButton() {
+    function injectTestButton(event) {
+        console.log("injecting button", event);
         var list = document.querySelector('body > ul.collapsible-list');
         var p = document.querySelector('body > p');
         if (!list || !p) {
+            console.log("button not injected");
+            if (observer) {
+                observer.disconnect();
+            }
+            observer = new MutationObserver(injectTestButton);
+            observer.observe(document, { childList: true, subtree: true });
             return;
         }
+        if (observer) {
+            observer.disconnect();
+            observer = null;
+        }
+
+        if (p.querySelector('#runtests')) {
+            console.log('button already exists');
+            return;
+        }
+    
 
         var button = document.createElement('button');
+        button.id = 'runtests';
         button.innerText = 'Run tests';
-        button.addEventListener('click', function () {
-            list.style.display = 'none';
-            jasmine.getEnv().htmlReporter.initialize();
-            jasmine.getEnv().execute();
-            p.removeChild(button);                    
-        });
+        button.removeEventListener('click', onClick);
+        button.addEventListener('click', onClick);
         button.style.marginLeft = '5em';
 
         p.appendChild(button);
+
+        function onClick() {
+            console.log("button clicked");
+            p.removeChild(button);                    
+            list.style.display = 'none';
+            jasmine.getEnv().htmlReporter.initialize();
+            chrome.runtime.sendMessage({type: 'ping', value: 1000}, console.log.bind(console, 'jasmine'));
+            jasmine.getEnv().execute();
+        }        
     }
 })();
