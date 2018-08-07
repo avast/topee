@@ -56,7 +56,7 @@ function invokeFunction(context, sender, sendResponse) {
     });
 
     if (typeof namespace[funcName] === 'function' && funcName === 'addListener') {
-        console.error('use jasmine.setup to setup a listener (processing', key, ')');
+        console.error('use test.setupListeners to setup a listener (processing', key, ')');
     }
     else if (typeof namespace[funcName] === 'function') {
         var args = [];
@@ -102,15 +102,15 @@ function shutdownListeners(listeners) {
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    if (message.type === 'jasmine.setup') {
+    if (message.type === 'test.setupListeners') {
         sendResponse(setupListeners(message.value));
         return;
     }
-    if (message.type === 'jasmine.invoke') {
+    if (message.type === 'test.backgroundInvoke') {
         invokeFunction(message.value, sender, sendResponse);
         return;
     }    
-    if (message.type === 'jasmine.shutdown') {
+    if (message.type === 'test.shutdownListeners') {
         sendResponse(shutdownListeners(message.value));
         return;
     }
