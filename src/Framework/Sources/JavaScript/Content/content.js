@@ -17,7 +17,12 @@ window.addEventListener("pageshow", function(event) {
 if (window === window.top) {
     window.addEventListener('beforeunload', function () {
         safari.extension.dispatchMessage('bye', {
-            tabId: tabInfo.topLevelTabId
+            tabId: tabInfo.topLevelTabId,
+            payload: JSON.stringify({
+                tabId: tabInfo.topLevelTabId,
+                eventName: 'bye',
+                url: window.location.href
+            })
         });
     });
 }

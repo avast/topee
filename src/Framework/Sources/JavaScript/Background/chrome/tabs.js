@@ -16,6 +16,11 @@ eventEmitter.addListener('hello', function (payload) {
     };
 });
 
+eventEmitter.addListener('bye', function (payload) {
+    if (typeof payload.frameId !== 'undefined' && payload.frameId !== 0) { return; }
+    delete browserTabs[payload.tabId];
+});
+
 // chrome.tabs API
 tabs.sendMessage = function (tabId, message, options, responseCallback) {
     var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);

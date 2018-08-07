@@ -93,20 +93,52 @@ describe('chrome.tabs', function () {
       }}, promise.callback()));
       
       var url = 'https://raw.githubusercontent.com/avast/topee/master/README.md?q=' + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString();
-      openTab = window.open();
-      openTab.location = url;
+      openTab = window.open(url, 'README.md');
       
       // addEventListener('load') does not trigger in this case
-      await promise(setTimeout(promise.callback(), 100));
+      await promise(setTimeout(promise.callback(), 300));
 
       result = await promise(chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
-            name: 'chrome.tabs.query',
-            arguments: {},
-            wantCallback: true
-          }}, promise.callback()));
+        name: 'chrome.tabs.query',
+        arguments: {},
+        wantCallback: true
+      }}, promise.callback()));
           
       expect(result.find(tab => tab.url === url)).not.toBeNull();
       expect(result.length).toBe(initialTabs.length + 1);
+    });
+
+    cit('recognizes a tab being closed', async function () {
+      var result;
+
+      var url = 'https://raw.githubusercontent.com/avast/topee/master/README.md?q=' + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString();
+      openTab = window.open(url, 'README.md');
+      
+      // addEventListener('load') does not trigger in this case
+      await promise(setTimeout(promise.callback(), 300));
+
+      initialTabs = await promise(chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
+        name: 'chrome.tabs.query',
+        arguments: {},
+        wantCallback: true
+      }}, promise.callback()));
+
+      openTab.close();
+      openTab = null;
+      
+      result = await promise(chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
+        name: 'chrome.tabs.query',
+        arguments: {},
+        wantCallback: true
+      }}, promise.callback()));
+
+      console.log('before');
+      initialTabs.forEach(t => console.log(t.id, t.url));
+      console.log('after');
+      result.forEach(t => console.log(t.id, t.url));
+        
+      expect(result.find(tab => tab.url === url)).toBeUndefined();
+      expect(result.length).toBe(initialTabs.length - 1);
     });
   });
 });

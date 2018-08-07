@@ -29,6 +29,9 @@ function manageRequest(stringifiedPayload) {
     if (payload.eventName === 'hello') {
         eventEmitter.emit('hello', payload);
     }
+    if (payload.eventName === 'bye') {
+        eventEmitter.emit('bye', payload);
+    }
 
     function sendResponse(response) {
         window.webkit.messageHandlers.content.postMessage({
