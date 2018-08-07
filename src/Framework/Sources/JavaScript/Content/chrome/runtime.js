@@ -47,9 +47,9 @@ runtime.onMessage = {
             callback(message, sender, sendResponse);
         });
     },
-/*    removeListener: function(callback) {
-        eventEmitter.removeListener('message', ...)
-    }*/
+    removeListener: function(callback) {
+        eventEmitter.removeListener('message', callback);
+    }
 };
 
 safari.self.addEventListener("message", function (event) {
