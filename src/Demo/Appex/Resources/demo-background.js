@@ -19,9 +19,6 @@ function setupListeners(listeners) {
         if (typeof namespace[funcName] === 'function' && funcName === 'addListener') {
             listenerIds[key] = installListener(namespace, listeners[key]);
         }
-        else if (typeof namespace[funcName] === 'function') {
-            namespace[funcName].apply(namespace, listeners[key].arguments);
-        }
         else {
             console.error("'" + funcName + "'", 'is not a function (processing', key, ')');
         }
@@ -43,6 +40,47 @@ function setupListeners(listeners) {
         };
         namespace['addListener'](activeListeners[id].listener);
         return id;
+    }
+}
+
+function invokeFunction(context, sender, sendResponse) {
+    var key = context.name;
+    namespace = window;
+    var parts = key.split('.');
+    var funcName = parts.pop();
+    parts.forEach(p => {
+        if (typeof namespace[p] === 'undefined') {
+            console.error("'" + p + "'", 'is undefined (processing', key, ')');
+        }
+        namespace = namespace[p];
+    });
+
+    if (typeof namespace[funcName] === 'function' && funcName === 'addListener') {
+        console.error('use jasmine.setup to setup a listener (processing', key, ')');
+    }
+    else if (typeof namespace[funcName] === 'function') {
+        var args = [];
+        if (context.arguments) {
+            if (Array.isArray(context.arguments)) {
+                args = context.arguments.slice();
+            }
+            else {
+                args = [ context.arguments ];
+            }
+        }
+        if (context.wantCallback) {
+            args.push(sendResponse);
+            if (context.wantReturnValue) {
+                console.error(key, ': wantCallback and wantReturnValue are mutually exclusive');
+            }
+        }
+        var rv = namespace[funcName].apply(namespace, args);
+        if (context.wantReturnValue) {
+            sendResponse(rv);
+        }
+    }
+    else {
+        console.error("'" + funcName + "'", 'is not a function (processing', key, ')');
     }
 }
 
@@ -68,6 +106,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         sendResponse(setupListeners(message.value));
         return;
     }
+    if (message.type === 'jasmine.invoke') {
+        invokeFunction(message.value, sender, sendResponse);
+        return;
+    }    
     if (message.type === 'jasmine.shutdown') {
         sendResponse(shutdownListeners(message.value));
         return;

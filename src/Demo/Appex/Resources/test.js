@@ -28,4 +28,17 @@ describe('jasmine setup', function () {
       });
     });
   });
+
+  it('invokes a background script function', function (done) {
+    chrome.runtime.sendMessage({ type: 'jasmine.invoke', value: {
+      name: 'chrome.tabs.query',
+      arguments: {},
+      wantCallback: true
+    }}, function (result) {
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBeGreaterThan(0);
+      done();
+    });
+  });
+
 });
