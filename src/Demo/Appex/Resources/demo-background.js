@@ -1,59 +1,63 @@
 var bgPingCount = 0;
 
 var activeListeners = {};
-function setupListeners(listeners, namespace) {
-    if (!namespace) {
-        namespace = window;
-    }
-
+function setupListeners(listeners) {
+    var namespace;
     var listenerIds = {};
-
+    
     for (var key in listeners) {
-        if (typeof namespace[key] === 'function' && key === 'addListener') {
-            listenerIds[key] = installListener(namespace[key], listeners[key]);
+        namespace = window;
+        var parts = key.split('.');
+        var funcName = parts.pop();
+        parts.forEach(p => {
+            if (typeof namespace[p] === 'undefined') {
+                console.error("'" + p + "'", 'is undefined (processing', key, ')');
+            }
+            namespace = namespace[p];
+        });
+
+        if (typeof namespace[funcName] === 'function' && funcName === 'addListener') {
+            listenerIds[key] = installListener(namespace, listeners[key]);
         }
-        else if (typeof namespace[key] === 'function') {
-            namespace[key].apply(namespace, listeners[key].arguments);
+        else if (typeof namespace[funcName] === 'function') {
+            namespace[funcName].apply(namespace, listeners[key].arguments);
         }
         else {
-            listenerIds[key] = setupListeners(listeners[key], namespace[key]);
+            console.error("'" + funcName + "'", 'is not a function (processing', key, ')');
         }
     }
 
     return listenerIds;
 
-    function installListener(f, context) {
+    function installListener(namespace, context) {
         var id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
         activeListeners[id] = {
             listener: function (message, sender, sendResponse) {
-                if (context[message.type]) {
-                    message.processed = true;
-                    sendResponse(context[message.type]);
+                if (context.type === message.type) {
+//                    message.processed = true;
+                    sendResponse(context.response);
                 }
             },
-            type: Object.keys(context)[0]
+            type: context.type,
+            namespace: namespace
         };
-        f(activeListeners[id].listener);
+        namespace['addListener'](activeListeners[id].listener);
         return id;
     }
 }
 
-function shutdownListeners(listeners, namespace) {
-    if (!namespace) {
-        namespace = window;
-    }
-
+function shutdownListeners(listeners) {
     var count = 0;
     
     for (var key in listeners) {
-        if (typeof namespace[key] === 'function' && key === 'addListener') {
-            ++count;
-            namespace.removeListener(activeListeners[listeners[key]].listener);
-            delete activeListeners[listeners[key]];
+        if (!activeListeners[listeners[key]]) {
+            console.error('listener', key, 'not found');
+            continue;
         }
-        else if (typeof namespace[key] !== 'function') {
-            count += shutdownListeners(listeners[key], namespace[key]);
-        }
+        var listenerEntry = activeListeners[listeners[key]];
+        listenerEntry.namespace['removeListener'](listenerEntry.listener);
+        delete activeListeners[listeners[key]];
+        ++count;
     }
 
     return count;
