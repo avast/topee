@@ -1,44 +1,56 @@
+function promise() {
+  return promise._queue.pop();
+}
+promise._queue = [];
+promise.callback = function () {
+  var signal;
+  var p = new Promise(function (resolve) {
+    signal = resolve;
+  });
+  promise._queue.push(p);
+  return signal;
+}
+
 describe('jasmine setup', function () {
-  it('sets and shuts down listeners', function (done) {
-    chrome.runtime.sendMessage({ type: 'test.setupListeners', value: {
+  it('sets and shuts down listeners', async function () {
+    var resp = await promise(chrome.runtime.sendMessage({ type: 'test.setupListeners', value: {
       'chrome.runtime.onMessage.addListener': {
         type: 'testMessage',
         response: 'testResponse'
       }
-    }}, function (resp) {
-      expect(Object.keys(resp).length).toBe(1);
-      chrome.runtime.sendMessage({ type: 'test.shutdownListeners', value: resp}, function (resp) {
-        expect(resp).toBe(1);
-        done();
-      });
-    });
+    }}, promise.callback()));
+    
+    expect(Object.keys(resp).length).toBe(1);
+
+    resp = await promise(chrome.runtime.sendMessage({ type: 'test.shutdownListeners', value: resp}, promise.callback()));
+    
+    expect(resp).toBe(1);
   });
 
-  it('installs listeners correctly', function (done) {
-    chrome.runtime.sendMessage({ type: 'test.setupListeners', value: {
+  it('installs listeners correctly', async function () {
+    var listeners = await promise(chrome.runtime.sendMessage({ type: 'test.setupListeners', value: {
       'chrome.runtime.onMessage.addListener': {
         type: 'testMessage',
         response: 'testResponse'
       }
-    }}, function (listeners) {
-      chrome.runtime.sendMessage({ type: 'testMessage'}, function(resp) {
-        expect(resp).toBe('testResponse');
-        chrome.runtime.sendMessage({ type: 'test.shutdownListeners', value: listeners});
-        done();
-      });
-    });
+    }}, promise.callback()));
+    
+    var resp = await promise(chrome.runtime.sendMessage({ type: 'testMessage'}, promise.callback()));
+
+    expect(resp).toBe('testResponse');
+
+    chrome.runtime.sendMessage({ type: 'test.shutdownListeners', value: listeners});
   });
 
-  it('invokes a background script function', function (done) {
-    chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
+  it('invokes a background script function', async function () {
+    var result = await promise(chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
       name: 'chrome.tabs.query',
       arguments: {},
       wantCallback: true
-    }}, function (result) {
-      expect(Array.isArray(result)).toBe(true);
-      expect(result.length).toBeGreaterThan(0);
-      done();
-    });
+    }}, promise.callback()));
+
+    expect(Array.isArray(result)).toBe(true);
+    expect(result.length).toBeGreaterThan(0);
   });
 });
 
@@ -60,7 +72,7 @@ describe('chrome.tabs', function () {
       return !!w;
     }
 
-    beforeEach(function (done) {
+    beforeEach(function () {
       openTab = null;
     });
 
@@ -71,34 +83,30 @@ describe('chrome.tabs', function () {
       }
     });
 
-    cit('recognizes a new tab', function (done) {
-      chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
+    cit('recognizes a new tab', async function () {
+      var result;
+
+      initialTabs = await promise(chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
         name: 'chrome.tabs.query',
         arguments: {},
         wantCallback: true
-      }}, function (result) {
-        console.log('got tabs', result);
-        initialTabs = result;
+      }}, promise.callback()));
+      
+      var url = 'https://raw.githubusercontent.com/avast/topee/master/README.md?q=' + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString();
+      openTab = window.open();
+      openTab.location = url;
+      
+      // addEventListener('load') does not trigger in this case
+      await promise(setTimeout(promise.callback(), 100));
 
-        var url = 'https://raw.githubusercontent.com/avast/topee/master/README.md?q=' + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString();
-        openTab = window.open();
-        // addEventListener('load') does not trigger in this case
-        setTimeout(function () {
-          console.log('openTab loaded');
-          chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
+      result = await promise(chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
             name: 'chrome.tabs.query',
             arguments: {},
             wantCallback: true
-          }}, function (result) {
-            console.log('updated tabs', result);
-            expect(result.find(tab => tab.url === url)).not.toBeNull();
-            expect(result.length).toBe(initialTabs.length + 1);
-            done();
-          });
-        }, 100);
-        console.log('assigning location to', url);
-        openTab.location = url;
-      });
+          }}, promise.callback()));
+          
+      expect(result.find(tab => tab.url === url)).not.toBeNull();
+      expect(result.length).toBe(initialTabs.length + 1);
     });
   });
 });
