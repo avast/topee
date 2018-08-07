@@ -7,6 +7,10 @@ var runtime = {};
 
 var eventEmitter = new EventEmitter();
 
+// We are adding quite a few listeners so let's increase listeners limit. Otherwise we get following warning:
+// (node) warning: possible EventEmitter memory leak detected. 11 listeners added. Use emitter.setMaxListeners() to increase limit.
+eventEmitter.setMaxListeners(1024);
+
 // TODO: once tabId is fulfilled, sendMessage should call dispatchMessage right away, not in then(), that might be performed asynchronously
 runtime.sendMessage = function(message, callback) {
 	var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
