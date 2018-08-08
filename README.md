@@ -26,3 +26,8 @@ class MySafariExtensionHandler: TopeeSafariExtensionHandler {
     }
 }
 ```
+
+Tests
+====
+
+Once you have the demo extension installed in Safari, you can run unit tests by visiting https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html
