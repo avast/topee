@@ -1,3 +1,7 @@
+if (window.location.hostname !== 'htmlpreview.github.io' || !window.location.search.match(/avast[/]topee[/].*[/]api.html/)) {
+  return;  // this is injected anywhere despite the Info.plist settings
+} 
+
 function promise() {
   return promise._queue.pop();
 }
