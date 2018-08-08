@@ -60,13 +60,13 @@
 			</dict>
 			<dict>
 				<key>Allowed URL Patterns</key>
-				<string>*:///htmlpreview.github.io/*</string>
+				<string>https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html</string>
 				<key>Script</key>
 				<string>jasmine.dist.js</string>
 			</dict>
 			<dict>
 				<key>Allowed URL Patterns</key>
-				<string>*://htmlpreview.github.io/*</string>
+				<string>https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html</string>
 				<key>Script</key>
 				<string>test.js</string>
 			</dict>

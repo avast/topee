@@ -1,6 +1,6 @@
-if (window.location.hostname !== 'htmlpreview.github.io' || !window.location.search.match(/avast[/]topee[/].*[/]api.html/)) {
-  return;  // this is injected anywhere despite the Info.plist settings
-} 
+if (window.location.href !== 'https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html') {
+  throw 'invalid injection';  // this is injected anywhere despite the Info.plist settings
+}
 
 function promise() {
   return promise._queue.pop();
@@ -96,7 +96,7 @@ describe('chrome.tabs', function () {
         wantCallback: true
       }}, promise.callback()));
       
-      var url = 'https://raw.githubusercontent.com/avast/topee/master/README.md?q=' + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString();
+      var url = 'https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html?q=' + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString();
       openTab = window.open(url, 'README.md');
       
       // addEventListener('load') does not trigger in this case
@@ -115,7 +115,7 @@ describe('chrome.tabs', function () {
     cit('recognizes a tab being closed', async function () {
       var result;
 
-      var url = 'https://raw.githubusercontent.com/avast/topee/master/README.md?q=' + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString();
+      var url = 'https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html?q=' + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString();
       openTab = window.open(url, 'README.md');
       
       // addEventListener('load') does not trigger in this case
