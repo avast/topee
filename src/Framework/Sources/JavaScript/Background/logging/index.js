@@ -15,6 +15,13 @@ function captureConsole () {
                 // TODO: capture file/line
             });
             original[method].apply(null, arguments);
+
+            // Forward log message to Swift side so that it appears in Xcode console
+            window.webkit.messageHandlers.log.postMessage({
+                type: 'log',
+                level: method,
+                message: [...arguments].join(' ')
+            });
         };
     });
 

@@ -16,6 +16,7 @@ public protocol SafariExtensionBridgeType {
 enum MessageHandler: String {
     case content
     case appex
+    case log
 }
 
 // MARK: -
@@ -62,6 +63,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             contentController.addUserScript(script)
             contentController.add(self, name: MessageHandler.content.rawValue)
             contentController.add(self, name: MessageHandler.appex.rawValue)
+            contentController.add(self, name: MessageHandler.log.rawValue)
             webConfiguration.userContentController = contentController
             let webView = WKWebView(frame: .zero, configuration: webConfiguration)
             webView.loadHTMLString("<html><body></body></html>", baseURL: webViewURL)
@@ -133,18 +135,29 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         assert(Thread.isMainThread)
-        NSLog("#appex(background): { 'name': \(message.name), 'body': \(message.body) }")
+        if message.name != MessageHandler.log.rawValue {
+            // Ignore log messages (they are logged few lines below).
+            NSLog("#appex(background): { 'name': \(message.name), 'body': \(message.body) }")
+        }
+
         guard let handler = MessageHandler(rawValue: message.name) else { return }
         guard let userInfo = message.body as? [String: Any] else { return }
+
         switch handler {
+        case .log:
+            guard let logLevel = userInfo["level"] as? String else { return }
+            guard let message = userInfo["message"] as? String else { return }
+            NSLog("background.js [\(logLevel)]: \(message)")
         case .content:
             guard let tabId = userInfo["tabId"] as? UInt64 else { return }
             guard let eventName = userInfo["eventName"] as? String else { return }
             guard let page = self.pages[tabId] else { return }
             page.dispatchMessageToScript(withName: eventName, userInfo: userInfo)
         case .appex:
-            guard let type = userInfo["type"] as? String else { return }
-            if type == "ready" {
+            guard let typeName = userInfo["type"] as? String else { return }
+            guard let type = Message.Background(rawValue: typeName) else { return }
+            switch type {
+            case .ready:
                 isBackgroundReady = true
                 messageQueue.forEach { invokeMethod(payload: $0) }
                 messageQueue = []
