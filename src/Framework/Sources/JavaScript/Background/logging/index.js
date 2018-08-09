@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 var logBuffer = [];
 var methods = ['trace', 'debug', 'info', 'warn', 'error', 'log'];
 
@@ -48,7 +49,7 @@ function captureErrors () {
         }
 
         console.error.call(console, error.message, `at ${error.filename}:${error.lineno}`);
-    };
+    }
 
     window.addEventListener('error', onError);
 

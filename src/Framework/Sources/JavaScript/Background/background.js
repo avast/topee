@@ -11,7 +11,6 @@ window.chrome = require('./chrome/index.js');
 
 function manageRequest(stringifiedPayload) {
     var payload = JSON.parse(stringifiedPayload);
-    var message = payload.message;
 
     if (payload.eventName === 'sendMessage') {
         chrome.runtime.onMessage._emit(payload.message, {

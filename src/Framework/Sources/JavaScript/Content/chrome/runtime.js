@@ -13,31 +13,31 @@ eventEmitter.setMaxListeners(1024);
 
 // TODO: once tabId is fulfilled, sendMessage should call dispatchMessage right away, not in then(), that might be performed asynchronously
 runtime.sendMessage = function(message, callback) {
-	var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+    var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
     if (callback) {
-    	safari.self.addEventListener("message", listener);
+        safari.self.addEventListener("message", listener);
     }
 
     tabInfo.tabId.then(tabId => {
-		safari.extension.dispatchMessage('request', {
-        	tabId: tabId,
-        	payload: JSON.stringify({
-        		tabId: tabId,
+        safari.extension.dispatchMessage('request', {
+            tabId: tabId,
+            payload: JSON.stringify({
+                tabId: tabId,
                 eventName: 'sendMessage',
-        		frameId: tabInfo.frameId,
-				messageId: messageId,
-				url: window.location.href,
-        		message: message
-        	})
-    	});
+                frameId: tabInfo.frameId,
+                messageId: messageId,
+                url: window.location.href,
+                message: message
+            })
+        });
     });
 
     function listener(event) {
-    	if (event.name === 'response' && event.message.messageId === messageId) {
-    		callback(event.message.payload);
-    		safari.self.removeEventListener(listener);
-    	}
+        if (event.name === 'response' && event.message.messageId === messageId) {
+            callback(event.message.payload);
+            safari.self.removeEventListener(listener);
+        }
     }
 };
 

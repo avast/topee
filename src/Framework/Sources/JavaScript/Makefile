@@ -1,7 +1,10 @@
 build: node_modules
 	npx webpack
 
-test: node_modules
+lint: node_modules
+	npx eslint Background/ Content/
+
+test: node_modules lint
 	npx jasmine
 
 node_modules: package.json package-lock.json

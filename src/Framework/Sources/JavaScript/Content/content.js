@@ -1,7 +1,7 @@
 (function () {
 
 if (typeof window.chrome === 'object') {
-    console.log('chrome api already loaded');
+    console.log('chrome api already loaded'); // eslint-disable-line no-console
 
     if (typeof window.chrome._tabId !== 'undefined') {
         window.addEventListener('pagehide', sayBye);
@@ -22,7 +22,7 @@ else {
     tabInfo.tabId.then(tabId => sayHello(tabId));
 }
 
-window.addEventListener('pageshow', function(event) {
+window.addEventListener('pageshow', function() {
     // When user navigates back Safari ressurects page so we need to trigger hello also in
     // this case (because was dereferenced using beforeunload)
     tabInfo.tabId.then(tabId => sayHello(tabId));

@@ -8,7 +8,7 @@ extension.getURL = function (path) {
 };
 
 // TODO: Implementation
-extension.getViews = function (fetchProperties) {
+extension.getViews = function (/* fetchProperties */) {
     return [];
 };
 
