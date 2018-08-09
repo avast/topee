@@ -2,6 +2,9 @@
 //  Copyright © 2018 Avast. All rights reserved.
 //
 
+var logging = require('./logging');
+logging.setup();
+
 var eventEmitter = require('./event-bus.js');
 
 window.chrome = require('./chrome/index.js');
