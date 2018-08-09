@@ -41,7 +41,13 @@ function captureConsole () {
 
 function captureErrors () {
     function onError (error) {
-        console.error.call(console, error.message);
+        if (!event.error) {
+            // We don't have full error so let's only log message
+            console.error.call(console, error.message);
+            return;
+        }
+
+        console.error.call(console, error.message, `at ${error.filename}:${error.lineno}`);
     };
 
     window.addEventListener('error', onError);
