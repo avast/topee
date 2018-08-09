@@ -14,7 +14,7 @@ function captureConsole () {
                 arguments: arguments
                 // TODO: capture file/line
             });
-            original[method].apply(null, arguments);
+            original[method].apply(console, arguments);
 
             // Forward log message to Swift side so that it appears in Xcode console
             window.webkit.messageHandlers.log.postMessage({
@@ -25,7 +25,7 @@ function captureConsole () {
         };
     });
 
-    console.flush = function () {
+    return function () {
         original.log('%c >>>> ', 'background: #222; color: #AED6F1', 'Flushing collected logs...');
 
         // Dump collected messages
@@ -39,8 +39,24 @@ function captureConsole () {
     };
 }
 
+function captureErrors () {
+    function onError (error) {
+        console.error.call(console, error.message);
+    };
+
+    window.addEventListener('error', onError);
+
+    return () => window.removeEventListener('error', onError);
+}
+
 module.exports = {
     setup: function () {
-        captureConsole();
+        var removeErrorCapturer = captureErrors();
+        var logsFlushFn = captureConsole();
+
+        console.flush = function () {
+            removeErrorCapturer();
+            logsFlushFn();
+        };
     }
 };
