@@ -46,9 +46,9 @@
 }
 .collapsible-list li:target.some-done:after {
     content: "";
-}
-  
-  
+}  
+
+
 .collapsible-list li .unfold {
   display: initial;
 }
@@ -68,7 +68,12 @@
 .collapsible-list li ul li:before {
   content: "";
 }
+
+#hide-not-done:checked ~ ul .not-done {
+    display: none;
+}
 </style>
+<input type="checkbox" id="hide-not-done" /><span>What's done?</span>
 <ul class="collapsible-list">
 
     <li id="accessibilityFeatures" class="not-done"><a href="#accessibilityFeatures" class="unfold">accessibilityFeatures</a><a href="#" class="collapse">accessibilityFeatures</a>
@@ -460,7 +465,7 @@
       <li class="not-done">getAllInWindow</li>
       <li class="not-done">create</li>
       <li class="not-done">duplicate</li>
-      <li class="not-done">query</li>
+      <li class="some-done">query</li>
       <li class="not-done">highlight</li>
       <li class="not-done">update</li>
       <li class="not-done">move</li>
