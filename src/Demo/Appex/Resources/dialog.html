@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="topee-iframe-resources.js"></script>
+</head>
+<body>
+<h1>Topee</h1>
+<script>
+chrome.runtime.sendMessage({type: 'ping', value: 1024}, console.log.bind(console, 'dlg'));
+</script>
+</body>
+</html>
+

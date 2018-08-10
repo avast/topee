@@ -16,6 +16,7 @@ runtime.sendMessage = function(message, callback) {
     var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
     if (callback) {
+        listener.messageId = messageId;  // this is needed for iframe-resources.js communication
         safari.self.addEventListener("message", listener);
     }
 
@@ -36,7 +37,7 @@ runtime.sendMessage = function(message, callback) {
     function listener(event) {
         if (event.name === 'response' && event.message.messageId === messageId) {
             callback(event.message.payload);
-            safari.self.removeEventListener(listener);
+            safari.self.removeEventListener("message", listener);
         }
     }
 };

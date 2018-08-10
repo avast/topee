@@ -1,7 +1,7 @@
 (function () {
 
 if (typeof window.chrome === 'object') {
-    console.log('chrome api already loaded'); // eslint-disable-line no-console
+    console.log('chrome api already loaded');
 
     if (typeof window.chrome._tabId !== 'undefined') {
         window.addEventListener('pagehide', sayBye);
@@ -11,8 +11,52 @@ if (typeof window.chrome === 'object') {
     return;
 }
 
+var TextCrypto = require('../text-crypto.js');
+var txtCrypto = new TextCrypto();
+
 window.chrome = require('./chrome/index.js');
 var tabInfo = require('./tabInfo.js');
+
+// the non-existence of window.chrome on the top makes sure that this listener is installed only once
+window.addEventListener('message', function (event) {
+    if (!safari.extension.baseURI.toLowerCase().startsWith(event.origin.toLowerCase())) {
+        return;
+    }
+
+    if (event.data && event.data.type === 'topee_get_iframe_key') {
+        txtCrypto.readyPromise
+            .then(() => txtCrypto.getKey())
+            .then(function (key) {
+                event.source.postMessage({ type: 'topee_iframe_key', value: key}, event.origin);
+            });
+    }
+
+    if (event.data && event.data.type === 'topee_iframe_request') {
+        txtCrypto.decrypt(event.data.value)
+            .then(function (str) {
+                var payload = JSON.parse(str);
+                console.log('got message from iframe:', payload, event.data);
+
+                if (typeof event.data.messageId !== 'undefined') {
+                    safari.self.addEventListener("message", listener);
+                }
+
+                // the correct tabId should already be there
+                safari.extension.dispatchMessage(payload.name, payload.value);
+            
+                function listener(responseEvent) {
+                    if (responseEvent.name === 'response' && responseEvent.message.messageId === event.data.messageId) {
+                        console.log("sending a callback id", event.data.messageId);
+                        txtCrypto.encrypt(JSON.stringify(responseEvent.message))
+                            .then(function (e) {
+                                event.source.postMessage({ type: 'topee_iframe_response', value: e}, event.origin);
+                            });
+                        safari.self.removeEventListener(listener);
+                    }
+                }
+        });
+    }
+});    
 
 if (window === window.top) {
     window.chrome._tabId = tabInfo.topLevelTabId;
