@@ -119,14 +119,24 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     // MARK: - Private API
     
     private func invokeMethod(payload: String) {
-        assert(Thread.isMainThread)
-        webView.evaluateJavaScript("topee.manageRequest('\(payload.replacingOccurrences(of: "'", with: "\\\'"))')"){ result, error in
-            guard error == nil else {
-                NSLog("Received JS error: \(error! as NSError)")
-                return
+        let handler = {
+            self.webView.evaluateJavaScript("topee.manageRequest('\(payload.replacingOccurrences(of: "'", with: "\\\'"))')"){ result, error in
+                guard error == nil else {
+                    NSLog("Received JS error: \(error! as NSError)")
+                    return
+                }
+                if let result = result {
+                    NSLog("Received JS result: \(result)")
+                }
             }
-            if let result = result {
-                NSLog("Received JS result: \(result)")
+        }
+        
+        // Only dispatch to main thread if we aren't already in main.
+        if Thread.isMainThread {
+            handler()
+        } else {
+            DispatchQueue.main.async {
+                handler()
             }
         }
     }
