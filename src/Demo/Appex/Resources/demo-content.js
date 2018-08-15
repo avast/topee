@@ -8,10 +8,22 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 chrome.runtime.sendMessage({type: 'ping', value: 1}, console.log.bind(console, 'first'));
 chrome.runtime.sendMessage({type: 'ping', value: 2}, console.log.bind(console, 'second'));
 
-document.addEventListener('DOMContentLoaded', function () {
-  console.log(location.href, 'opening page', safari.extension.baseURI + 'dialog.html')
-  var f = document.createElement('iframe');
-  f.src = safari.extension.baseURI + 'dialog.html';
-  document.body.appendChild(f);
-});
+var dlg = null;
+document.addEventListener('click', function (event) {
+  if (dlg) {
+    document.body.removeChild(dlg);
+    dlg = null;
+    return;
+  }
 
+  if (!event.altKey) {
+    return;
+  }
+
+  dlg = document.createElement('iframe');
+  dlg.src = safari.extension.baseURI + 'dialog.html';
+  dlg.style.position = 'absolute';
+  dlg.style.left = Math.floor(event.clientX) + 'px';
+  dlg.style.top = Math.floor(event.clientY) + 'px';
+  document.body.appendChild(dlg);
+});

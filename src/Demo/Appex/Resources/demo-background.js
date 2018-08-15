@@ -118,7 +118,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         return;
     }
             
-    
+    if (message.type === 'getDemoDlgBackground') {
+        sendResponse(Math.random() >= 0.5 ? 'pink' : 'honeydew');
+    }
     sendResponse("background pong #" + message.value);
 
     setTimeout(function () {
