@@ -1,0 +1,574 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+</head>
+<body>
+<h1>Google Chrome Extension API Support</h1>
+<p>API as documented at <a href="https://developer.chrome.com/extensions/api_index">Chrome APIs</a>.</p>
+<style>
+.collapsible-list li {
+  list-style-type: none;
+}
+.collapsible-list li:before {
+  content: "\000BB";
+  padding-right: 0.5em;
+}
+
+.not-done:after {
+    content: "\2718";
+    color: red;
+}
+.all-done:after {
+    content: "\2713";
+    font-weight: bolder;
+    color: green;
+}
+.some-done:after {
+    content: "\2713";
+    font-weight: bolder;
+    color: orange;
+}
+
+.collapsible-list li ul {
+  display: none;
+}
+.collapsible-list li:target ul {
+  display: initial;
+}
+
+.collapsible-list li:target.not-done:after {
+    content: "";
+}
+.collapsible-list li:target.all-done:after {
+    content: "";
+}
+.collapsible-list li:target.some-done:after {
+    content: "";
+}  
+
+
+.collapsible-list li .unfold {
+  display: initial;
+}
+.collapsible-list li:target .unfold {
+  display: none;
+}
+.collapsible-list li .collapse {
+  display: none;
+}
+.collapsible-list li:target .collapse {
+  display: initial;
+}
+
+.collapsible-list li ul li {
+  margin-left: 2em;
+}
+.collapsible-list li ul li:before {
+  content: "";
+}
+
+#hide-not-done:checked ~ ul .not-done {
+    display: none;
+}
+</style>
+<input type="checkbox" id="hide-not-done" /><span>What's done?</span>
+<ul class="collapsible-list">
+
+    <li id="accessibilityFeatures" class="not-done"><a href="#accessibilityFeatures" class="unfold">accessibilityFeatures</a><a href="#" class="collapse">accessibilityFeatures</a>
+    <ul>
+      <li class="not-done">spokenFeedback</li>
+      <li class="not-done">largeCursor</li>
+      <li class="not-done">stickyKeys</li>
+      <li class="not-done">highContrast</li>
+      <li class="not-done">screenMagnifier</li>
+      <li class="not-done">autoclick</li>
+      <li class="not-done">virtualKeyboard</li>
+      <li class="not-done">caretHighlight</li>
+      <li class="not-done">cursorHighlight</li>
+      <li class="not-done">focusHighlight</li>
+      <li class="not-done">selectToSpeak</li>
+      <li class="not-done">switchAccess</li>
+      <li class="not-done">animationPolicy</li>    </ul>
+  </li>
+
+    <li id="bookmarks" class="not-done"><a href="#bookmarks" class="unfold">bookmarks</a><a href="#" class="collapse">bookmarks</a>
+    <ul>
+      <li class="not-done">MAX_WRITE_OPERATIONS_PER_HOUR</li>
+      <li class="not-done">MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE</li>
+      <li class="not-done">get</li>
+      <li class="not-done">getChildren</li>
+      <li class="not-done">getRecent</li>
+      <li class="not-done">getTree</li>
+      <li class="not-done">getSubTree</li>
+      <li class="not-done">search</li>
+      <li class="not-done">create</li>
+      <li class="not-done">move</li>
+      <li class="not-done">update</li>
+      <li class="not-done">remove</li>
+      <li class="not-done">removeTree</li>
+      <li class="not-done">import</li>
+      <li class="not-done">export</li>
+      <li class="not-done">onCreated</li>
+      <li class="not-done">onRemoved</li>
+      <li class="not-done">onChanged</li>
+      <li class="not-done">onMoved</li>
+      <li class="not-done">onChildrenReordered</li>
+      <li class="not-done">onImportBegan</li>
+      <li class="not-done">onImportEnded</li>    </ul>
+  </li>
+
+    <li id="browserAction" class="not-done"><a href="#browserAction" class="unfold">browserAction</a><a href="#" class="collapse">browserAction</a>
+    <ul>
+      <li class="not-done">setTitle</li>
+      <li class="not-done">getTitle</li>
+      <li class="not-done">setIcon</li>
+      <li class="not-done">setPopup</li>
+      <li class="not-done">getPopup</li>
+      <li class="not-done">setBadgeText</li>
+      <li class="not-done">getBadgeText</li>
+      <li class="not-done">setBadgeBackgroundColor</li>
+      <li class="not-done">getBadgeBackgroundColor</li>
+      <li class="not-done">enable</li>
+      <li class="not-done">disable</li>
+      <li class="not-done">openPopup</li>
+      <li class="not-done">onClicked</li>    </ul>
+  </li>
+
+    <li id="browsingData" class="not-done"><a href="#browsingData" class="unfold">browsingData</a><a href="#" class="collapse">browsingData</a>
+    <ul>
+      <li class="not-done">settings</li>
+      <li class="not-done">remove</li>
+      <li class="not-done">removeAppcache</li>
+      <li class="not-done">removeCache</li>
+      <li class="not-done">removeCookies</li>
+      <li class="not-done">removeDownloads</li>
+      <li class="not-done">removeFileSystems</li>
+      <li class="not-done">removeFormData</li>
+      <li class="not-done">removeHistory</li>
+      <li class="not-done">removeIndexedDB</li>
+      <li class="not-done">removeLocalStorage</li>
+      <li class="not-done">removePluginData</li>
+      <li class="not-done">removePasswords</li>
+      <li class="not-done">removeWebSQL</li>    </ul>
+  </li>
+
+    <li id="commands" class="not-done"><a href="#commands" class="unfold">commands</a><a href="#" class="collapse">commands</a>
+    <ul>
+      <li class="not-done">getAll</li>
+      <li class="not-done">onCommand</li>    </ul>
+  </li>
+
+    <li id="contentSettings" class="not-done"><a href="#contentSettings" class="unfold">contentSettings</a><a href="#" class="collapse">contentSettings</a>
+    <ul>
+      <li class="not-done">cookies</li>
+      <li class="not-done">images</li>
+      <li class="not-done">javascript</li>
+      <li class="not-done">location</li>
+      <li class="not-done">plugins</li>
+      <li class="not-done">popups</li>
+      <li class="not-done">notifications</li>
+      <li class="not-done">fullscreen</li>
+      <li class="not-done">mouselock</li>
+      <li class="not-done">microphone</li>
+      <li class="not-done">camera</li>
+      <li class="not-done">unsandboxedPlugins</li>
+      <li class="not-done">automaticDownloads</li>    </ul>
+  </li>
+
+    <li id="contextMenus" class="not-done"><a href="#contextMenus" class="unfold">contextMenus</a><a href="#" class="collapse">contextMenus</a>
+    <ul>
+      <li class="not-done">ACTION_MENU_TOP_LEVEL_LIMIT</li>
+      <li class="not-done">create</li>
+      <li class="not-done">update</li>
+      <li class="not-done">remove</li>
+      <li class="not-done">removeAll</li>
+      <li class="not-done">onClicked</li>    </ul>
+  </li>
+
+    <li id="cookies" class="not-done"><a href="#cookies" class="unfold">cookies</a><a href="#" class="collapse">cookies</a>
+    <ul>
+      <li class="not-done">get</li>
+      <li class="not-done">getAll</li>
+      <li class="not-done">set</li>
+      <li class="not-done">remove</li>
+      <li class="not-done">getAllCookieStores</li>
+      <li class="not-done">onChanged</li>    </ul>
+  </li>
+
+    <li id="debugger" class="not-done"><a href="#debugger" class="unfold">debugger</a><a href="#" class="collapse">debugger</a>
+    <ul>
+      <li class="not-done">attach</li>
+      <li class="not-done">detach</li>
+      <li class="not-done">sendCommand</li>
+      <li class="not-done">getTargets</li>
+      <li class="not-done">onEvent</li>
+      <li class="not-done">onDetach</li>    </ul>
+  </li>
+
+    <li id="declarativeContent" class="not-done"><a href="#declarativeContent" class="unfold">declarativeContent</a><a href="#" class="collapse">declarativeContent</a>
+    <ul>
+      <li class="not-done">onPageChanged</li>    </ul>
+  </li>
+
+    <li id="desktopCapture" class="not-done"><a href="#desktopCapture" class="unfold">desktopCapture</a><a href="#" class="collapse">desktopCapture</a>
+    <ul>
+      <li class="not-done">chooseDesktopMedia</li>
+      <li class="not-done">cancelChooseDesktopMedia</li>    </ul>
+  </li>
+
+    <li id="devtools.inspectedWindow" class="not-done"><a href="#devtools.inspectedWindow" class="unfold">devtools.inspectedWindow</a><a href="#" class="collapse">devtools.inspectedWindow</a>
+    <ul>
+      <li class="not-done">tabId</li>
+      <li class="not-done">eval</li>
+      <li class="not-done">reload</li>
+      <li class="not-done">getResources</li>
+      <li class="not-done">onResourceAdded</li>
+      <li class="not-done">onResourceContentCommitted</li>    </ul>
+  </li>
+
+    <li id="devtools.network" class="not-done"><a href="#devtools.network" class="unfold">devtools.network</a><a href="#" class="collapse">devtools.network</a>
+    <ul>
+      <li class="not-done">getHAR</li>
+      <li class="not-done">onRequestFinished</li>
+      <li class="not-done">onNavigated</li>    </ul>
+  </li>
+
+    <li id="devtools.panels" class="not-done"><a href="#devtools.panels" class="unfold">devtools.panels</a><a href="#" class="collapse">devtools.panels</a>
+    <ul>
+      <li class="not-done">elements</li>
+      <li class="not-done">sources</li>
+      <li class="not-done">themeName</li>
+      <li class="not-done">create</li>
+      <li class="not-done">setOpenResourceHandler</li>
+      <li class="not-done">openResource</li>    </ul>
+  </li>
+
+    <li id="extension" class="not-done"><a href="#extension" class="unfold">extension</a><a href="#" class="collapse">extension</a>
+    <ul>
+      <li class="not-done">lastError</li>
+      <li class="not-done">inIncognitoContext</li>
+      <li class="not-done">sendRequest</li>
+      <li class="not-done">getURL</li>
+      <li class="not-done">getViews</li>
+      <li class="not-done">getBackgroundPage</li>
+      <li class="not-done">getExtensionTabs</li>
+      <li class="not-done">isAllowedIncognitoAccess</li>
+      <li class="not-done">isAllowedFileSchemeAccess</li>
+      <li class="not-done">setUpdateUrlData</li>
+      <li class="not-done">onRequest</li>
+      <li class="not-done">onRequestExternal</li>    </ul>
+  </li>
+
+    <li id="fileBrowserHandler" class="not-done"><a href="#fileBrowserHandler" class="unfold">fileBrowserHandler</a><a href="#" class="collapse">fileBrowserHandler</a>
+    <ul>
+      <li class="not-done">selectFile</li>
+      <li class="not-done">onExecute</li>    </ul>
+  </li>
+
+    <li id="fontSettings" class="not-done"><a href="#fontSettings" class="unfold">fontSettings</a><a href="#" class="collapse">fontSettings</a>
+    <ul>
+      <li class="not-done">clearFont</li>
+      <li class="not-done">getFont</li>
+      <li class="not-done">setFont</li>
+      <li class="not-done">getFontList</li>
+      <li class="not-done">clearDefaultFontSize</li>
+      <li class="not-done">getDefaultFontSize</li>
+      <li class="not-done">setDefaultFontSize</li>
+      <li class="not-done">clearDefaultFixedFontSize</li>
+      <li class="not-done">getDefaultFixedFontSize</li>
+      <li class="not-done">setDefaultFixedFontSize</li>
+      <li class="not-done">clearMinimumFontSize</li>
+      <li class="not-done">getMinimumFontSize</li>
+      <li class="not-done">setMinimumFontSize</li>
+      <li class="not-done">onFontChanged</li>
+      <li class="not-done">onDefaultFontSizeChanged</li>
+      <li class="not-done">onDefaultFixedFontSizeChanged</li>
+      <li class="not-done">onMinimumFontSizeChanged</li>    </ul>
+  </li>
+
+    <li id="gcm" class="not-done"><a href="#gcm" class="unfold">gcm</a><a href="#" class="collapse">gcm</a>
+    <ul>
+      <li class="not-done">MAX_MESSAGE_SIZE</li>
+      <li class="not-done">register</li>
+      <li class="not-done">unregister</li>
+      <li class="not-done">send</li>
+      <li class="not-done">onMessage</li>
+      <li class="not-done">onMessagesDeleted</li>
+      <li class="not-done">onSendError</li>    </ul>
+  </li>
+
+    <li id="history" class="not-done"><a href="#history" class="unfold">history</a><a href="#" class="collapse">history</a>
+    <ul>
+      <li class="not-done">search</li>
+      <li class="not-done">getVisits</li>
+      <li class="not-done">addUrl</li>
+      <li class="not-done">deleteUrl</li>
+      <li class="not-done">deleteRange</li>
+      <li class="not-done">deleteAll</li>
+      <li class="not-done">onVisited</li>
+      <li class="not-done">onVisitRemoved</li>    </ul>
+  </li>
+
+    <li id="i18n" class="not-done"><a href="#i18n" class="unfold">i18n</a><a href="#" class="collapse">i18n</a>
+    <ul>
+      <li class="not-done">getAcceptLanguages</li>
+      <li class="not-done">getMessage</li>
+      <li class="not-done">getUILanguage</li>
+      <li class="not-done">detectLanguage</li>    </ul>
+  </li>
+
+    <li id="input.ime" class="not-done"><a href="#input.ime" class="unfold">input.ime</a><a href="#" class="collapse">input.ime</a>
+    <ul>
+      <li class="not-done">setComposition</li>
+      <li class="not-done">clearComposition</li>
+      <li class="not-done">commitText</li>
+      <li class="not-done">sendKeyEvents</li>
+      <li class="not-done">hideInputView</li>
+      <li class="not-done">setCandidateWindowProperties</li>
+      <li class="not-done">setCandidates</li>
+      <li class="not-done">setCursorPosition</li>
+      <li class="not-done">setMenuItems</li>
+      <li class="not-done">updateMenuItems</li>
+      <li class="not-done">deleteSurroundingText</li>
+      <li class="not-done">keyEventHandled</li>
+      <li class="not-done">createWindow</li>
+      <li class="not-done">showWindow</li>
+      <li class="not-done">hideWindow</li>
+      <li class="not-done">activate</li>
+      <li class="not-done">deactivate</li>
+      <li class="not-done">onActivate</li>
+      <li class="not-done">onDeactivated</li>
+      <li class="not-done">onFocus</li>
+      <li class="not-done">onBlur</li>
+      <li class="not-done">onInputContextUpdate</li>
+      <li class="not-done">onKeyEvent</li>
+      <li class="not-done">onCandidateClicked</li>
+      <li class="not-done">onMenuItemActivated</li>
+      <li class="not-done">onSurroundingTextChanged</li>
+      <li class="not-done">onReset</li>
+      <li class="not-done">onCompositionBoundsChanged</li>    </ul>
+  </li>
+
+    <li id="instanceId" class="not-done"><a href="#instanceId" class="unfold">instanceId</a><a href="#" class="collapse">instanceId</a>
+    <ul>
+      <li class="not-done">getID</li>
+      <li class="not-done">getCreationTime</li>
+      <li class="not-done">getToken</li>
+      <li class="not-done">deleteToken</li>
+      <li class="not-done">deleteID</li>
+      <li class="not-done">onTokenRefresh</li>    </ul>
+  </li>
+
+    <li id="omnibox" class="not-done"><a href="#omnibox" class="unfold">omnibox</a><a href="#" class="collapse">omnibox</a>
+    <ul>
+      <li class="not-done">sendSuggestions</li>
+      <li class="not-done">setDefaultSuggestion</li>
+      <li class="not-done">onInputStarted</li>
+      <li class="not-done">onInputChanged</li>
+      <li class="not-done">onInputEntered</li>
+      <li class="not-done">onInputCancelled</li>
+      <li class="not-done">onDeleteSuggestion</li>    </ul>
+  </li>
+
+    <li id="pageAction" class="not-done"><a href="#pageAction" class="unfold">pageAction</a><a href="#" class="collapse">pageAction</a>
+    <ul>
+      <li class="not-done">show</li>
+      <li class="not-done">hide</li>
+      <li class="not-done">setTitle</li>
+      <li class="not-done">getTitle</li>
+      <li class="not-done">setIcon</li>
+      <li class="not-done">setPopup</li>
+      <li class="not-done">getPopup</li>
+      <li class="not-done">onClicked</li>    </ul>
+  </li>
+
+    <li id="pageCapture" class="not-done"><a href="#pageCapture" class="unfold">pageCapture</a><a href="#" class="collapse">pageCapture</a>
+    <ul>
+      <li class="not-done">saveAsMHTML</li>    </ul>
+  </li>
+
+    <li id="permissions" class="not-done"><a href="#permissions" class="unfold">permissions</a><a href="#" class="collapse">permissions</a>
+    <ul>
+      <li class="not-done">getAll</li>
+      <li class="not-done">contains</li>
+      <li class="not-done">request</li>
+      <li class="not-done">remove</li>
+      <li class="not-done">onAdded</li>
+      <li class="not-done">onRemoved</li>    </ul>
+  </li>
+
+    <li id="privacy" class="not-done"><a href="#privacy" class="unfold">privacy</a><a href="#" class="collapse">privacy</a>
+    <ul>
+      <li class="not-done">network</li>
+      <li class="not-done">services</li>
+      <li class="not-done">websites</li>    </ul>
+  </li>
+
+    <li id="proxy" class="not-done"><a href="#proxy" class="unfold">proxy</a><a href="#" class="collapse">proxy</a>
+    <ul>
+      <li class="not-done">settings</li>
+      <li class="not-done">onProxyError</li>    </ul>
+  </li>
+
+    <li id="runtime" class="some-done"><a href="#runtime" class="unfold">runtime</a><a href="#" class="collapse">runtime</a>
+    <ul>
+      <li class="not-done">lastError</li>
+      <li class="not-done">id</li>
+      <li class="not-done">getBackgroundPage</li>
+      <li class="not-done">openOptionsPage</li>
+      <li class="not-done">getManifest</li>
+      <li class="not-done">getURL</li>
+      <li class="not-done">setUninstallURL</li>
+      <li class="not-done">reload</li>
+      <li class="not-done">requestUpdateCheck</li>
+      <li class="not-done">restart</li>
+      <li class="not-done">restartAfterDelay</li>
+      <li class="not-done">connect</li>
+      <li class="not-done">connectNative</li>
+      <li class="all-done">sendMessage</li>
+      <li class="not-done">sendNativeMessage</li>
+      <li class="not-done">getPlatformInfo</li>
+      <li class="not-done">getPackageDirectoryEntry</li>
+      <li class="not-done">onStartup</li>
+      <li class="not-done">onInstalled</li>
+      <li class="not-done">onSuspend</li>
+      <li class="not-done">onSuspendCanceled</li>
+      <li class="not-done">onUpdateAvailable</li>
+      <li class="not-done">onBrowserUpdateAvailable</li>
+      <li class="not-done">onConnect</li>
+      <li class="not-done">onConnectExternal</li>
+      <li class="all-done">onMessage</li>
+      <li class="not-done">onMessageExternal</li>
+      <li class="not-done">onRestartRequired</li>    </ul>
+  </li>
+
+    <li id="sessions" class="not-done"><a href="#sessions" class="unfold">sessions</a><a href="#" class="collapse">sessions</a>
+    <ul>
+      <li class="not-done">MAX_SESSION_RESULTS</li>
+      <li class="not-done">getRecentlyClosed</li>
+      <li class="not-done">getDevices</li>
+      <li class="not-done">restore</li>
+      <li class="not-done">onChanged</li>    </ul>
+  </li>
+
+    <li id="tabs" class="some-done"><a href="#tabs" class="unfold">tabs</a><a href="#" class="collapse">tabs</a>
+    <ul>
+      <li class="not-done">TAB_ID_NONE</li>
+      <li class="not-done">get</li>
+      <li class="not-done">getCurrent</li>
+      <li class="not-done">connect</li>
+      <li class="not-done">sendRequest</li>
+      <li class="all-done">sendMessage</li>
+      <li class="not-done">getSelected</li>
+      <li class="not-done">getAllInWindow</li>
+      <li class="not-done">create</li>
+      <li class="not-done">duplicate</li>
+      <li class="some-done">query</li>
+      <li class="not-done">highlight</li>
+      <li class="not-done">update</li>
+      <li class="not-done">move</li>
+      <li class="not-done">reload</li>
+      <li class="not-done">remove</li>
+      <li class="not-done">detectLanguage</li>
+      <li class="not-done">captureVisibleTab</li>
+      <li class="not-done">executeScript</li>
+      <li class="not-done">insertCSS</li>
+      <li class="not-done">setZoom</li>
+      <li class="not-done">getZoom</li>
+      <li class="not-done">setZoomSettings</li>
+      <li class="not-done">getZoomSettings</li>
+      <li class="not-done">discard</li>
+      <li class="not-done">onCreated</li>
+      <li class="not-done">onUpdated</li>
+      <li class="not-done">onMoved</li>
+      <li class="not-done">onSelectionChanged</li>
+      <li class="not-done">onActiveChanged</li>
+      <li class="not-done">onActivated</li>
+      <li class="not-done">onHighlightChanged</li>
+      <li class="not-done">onHighlighted</li>
+      <li class="not-done">onDetached</li>
+      <li class="not-done">onAttached</li>
+      <li class="not-done">onRemoved</li>
+      <li class="not-done">onReplaced</li>
+      <li class="not-done">onZoomChange</li>    </ul>
+  </li>
+
+    <li id="topSites" class="not-done"><a href="#topSites" class="unfold">topSites</a><a href="#" class="collapse">topSites</a>
+    <ul>
+      <li class="not-done">get</li>    </ul>
+  </li>
+
+    <li id="ttsEngine" class="not-done"><a href="#ttsEngine" class="unfold">ttsEngine</a><a href="#" class="collapse">ttsEngine</a>
+    <ul>
+      <li class="not-done">updateVoices</li>
+      <li class="not-done">sendTtsEvent</li>
+      <li class="not-done">onSpeak</li>
+      <li class="not-done">onStop</li>
+      <li class="not-done">onPause</li>
+      <li class="not-done">onResume</li>    </ul>
+  </li>
+
+    <li id="tts" class="not-done"><a href="#tts" class="unfold">tts</a><a href="#" class="collapse">tts</a>
+    <ul>
+      <li class="not-done">speak</li>
+      <li class="not-done">stop</li>
+      <li class="not-done">pause</li>
+      <li class="not-done">resume</li>
+      <li class="not-done">isSpeaking</li>
+      <li class="not-done">getVoices</li>
+      <li class="not-done">onEvent</li>    </ul>
+  </li>
+
+    <li id="types" class="not-done"><a href="#types" class="unfold">types</a><a href="#" class="collapse">types</a>
+    <ul>
+    </ul>
+  </li>
+
+    <li id="wallpaper" class="not-done"><a href="#wallpaper" class="unfold">wallpaper</a><a href="#" class="collapse">wallpaper</a>
+    <ul>
+      <li class="not-done">setWallpaper</li>    </ul>
+  </li>
+
+    <li id="webNavigation" class="not-done"><a href="#webNavigation" class="unfold">webNavigation</a><a href="#" class="collapse">webNavigation</a>
+    <ul>
+      <li class="not-done">getFrame</li>
+      <li class="not-done">getAllFrames</li>
+      <li class="not-done">onBeforeNavigate</li>
+      <li class="not-done">onCommitted</li>
+      <li class="not-done">onDOMContentLoaded</li>
+      <li class="not-done">onCompleted</li>
+      <li class="not-done">onErrorOccurred</li>
+      <li class="not-done">onCreatedNavigationTarget</li>
+      <li class="not-done">onReferenceFragmentUpdated</li>
+      <li class="not-done">onTabReplaced</li>
+      <li class="not-done">onHistoryStateUpdated</li>    </ul>
+  </li>
+
+    <li id="webstore" class="not-done"><a href="#webstore" class="unfold">webstore</a><a href="#" class="collapse">webstore</a>
+    <ul>
+      <li class="not-done">install</li>
+      <li class="not-done">onInstallStageChanged</li>
+      <li class="not-done">onDownloadProgress</li>    </ul>
+  </li>
+
+    <li id="windows" class="not-done"><a href="#windows" class="unfold">windows</a><a href="#" class="collapse">windows</a>
+    <ul>
+      <li class="not-done">WINDOW_ID_NONE</li>
+      <li class="not-done">WINDOW_ID_CURRENT</li>
+      <li class="not-done">get</li>
+      <li class="not-done">getCurrent</li>
+      <li class="not-done">getLastFocused</li>
+      <li class="not-done">getAll</li>
+      <li class="not-done">create</li>
+      <li class="not-done">update</li>
+      <li class="not-done">remove</li>
+      <li class="not-done">onCreated</li>
+      <li class="not-done">onRemoved</li>
+      <li class="not-done">onFocusChanged</li>    </ul>
+  </li>
+
+</ul>
+</body>
+</html>

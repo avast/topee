@@ -1,0 +1,21 @@
+{
+  "done": {
+    "runtime": [
+      "sendMessage",
+      "onMessage"
+    ],
+    "tabs": [
+      "sendMessage"
+    ]
+  },
+  "partly": {
+    "tabs": [
+      "query"
+    ]
+  },
+  "bugs": {
+    "runtime": {
+      "sendMessage": [ "https://bugreport.apple.com/web/?problemID=43230564" ]
+    }
+  }
+}
