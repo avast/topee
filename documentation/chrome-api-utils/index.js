@@ -34,24 +34,23 @@ const HEAD = `
 .collapsible-list li {
   list-style-type: none;
 }
-.collapsible-list li:before {
-  content: "\\000BB";
-  padding-right: 0.5em;
-}
 
-.not-done:after {
+.not-done:before {
     content: "\\2718";
     color: red;
+    margin-right: 0.25em;
 }
-.all-done:after {
+.all-done:before {
     content: "\\2713";
     font-weight: bolder;
     color: green;
+    margin-right: 0.25em;
 }
-.some-done:after {
+.some-done:before {
     content: "\\2713";
     font-weight: bolder;
     color: orange;
+    margin-right: 0.25em;
 }
 
 .collapsible-list li ul {
@@ -60,17 +59,6 @@ const HEAD = `
 .collapsible-list li:target ul {
   display: initial;
 }
-
-.collapsible-list li:target.not-done:after {
-    content: "";
-}
-.collapsible-list li:target.all-done:after {
-    content: "";
-}
-.collapsible-list li:target.some-done:after {
-    content: "";
-}  
-
 
 .collapsible-list li .unfold {
   display: initial;
@@ -87,9 +75,6 @@ const HEAD = `
 
 .collapsible-list li ul li {
   margin-left: 2em;
-}
-.collapsible-list li ul li:before {
-  content: "";
 }
 
 #hide-not-done:checked ~ ul .not-done {
