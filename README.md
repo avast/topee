@@ -6,7 +6,7 @@ Google Chrome Extension API for Safari
 
 Integration
 ====
-![diagram](documentation/integration.svg?raw=true)
+
 - Add `github https://github.com/avast/topee ~> 0.0.0` to your Cartfile
 - Link the `Topee` to your Appex target
 - Add a resource to your Appex pointing to `Carthage/Build/Mac/Topee.framework/Resources/topee-content.js`
