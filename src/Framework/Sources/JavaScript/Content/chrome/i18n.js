@@ -2,9 +2,8 @@
 
 var i18n = {};
 
-// TODO: Implementation
 i18n.getUILanguage = function () {
-    return "en-GB";
+    return navigator.language;
 };
 
 // TODO: Implementation
