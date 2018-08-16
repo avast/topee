@@ -34,6 +34,9 @@ function manageRequest(stringifiedPayload) {
     if (payload.eventName === 'bye') {
         eventEmitter.emit('bye', payload);
     }
+    if (payload.eventName === 'activeTabId') {
+        eventEmitter.emit('activeTabId', payload);
+    }
 
     function sendResponse(response) {
         window.webkit.messageHandlers.content.postMessage({

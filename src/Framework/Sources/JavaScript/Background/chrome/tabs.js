@@ -6,7 +6,7 @@ var urlMatcher = require('../url-matcher.js');
 var tabs = {};
 
 // Internal state management
-var browserTabs = {};
+var browserTabs = { /* id, url */ };
 
 eventEmitter.addListener('hello', function (payload) {
     if (payload.frameId !== 0) { return; }
@@ -50,14 +50,29 @@ tabs.sendMessage = function (tabId, message, options, responseCallback) {
 };
 
 tabs.query = function(queryInfo, callback) {
+    // TODO: Validate supported queryInfo options
+
     var tabs = [];
     for (var tab in browserTabs) {
         tabs.push(browserTabs[tab]);
     }
+
+    // URL filtering
     if (queryInfo.url) {
         tabs = tabs.filter(tab => urlMatcher.match(queryInfo.url, tab.url));
     }
-    callback(tabs);
+
+    // Active tab (in last focussed window) filter
+    if (queryInfo.active && queryInfo.lastFocusedWindow) {
+        eventEmitter.once('activeTabId', function (event) {
+            callback(tabs.filter(tab => tab.id === event.tabId));
+        });
+
+        window.webkit.messageHandlers.appex.postMessage({type: "getActiveTabId"});
+    } else {
+        callback(tabs);
+    }
+
 };
 
 tabs.sendMessage._emit = function (payload) {
