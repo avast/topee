@@ -5,6 +5,7 @@
       "onMessage"
     ],
     "tabs": [
+      "get",
       "sendMessage"
     ]
   },

@@ -11,6 +11,9 @@ if (typeof window.chrome === 'object') {
     return;
 }
 
+var URL_POLL_VISIBLE = 500;
+var URL_POLL_HIDDEN = 5000;
+
 var TextCrypto = require('../text-crypto.js');
 var txtCrypto = new TextCrypto();
 
@@ -75,6 +78,27 @@ window.addEventListener('pageshow', function() {
 if (window === window.top) {
     window.addEventListener('pagehide', sayBye);
     window.addEventListener('beforeunload', sayBye);
+
+    // history API has no change notification, so we have to use polling
+    var scheduleMs = document.visibilityState === 'visible' ? URL_POLL_VISIBLE : URL_POLL_HIDDEN;
+    var visibilityPoll = setInterval(visibilityHello, scheduleMs);
+    document.addEventListener('visibilitychange', function () {
+        clearInterval(visibilityPoll);
+        if (document.visibilityState === 'visible') {
+            visibilityHello();
+            scheduleMs =  URL_POLL_VISIBLE;
+        }
+        else {
+            scheduleMs = URL_POLL_HIDDEN;
+        }
+        visibilityPoll = setInterval(visibilityHello, scheduleMs);            
+    });
+}
+
+function visibilityHello() {
+    if (document.visibilityState !== 'prerender') {
+        sayHello(tabInfo.topLevelTabId);
+    }
 }
 
 function sayHello(tabId) {

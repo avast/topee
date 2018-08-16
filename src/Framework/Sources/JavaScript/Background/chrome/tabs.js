@@ -75,6 +75,10 @@ tabs.query = function(queryInfo, callback) {
 
 };
 
+tabs.get = function(id, callback) {
+    callback(browserTabs[id]);
+}
+
 tabs.sendMessage._emit = function (payload) {
     eventEmitter.emit('messageResponse', payload);
 };

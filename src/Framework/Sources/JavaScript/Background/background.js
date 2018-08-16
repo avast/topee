@@ -13,15 +13,18 @@ function manageRequest(stringifiedPayload) {
     var payload = JSON.parse(stringifiedPayload);
 
     if (payload.eventName === 'sendMessage') {
-        chrome.runtime.onMessage._emit(payload.message, {
-            tab: {
-                id: payload.tabId,
-            },
-            frameId: payload.frameId,
-            id: 'topee',
-            url: payload.url,
-            tlsChannelId: undefined
-        }, sendResponse);
+        chrome.tabs.get(payload.tabId, function (tab) {
+            if (!tab) {  // should not happen
+                tab = { id: payload.tabId };
+            }
+            chrome.runtime.onMessage._emit(payload.message, {
+                tab: tab,
+                frameId: payload.frameId,
+                id: 'topee',
+                url: payload.url,
+                tlsChannelId: undefined
+            }, sendResponse);
+        });
         return;
     }
     if (payload.eventName === 'messageResponse') {
