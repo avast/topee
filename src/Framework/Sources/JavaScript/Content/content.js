@@ -75,6 +75,8 @@ window.addEventListener('pageshow', function() {
     tabInfo.tabId.then(tabId => sayHello(tabId));
 });
 
+var lastUrl = window.location.href;
+
 if (window === window.top) {
     window.addEventListener('pagehide', sayBye);
     window.addEventListener('beforeunload', sayBye);
@@ -96,7 +98,8 @@ if (window === window.top) {
 }
 
 function visibilityHello() {
-    if (document.visibilityState !== 'prerender') {
+    if (document.visibilityState !== 'prerender' && window.location.href !== lastUrl) {
+        lastUrl = window.location.href;
         sayHello(tabInfo.topLevelTabId);
     }
 }
