@@ -8,14 +8,17 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
 
     // MARK: - Public Members
 
-    open var backgroundScripts: [URL] { return [] }
-    public var bridge: SafariExtensionBridgeType!
+    public var bridge: SafariExtensionBridgeType { return SafariExtensionBridge.shared }
 
     // MARK: - Initializers
     
     public override init() {
         super.init()
-        bridge = SafariExtensionBridge.shared(backgroundScripts: backgroundScripts)
+        self.setupBridge()
+    }
+
+    open func setupBridge() {
+        preconditionFailure("This method must be overridden, and it should call bridge.setup(...)")
     }
 
     // MARK: - SFSafariExtensionHandler

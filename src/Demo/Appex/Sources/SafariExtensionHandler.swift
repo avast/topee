@@ -7,10 +7,11 @@ import SafariServices
 import Topee
 
 class SafariExtensionHandler: TopeeSafariExtensionHandler {
-
-    override var backgroundScripts: [URL] {
-        let fileName = "demo-background"
-        let fileExtension = "js"
-        return [Bundle.main.url(forResource: fileName, withExtension: fileExtension)!]
+    override func setupBridge() {
+        bridge.setup(
+            backgroundScripts: [
+                Bundle.main.url(forResource: "demo-background", withExtension: "js")!
+            ]
+        )
     }
 }

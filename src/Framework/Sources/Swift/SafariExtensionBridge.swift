@@ -9,7 +9,7 @@ import WebKit
 // MARK: -
 
 public protocol SafariExtensionBridgeType {
-    var backgroundScripts: [URL]  { get }
+    func setup(backgroundScripts: [URL])
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
 }
@@ -26,35 +26,39 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     // MARK: - Public Members
 
-    public let backgroundScripts: [URL]
-
+    public static let shared = SafariExtensionBridge()
+    
     // MARK: - Private Members
 
+    private var backgroundScripts: [URL]?
+    private var webViewURL: URL = URL(string: "http://topee.local")!
+
     private var pages: [UInt64: SFSafariPage] = [:]
-    private let webViewURL: URL = URL(string: "http://topee.local")!
-    private var webView: WKWebView!
+    private var webView: WKWebView?
     private var isBackgroundReady: Bool = false
     // Accumulates messages until the background scripts
     // informs us that is ready
     private var messageQueue: [String] = []
     private var safariHelper: SFSafariApplicationHelper = SFSafariApplicationHelper()
 
-    private static var shared: SafariExtensionBridgeType?
-
     // MARK: - Initializers
-
-    static func shared(backgroundScripts: [URL]) -> SafariExtensionBridgeType {
-        if shared == nil {
-            shared = SafariExtensionBridge(backgroundScripts: backgroundScripts)
-        } else if backgroundScripts != shared!.backgroundScripts {
-            fatalError("You can only inject one set of background scripts")
-        }
-        return shared!
-    }
-
-    public init(backgroundScripts: [URL]) {
-        self.backgroundScripts = backgroundScripts
+    
+    override init() {
         super.init()
+    }
+    
+    public func setup(backgroundScripts: [URL]) {
+        if webView != nil {
+            // Setup has been already called, so let's just check if configuration matches.
+            if backgroundScripts != self.backgroundScripts {
+                fatalError("You can only inject one set of background scripts")
+            }
+            
+            return
+        }
+
+        self.backgroundScripts = backgroundScripts
+
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
             let backgroundEndURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "topee-background-end", withExtension: "js")!
@@ -132,7 +136,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     private func invokeMethod(payload: String) {
         let handler = {
-            self.webView.evaluateJavaScript("topee.manageRequest('\(payload.replacingOccurrences(of: "'", with: "\\\'"))')"){ result, error in
+            self.webView!.evaluateJavaScript("topee.manageRequest('\(payload.replacingOccurrences(of: "'", with: "\\\'"))')"){ result, error in
                 guard error == nil else {
                     NSLog("Received JS error: \(error! as NSError)")
                     return
