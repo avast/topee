@@ -9,10 +9,26 @@ import WebKit
 // MARK: -
 
 public protocol SafariExtensionBridgeType {
-    func setup(backgroundScripts: [URL])
+    func setup(
+        backgroundScripts: [URL],
+        webViewURL: URL)
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
 }
+
+// Can't define default values in protocol so we need extension
+public extension SafariExtensionBridgeType {
+    func setup(
+        backgroundScripts: [URL],
+        webViewURL: URL = URL(string: "http://topee.local")!)
+    {
+        setup(
+            backgroundScripts: backgroundScripts,
+            webViewURL: webViewURL
+        )
+    }
+}
+
 
 enum MessageHandler: String {
     case content
@@ -47,17 +63,22 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         super.init()
     }
     
-    public func setup(backgroundScripts: [URL]) {
+    public func setup(backgroundScripts: [URL], webViewURL: URL) {
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
             if backgroundScripts != self.backgroundScripts {
                 fatalError("You can only inject one set of background scripts")
             }
             
+            if webViewURL != self.webViewURL {
+                fatalError("You can only specify one webViewURL")
+            }
+            
             return
         }
 
         self.backgroundScripts = backgroundScripts
+        self.webViewURL = webViewURL
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
