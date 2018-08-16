@@ -116,18 +116,15 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         if let message = Message.Content.Request(rawValue: messageName) {
             // Manages the registry of pages based on the type of message received
             switch message {
-            case .hello:
+            case .hello, .request:
+                // Messages may come out of order, e.g. request is faster than hello here
+                // so let's handle them in same way.
                 if let tabId = userInfo?["tabId"] as? UInt64 {
                     pages[tabId] = page
                 }
             case .bye:
                 if let tabId = userInfo?["tabId"] as? UInt64 {
                     pages[tabId] = nil
-                }
-            case .request:
-                // messages may come out of order, so that e.g. request is faster than hello here
-                if let tabId = userInfo?["tabId"] as? UInt64 {
-                    pages[tabId] = page
                 }
             }
 
@@ -156,7 +153,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
 
     private func invokeMethod(payload: String) {
-        let handler = {
+        func handler() {
             self.webView!.evaluateJavaScript("topee.manageRequest('\(payload.replacingOccurrences(of: "'", with: "\\\'"))')"){ result, error in
                 guard error == nil else {
                     NSLog("Received JS error: \(error! as NSError)")
