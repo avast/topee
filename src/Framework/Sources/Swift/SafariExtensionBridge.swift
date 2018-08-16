@@ -11,6 +11,7 @@ import WebKit
 public protocol SafariExtensionBridgeType {
     var backgroundScripts: [URL]  { get }
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?)
+    func toolbarItemClicked(in window: SFSafariWindow)
 }
 
 enum MessageHandler: String {
@@ -22,13 +23,13 @@ enum MessageHandler: String {
 // MARK: -
 
 public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessageHandler {
-    
+
     // MARK: - Public Members
 
     public let backgroundScripts: [URL]
 
     // MARK: - Private Members
-    
+
     private var pages: [UInt64: SFSafariPage] = [:]
     private let webViewURL: URL = URL(string: "http://topee.local")!
     private var webView: WKWebView!
@@ -36,6 +37,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     // Accumulates messages until the background scripts
     // informs us that is ready
     private var messageQueue: [String] = []
+    private var safariHelper: SFSafariApplicationHelper = SFSafariApplicationHelper()
 
     private static var shared: SafariExtensionBridgeType?
 
@@ -49,7 +51,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
         return shared!
     }
-    
+
     public init(backgroundScripts: [URL]) {
         self.backgroundScripts = backgroundScripts
         super.init()
@@ -76,8 +78,12 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
         }
     }
-    
+
     // MARK: - Public API
+
+    public func toolbarItemClicked(in window: SFSafariWindow) {
+        safariHelper.onWindowActivated(window: window)
+    }
 
     public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
         assert(Thread.isMainThread)
@@ -99,6 +105,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     pages[tabId] = page
                 }
             }
+
             // Relays the messages to the background script
             if let payload = userInfo?["payload"] as? String {
                 // TODO: It would be nice if we didn't have to
@@ -115,9 +122,14 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
         NSLog("#appex(content): pages: { count: \(self.pages.count), tabIds: \(self.pages.keys)}")
     }
-    
+
     // MARK: - Private API
-    
+
+    func pageToTabId(page: SFSafariPage) -> UInt64? {
+        guard let item = self.pages.first(where: { $0.value == page }) else { return nil }
+        return item.key
+    }
+
     private func invokeMethod(payload: String) {
         let handler = {
             self.webView.evaluateJavaScript("topee.manageRequest('\(payload.replacingOccurrences(of: "'", with: "\\\'"))')"){ result, error in
@@ -140,9 +152,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
         }
     }
-    
+
     // MARK: - WKScriptMessageHandler
-    
+
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         assert(Thread.isMainThread)
         if message.name != MessageHandler.log.rawValue {
@@ -171,6 +183,16 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 isBackgroundReady = true
                 messageQueue.forEach { invokeMethod(payload: $0) }
                 messageQueue = []
+            case .getActiveTabId:
+                safariHelper.getActivePage { page in
+                    guard page != nil,
+                        let tabId = self.pageToTabId(page: page!) else {
+                        self.invokeMethod(payload: "{\"eventName\": \"activeTabId\", \"tabId\": null}")
+                        return
+                    }
+
+                    self.invokeMethod(payload: "{\"eventName\": \"activeTabId\", \"tabId\": \(tabId)}")
+                }
             }
         }
     }
