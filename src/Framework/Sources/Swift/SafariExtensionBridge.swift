@@ -120,7 +120,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     
     private func invokeMethod(payload: String) {
         assert(Thread.isMainThread)
-        webView.evaluateJavaScript("topee.manageRequest('\(payload)')"){ result, error in
+        webView.evaluateJavaScript("topee.manageRequest('\(payload.replacingOccurrences(of: "'", with: "\\\'"))')"){ result, error in
             guard error == nil else {
                 NSLog("Received JS error: \(error! as NSError)")
                 return
