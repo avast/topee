@@ -9,6 +9,11 @@
 chrome.runtime.sendMessage({ type: 'getDemoDlgBackground' }, function (color) {
     document.body.style.backgroundColor = color;
 });
+chrome.runtime.onMessage.addListener(function (msg) {
+    if (msg.type === 'changeDemoDlgBackground') {
+        document.body.style.backgroundColor = msg.value;        
+    }
+});
 chrome.runtime.sendMessage({ type: 'ping', value: 1024 }, console.log.bind(console, 'dlg'));
 </script>
 </body>

@@ -120,6 +120,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             
     if (message.type === 'getDemoDlgBackground') {
         sendResponse(Math.random() >= 0.5 ? 'pink' : 'honeydew');
+        setTimeout(function () {
+            chrome.tabs.sendMessage(sender.tab.id, {type: 'changeDemoDlgBackground', value: Math.random() >= 0.5 ? 'lavender' : 'papayawhip' }, { frameId: sender.frameId });
+        }, 3000);
     }
     sendResponse("background pong #" + message.value);
 

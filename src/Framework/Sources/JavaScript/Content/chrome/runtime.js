@@ -2,6 +2,7 @@
 
 var EventEmitter = require('events');
 var tabInfo = require('../tabInfo.js');
+var iframesParent = require('../iframes.js');
 
 var runtime = {};
 
@@ -70,6 +71,12 @@ safari.self.addEventListener("message", function (event) {
                 });
             });
         });
+    }
+    if (event.name === 'request' && iframesParent.hasChild(event.message.frameId)) {
+        iframesParent.forward(event.message.frameId, event.message);
+    }
+    if (event.name === 'request' && !event.message.frameId) {
+        iframesParent.broadcast(event.message);
     }
 });
 

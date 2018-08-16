@@ -26,7 +26,6 @@ if (typeof safari.extension.dispatchMessage === 'undefined') {
 }
 
 if (typeof safari.self.addEventListener === 'undefined') {
-    // Content/chrome/runtime.js calls addEventListener and then immediatelly dispatchMessage, the fact is used here
     safari.self.addEventListener = function (type, callback) {
         if (type !== 'message') {
             console.error('unexcpected message listener:', type);
@@ -37,13 +36,13 @@ if (typeof safari.self.addEventListener === 'undefined') {
             freshListeners[callback.messageId] = true;
             setTimeout(function () {
                 delete freshListeners[callback.messageId];
-            }, 1000);  // just for case, to prevent leaks
+            }, 1000);  // to prevent leaks
         }
 
         pendingResponseListeners.push({ type: type, safariCallback: callback, messageCallback: decryptingCallback });
         window.addEventListener('message', decryptingCallback);
 
-        function decryptingCallback(/*event*/) {
+        function decryptingCallback(event) {
             if (event.data && event.data.type === 'topee_iframe_response') {
                 txtCrypto.decrypt(event.data.value)
                     .then(function (str) {
@@ -54,6 +53,15 @@ if (typeof safari.self.addEventListener === 'undefined') {
                             //window.removeEventListener('message', decryptingCallback);
                             callback({ name: payload.eventName, message: { messageId: payload.messageId, payload: payload.payload } });
                         }
+                });
+            }
+            else if (event.data && event.data.type === 'topee_iframe_request') {
+                txtCrypto.decrypt(event.data.value)
+                    .then(function (str) {
+                        var payload = JSON.parse(str);
+                        console.log('got message in iframe:', payload);
+                    
+                        callback({ name: payload.eventName, message: { messageId: payload.messageId, payload: payload.payload } });
                 });
             }
         }
@@ -93,7 +101,9 @@ window.addEventListener('message', function (event) {
     }
 });
 
-window.parent.postMessage({ type: 'topee_get_iframe_key' }, '*');
+var tabInfo = require('../Content/tabInfo.js');
+
+window.parent.postMessage({ type: 'topee_get_iframe_key', frameId: tabInfo.frameId }, '*');
 
 window.chrome = require('../Content/chrome/index.js');
 
