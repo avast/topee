@@ -18,6 +18,7 @@ import SafariServices
 
 class SFSafariApplicationHelper {
     private var activeWindow: SFSafariWindow?
+    private let workQueue = DispatchQueue(label: "SFSafariApplicationHelper.workQueue", attributes: .concurrent)
 
     /**
      Set cached active window from outside
@@ -55,7 +56,7 @@ class SFSafariApplicationHelper {
         var didCall = false
 
         // Fallback: Call completionHandler if getActiveWindow, getActiveTab or getActivePage fails.
-        DispatchQueue.global().asyncAfter(deadline: .now() + 5) {
+        workQueue.asyncAfter(deadline: .now() + 5) {
             if didCall { return }
             completionHandler(nil)
         }
