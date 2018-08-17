@@ -12,7 +12,26 @@ var eventEmitter = new EventEmitter();
 // (node) warning: possible EventEmitter memory leak detected. 11 listeners added. Use emitter.setMaxListeners() to increase limit.
 eventEmitter.setMaxListeners(1024);
 
-// TODO: once tabId is fulfilled, sendMessage should call dispatchMessage right away, not in then(), that might be performed asynchronously
+var dispatchRequest = function(payload) {
+    tabInfo.tabId.then(tabId => {
+        payload.tabId = tabId;
+        safari.extension.dispatchMessage('request', {
+            tabId: tabId,
+            payload: JSON.stringify(payload)
+        });
+    });
+};
+
+tabInfo.tabId.then(tabId => {
+    dispatchRequest = function (payload) {
+        payload.tabId = tabId;
+        safari.extension.dispatchMessage('request', {
+            tabId: tabId,
+            payload: JSON.stringify(payload)
+        });
+    }
+});
+
 runtime.sendMessage = function(message, callback) {
     var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
@@ -21,18 +40,12 @@ runtime.sendMessage = function(message, callback) {
         safari.self.addEventListener("message", listener);
     }
 
-    tabInfo.tabId.then(tabId => {
-        safari.extension.dispatchMessage('request', {
-            tabId: tabId,
-            payload: JSON.stringify({
-                tabId: tabId,
-                eventName: 'sendMessage',
-                frameId: tabInfo.frameId,
-                messageId: messageId,
-                url: window.location.href,
-                message: message
-            })
-        });
+    dispatchRequest({
+        eventName: 'sendMessage',
+        frameId: tabInfo.frameId,
+        messageId: messageId,
+        url: window.location.href,
+        message: message
     });
 
     function listener(event) {
