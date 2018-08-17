@@ -135,11 +135,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 // payload. Instead we could try to encode
                 // the userInfo into a JSON object at the swift level.
                 // e.g: https://stackoverflow.com/questions/48297263/how-to-use-any-in-codable-type
-                if isBackgroundReady {
-                    invokeMethod(payload: payload)
-                } else {
-                    messageQueue.append(payload)
-                }
+                invokeMethod(payload: payload)
             }
         }
         NSLog("#appex(content): pages: { count: \(self.pages.count), tabIds: \(self.pages.keys)}")
@@ -153,6 +149,11 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
 
     private func invokeMethod(payload: String) {
+        if !isBackgroundReady {
+            messageQueue.append(payload)
+            return
+        }
+        
         func handler() {
             self.webView!.evaluateJavaScript("topee.manageRequest('\(payload.replacingOccurrences(of: "'", with: "\\\'"))')"){ result, error in
                 guard error == nil else {
