@@ -22,12 +22,14 @@ runtime.onUpdateAvailable = {
     }
 };
 
-// TODO: Implementation
+var manifest = {};
+window.webkit.messageHandlers.appex.postMessage({type: "getManifest"});
+eventEmitter.once('extensionManifest', function (event) {
+    manifest = event.manifest;
+});
+    
 runtime.getManifest = function () {
-    return {
-        name: 'MyExtension',
-        version: '0.0.1'
-    };
+    return manifest;
 };
 
 module.exports = runtime;

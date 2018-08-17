@@ -15,5 +15,6 @@ enum Message {
     enum Background: String {
         case ready
         case getActiveTabId
+        case getManifest
     }
 }

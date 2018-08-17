@@ -1,6 +1,7 @@
 {
   "done": {
     "runtime": [
+      "getManifest",
       "sendMessage",
       "onMessage"
     ],

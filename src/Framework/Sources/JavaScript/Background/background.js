@@ -37,8 +37,8 @@ function manageRequest(stringifiedPayload) {
     if (payload.eventName === 'bye') {
         eventEmitter.emit('bye', payload);
     }
-    if (payload.eventName === 'activeTabId') {
-        eventEmitter.emit('activeTabId', payload);
+    if (payload.eventName === 'activeTabId' || payload.eventName === 'extensionManifest') {
+        eventEmitter.emit(payload.eventName, payload);
     }
 
     function sendResponse(response) {
