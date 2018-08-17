@@ -8,7 +8,9 @@ var state = {
 };
 
 // TODO: Implementation
-browserAction.setTitle = function () {};
+browserAction.setTitle = function () {
+    console.debug('TODO: chrome.browserAction.setTitle ' + JSON.stringify([...arguments], 2));
+};
 
 // TODO: Implementation (actual display of popup + callback handling is missing)
 browserAction.setPopup = function ({tabId, popup}, callback) {
@@ -16,7 +18,9 @@ browserAction.setPopup = function ({tabId, popup}, callback) {
 };
 
 // TODO: Implementation
-browserAction.setIcon = function () {};
+browserAction.setIcon = function () {
+    console.debug('TODO: chrome.browserAction.setIcon ' + JSON.stringify([...arguments], 2));
+};
 
 browserAction.onClicked = {
     addListener: function (fn) {
