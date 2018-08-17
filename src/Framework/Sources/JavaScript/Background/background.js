@@ -9,6 +9,8 @@ var eventEmitter = require('./event-bus.js');
 
 window.chrome = require('./chrome/index.js');
 
+var serviceEvents = ['hello', 'bye', 'activeTabId', 'extensionManifest'];
+
 function manageRequest(stringifiedPayload) {
     var payload = JSON.parse(stringifiedPayload);
 
@@ -31,13 +33,8 @@ function manageRequest(stringifiedPayload) {
         chrome.tabs.sendMessage._emit(payload);
         return;
     }
-    if (payload.eventName === 'hello') {
-        eventEmitter.emit('hello', payload);
-    }
-    if (payload.eventName === 'bye') {
-        eventEmitter.emit('bye', payload);
-    }
-    if (payload.eventName === 'activeTabId' || payload.eventName === 'extensionManifest') {
+
+    if (serviceEvents.includes(payload.eventName)) {
         eventEmitter.emit(payload.eventName, payload);
     }
 
