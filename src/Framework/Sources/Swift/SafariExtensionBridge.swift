@@ -217,11 +217,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     self.invokeMethod(payload: "{\"eventName\": \"activeTabId\", \"tabId\": \(tabId)}")
                 }
             case .getManifest:
-                guard let infoPlist = Bundle(for: SafariExtensionBridge.self).path(forResource: "Info", ofType: "plist") else {
-                    self.invokeMethod(payload: "{\"eventName\": \"extensionManifest\", \"manifest\": {}}")
-                    return
-                }
-                guard let infoPlistDictionary = NSDictionary(contentsOfFile: infoPlist) else {
+                guard let infoPlist = Bundle(for: SafariExtensionBridge.self).path(forResource: "Info", ofType: "plist"),
+                    let infoPlistDictionary = NSDictionary(contentsOfFile: infoPlist) else
+                {
                     self.invokeMethod(payload: "{\"eventName\": \"extensionManifest\", \"manifest\": {}}")
                     return
                 }
