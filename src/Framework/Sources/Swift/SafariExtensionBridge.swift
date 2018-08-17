@@ -108,6 +108,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     public func toolbarItemClicked(in window: SFSafariWindow) {
         safariHelper.onWindowActivated(window: window)
+        self.invokeMethod(payload: "{\"eventName\": \"toolbarItemClicked\"}")
     }
 
     public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {

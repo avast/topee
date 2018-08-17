@@ -9,7 +9,7 @@ var eventEmitter = require('./event-bus.js');
 
 window.chrome = require('./chrome/index.js');
 
-var serviceEvents = ['hello', 'bye', 'activeTabId', 'extensionManifest'];
+var serviceEvents = ['hello', 'bye', 'activeTabId', 'extensionManifest', 'toolbarItemClicked'];
 
 function manageRequest(stringifiedPayload) {
     var payload = JSON.parse(stringifiedPayload);
