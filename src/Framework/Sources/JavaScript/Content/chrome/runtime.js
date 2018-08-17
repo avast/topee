@@ -93,4 +93,8 @@ safari.self.addEventListener("message", function (event) {
     }
 });
 
+runtime.getURL = function (path) {
+    return safari.extension.baseURI + path;
+};
+
 module.exports = runtime;
