@@ -16,5 +16,6 @@ enum Message {
         case ready
         case getActiveTabId
         case getManifest
+        case setIcon
     }
 }

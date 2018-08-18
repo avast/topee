@@ -17,9 +17,8 @@ browserAction.setPopup = function ({tabId, popup}, callback) {
     state.popup = {tabId, popup, callback};
 };
 
-// TODO: Implementation
-browserAction.setIcon = function () {
-    console.debug('TODO: chrome.browserAction.setIcon ' + JSON.stringify([...arguments], 2));
+browserAction.setIcon = function (details) {
+    window.webkit.messageHandlers.appex.postMessage({type: 'setIcon', details});
 };
 
 browserAction.onClicked = {

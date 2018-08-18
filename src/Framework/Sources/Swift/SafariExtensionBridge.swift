@@ -11,7 +11,8 @@ import WebKit
 public protocol SafariExtensionBridgeType {
     func setup(
         backgroundScripts: [URL],
-        webViewURL: URL)
+        webViewURL: URL,
+        icons: [String: NSImage])
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
 }
@@ -20,7 +21,8 @@ public protocol SafariExtensionBridgeType {
 public extension SafariExtensionBridgeType {
     func setup(
         backgroundScripts: [URL],
-        webViewURL: URL = URL(string: "http://topee.local")!)
+        webViewURL: URL = URL(string: "http://topee.local")!,
+        icons: [String: NSImage] = [:])
     {
         setup(
             backgroundScripts: backgroundScripts,
@@ -48,6 +50,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     private var backgroundScripts: [URL]?
     private var webViewURL: URL = URL(string: "http://topee.local")!
+    private var icons: [String: NSImage] = [:]
 
     private var pages: [UInt64: SFSafariPage] = [:]
     private var webView: WKWebView?
@@ -63,7 +66,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         super.init()
     }
     
-    public func setup(backgroundScripts: [URL], webViewURL: URL) {
+    public func setup(backgroundScripts: [URL], webViewURL: URL, icons: [String: NSImage]) {
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
             if backgroundScripts != self.backgroundScripts {
@@ -79,6 +82,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
         self.backgroundScripts = backgroundScripts
         self.webViewURL = webViewURL
+        self.icons = icons
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
@@ -228,6 +232,19 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 let name = infoPlistDictionary["CFBundleDisplayName"] as? String
                 let extId = infoPlistDictionary["CFBundleIdentifier"] as? String
                 invokeMethod(payload: "{\"eventName\": \"extensionManifest\", \"manifest\": {\"version\": \"\(version ?? "")\", \"name\": \"\(name ?? "")\", \"id\": \"\(extId ?? "")\"}}")
+            case .setIcon:
+                NSLog("setIcon \(userInfo)")
+                
+                if let path32 = (((userInfo["details"]
+                    as? [String: Any])?["path"]
+                    as? [String: Any])?["32"])
+                    as? String,
+                    let image = icons[path32]
+                {
+                    self.safariHelper.getActiveWindow { window in
+                        window?.getToolbarItem { $0?.setImage(image) }
+                    }
+                }
             }
         }
     }
