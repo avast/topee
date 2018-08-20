@@ -1,5 +1,9 @@
 {
   "done": {
+    "browserAction": [
+      "setIcon",
+      "onClicked"
+    ],
     "runtime": [
       "getManifest",
       "sendMessage",
@@ -20,7 +24,7 @@
   },
   "bugs": {
     "runtime": {
-      "sendMessage": [ "https://bugreport.apple.com/web/?problemID=43230564" ]
+      "sendMessage": []
     }
   }
 }
