@@ -7,9 +7,8 @@ var state = {
     popup: {}
 };
 
-// TODO: Implementation
-browserAction.setTitle = function () {
-    console.debug('TODO: chrome.browserAction.setTitle ' + JSON.stringify([...arguments], 2));
+browserAction.setTitle = function ({title, tabId}) {
+    window.webkit.messageHandlers.appex.postMessage({type: 'setIconTitle', title, tabId});
 };
 
 // TODO: Implementation (actual display of popup + callback handling is missing)
@@ -17,8 +16,8 @@ browserAction.setPopup = function ({tabId, popup}, callback) {
     state.popup = {tabId, popup, callback};
 };
 
-browserAction.setIcon = function (details) {
-    window.webkit.messageHandlers.appex.postMessage({type: 'setIcon', details});
+browserAction.setIcon = function ({path, imageData, tabId}) {
+    window.webkit.messageHandlers.appex.postMessage({type: 'setIcon', path, imageData, tabId});
 };
 
 browserAction.onClicked = {

@@ -232,17 +232,24 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 let name = infoPlistDictionary["CFBundleDisplayName"] as? String
                 let extId = infoPlistDictionary["CFBundleIdentifier"] as? String
                 invokeMethod(payload: "{\"eventName\": \"extensionManifest\", \"manifest\": {\"version\": \"\(version ?? "")\", \"name\": \"\(name ?? "")\", \"id\": \"\(extId ?? "")\"}}")
+            case .setIconTitle:
+                guard let title = userInfo["title"] as? String else { return }
+
+                self.safariHelper.getActiveWindow { window in
+                    window?.getToolbarItem {
+                        $0?.setLabel(title)
+                    }
+                }
             case .setIcon:
-                NSLog("setIcon \(userInfo)")
-                
-                if let path32 = (((userInfo["details"]
-                    as? [String: Any])?["path"]
+                if let path32 = ((userInfo["path"]
                     as? [String: Any])?["32"])
                     as? String,
                     let image = icons[path32]
                 {
                     self.safariHelper.getActiveWindow { window in
-                        window?.getToolbarItem { $0?.setImage(image) }
+                        window?.getToolbarItem {
+                            $0?.setImage(image)
+                        }
                     }
                 }
             }
