@@ -26,7 +26,8 @@ public extension SafariExtensionBridgeType {
     {
         setup(
             backgroundScripts: backgroundScripts,
-            webViewURL: webViewURL
+            webViewURL: webViewURL,
+            icons: icons
         )
     }
 }
