@@ -10,14 +10,16 @@ var childFrames = {
         this._frames[frameId] = frameWindow;
     },
     get: function (frameId) {
+        this.garbageCollect();
         return this._frames[frameId];
     },
     getAll: function () {
+        this.garbageCollect();
         return Object.values(this._frames);
     },
     garbageCollect: function() {
         for (var frameId in this._frames) {
-            if (!Array.prototype.find.call(window.frames, f => this._frames[frameId] === f)) {
+            if (this._frames[frameId].closed) {
                 delete this._frames[frameId];
             }
         }
