@@ -19,7 +19,30 @@ import SafariServices
 class SFSafariApplicationHelper {
     private var activeWindow: SFSafariWindow?
     private let workQueue = DispatchQueue(label: "SFSafariApplicationHelper.workQueue", attributes: .concurrent)
+    private var toolbarIcon: NSImage?
+    private var toolbarIconTitle: String?
 
+    func toolbarItemClicked(in window: SFSafariWindow) {
+        onWindowActivated(window: window)
+    }
+    
+    func toolbarItemNeedsUpdate(in window: SFSafariWindow) {
+        window.getToolbarItem { [weak self] toolbar in
+            self?.toolbarIcon.flatMap { toolbar?.setImage($0) }
+            self?.toolbarIconTitle.flatMap {toolbar?.setLabel($0) }
+        }
+    }
+    
+    func setToolbarIcon(_ icon: NSImage) {
+        toolbarIcon = icon
+        SFSafariApplication.setToolbarItemsNeedUpdate()
+    }
+    
+    func setToolbarIconTitle(_ title: String) {
+        toolbarIconTitle = title
+        SFSafariApplication.setToolbarItemsNeedUpdate()
+    }
+    
     /**
      Set cached active window from outside
 

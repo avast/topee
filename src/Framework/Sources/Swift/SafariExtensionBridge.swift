@@ -15,6 +15,7 @@ public protocol SafariExtensionBridgeType {
         icons: [String: NSImage])
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
+    func toolbarItemNeedsUpdate(in window: SFSafariWindow)
 }
 
 // Can't define default values in protocol so we need extension
@@ -112,8 +113,12 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     // MARK: - Public API
 
     public func toolbarItemClicked(in window: SFSafariWindow) {
-        safariHelper.onWindowActivated(window: window)
+        safariHelper.toolbarItemClicked(in: window)
         self.invokeMethod(payload: "{\"eventName\": \"toolbarItemClicked\"}")
+    }
+
+    public func toolbarItemNeedsUpdate(in window: SFSafariWindow) {
+        safariHelper.toolbarItemNeedsUpdate(in: window)
     }
 
     public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
@@ -235,23 +240,14 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 invokeMethod(payload: "{\"eventName\": \"extensionManifest\", \"manifest\": {\"version\": \"\(version ?? "")\", \"name\": \"\(name ?? "")\", \"id\": \"\(extId ?? "")\"}}")
             case .setIconTitle:
                 guard let title = userInfo["title"] as? String else { return }
-
-                self.safariHelper.getActiveWindow { window in
-                    window?.getToolbarItem {
-                        $0?.setLabel(title)
-                    }
-                }
+                safariHelper.setToolbarIconTitle(title)
             case .setIcon:
                 if let path32 = ((userInfo["path"]
                     as? [String: Any])?["32"])
                     as? String,
-                    let image = icons[path32]
+                    let icon = icons[path32]
                 {
-                    self.safariHelper.getActiveWindow { window in
-                        window?.getToolbarItem {
-                            $0?.setImage(image)
-                        }
-                    }
+                    safariHelper.setToolbarIcon(icon)
                 }
             }
         }
