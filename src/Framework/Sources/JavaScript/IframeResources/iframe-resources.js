@@ -80,12 +80,12 @@ if (typeof safari.self.addEventListener === 'undefined') {
 }
 
 window.addEventListener('message', function (event) {
-    if (txtCrypto) {
-        console.error('cannot overwrite encryption key');
-        return;
-    }
-
     if (event.data.type === 'topee_iframe_key' && event.data.value) {
+        if (txtCrypto) {
+            console.error('cannot overwrite encryption key');
+            return;
+        }
+    
         txtCrypto = new TextCrypto(event.data.value);
         txtCrypto.readyPromise
             .then(function () {
