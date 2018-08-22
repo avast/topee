@@ -40,6 +40,44 @@ enum MessageHandler: String {
     case log
 }
 
+struct PageRegistry {
+    private var pages: [UInt64: SFSafariPage] = [:]
+    
+    var count: Int {
+        get {
+            return pages.count
+        }
+    }
+    
+    var tabIds: [ UInt64 ] {
+        get {
+            return Array(pages.keys)
+        }
+    }
+
+    mutating public func hello(page: SFSafariPage, tabId: UInt64?) {
+        if tabId != nil {
+            pages[tabId!] = page
+        }
+    }
+
+    mutating public func bye(tabId: UInt64?) {
+        if tabId != nil {
+            pages[tabId!] = nil
+        }
+    }
+    
+    public func pageToTabId(_ page: SFSafariPage) -> UInt64? {
+        guard let item = pages.first(where: { $0.value == page }) else { return nil }
+        return item.key
+    }
+    
+    public func tabIdToPage(_ tabId: UInt64) -> SFSafariPage? {
+        return pages[tabId]
+    }
+
+}
+
 // MARK: -
 
 public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessageHandler {
@@ -54,7 +92,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var webViewURL: URL = URL(string: "http://topee.local")!
     private var icons: [String: NSImage] = [:]
 
-    private var pages: [UInt64: SFSafariPage] = [:]
+    private var pageRegistry = PageRegistry()
     private var webView: WKWebView?
     private var isBackgroundReady: Bool = false
     // Accumulates messages until the background scripts
@@ -130,13 +168,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             case .hello, .request:
                 // Messages may come out of order, e.g. request is faster than hello here
                 // so let's handle them in same way.
-                if let tabId = userInfo?["tabId"] as? UInt64 {
-                    pages[tabId] = page
-                }
+                pageRegistry.hello(page: page, tabId: userInfo?["tabId"] as? UInt64)
             case .bye:
-                if let tabId = userInfo?["tabId"] as? UInt64 {
-                    pages[tabId] = nil
-                }
+                pageRegistry.bye(tabId: userInfo?["tabId"] as? UInt64)
             }
 
             // Relays the messages to the background script
@@ -149,15 +183,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 invokeMethod(payload: payload)
             }
         }
-        NSLog("#appex(content): pages: { count: \(self.pages.count), tabIds: \(self.pages.keys)}")
+        NSLog("#appex(content): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
     }
 
     // MARK: - Private API
-
-    func pageToTabId(page: SFSafariPage) -> UInt64? {
-        guard let item = self.pages.first(where: { $0.value == page }) else { return nil }
-        return item.key
-    }
 
     private func invokeMethod(payload: String) {
         if !isBackgroundReady {
@@ -207,7 +236,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         case .content:
             guard let tabId = userInfo["tabId"] as? UInt64 else { return }
             guard let eventName = userInfo["eventName"] as? String else { return }
-            guard let page = self.pages[tabId] else { return }
+            guard let page = pageRegistry.tabIdToPage(tabId) else { return }
             page.dispatchMessageToScript(withName: eventName, userInfo: userInfo)
         case .appex:
             guard let typeName = userInfo["type"] as? String else { return }
@@ -220,7 +249,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             case .getActiveTabId:
                 safariHelper.getActivePage { page in
                     guard page != nil,
-                        let tabId = self.pageToTabId(page: page!) else {
+                        let tabId = self.pageRegistry.pageToTabId(page!) else {
                         self.invokeMethod(payload: "{\"eventName\": \"activeTabId\", \"tabId\": null}")
                         return
                     }
