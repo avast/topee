@@ -102,6 +102,7 @@ window.addEventListener('message', function (event) {
 });
 
 var tabInfo = require('../Content/tabInfo.js');
+tabInfo.init();
 
 window.parent.postMessage({ type: 'topee_get_iframe_key', frameId: tabInfo.frameId }, '*');
 

@@ -1,12 +1,13 @@
 (function () {
 
+var tabInfo = require('./tabInfo.js');
+    
 if (typeof window.chrome === 'object') {
     console.log('chrome api already loaded');
 
-    if (typeof window.chrome._tabId !== 'undefined') {
-        window.addEventListener('pagehide', sayBye);
-        window.addEventListener('beforeunload', sayBye);
-    }
+    // in case this is injected multiple times (https://bugreport.apple.com/web/?problemID=43086339), the first injects don't received these events
+    window.addEventListener('pagehide', tabInfo.sayBye);
+    window.addEventListener('beforeunload', tabInfo.sayBye);
 
     return;
 }
@@ -15,31 +16,27 @@ var URL_POLL_VISIBLE = 500;
 var URL_POLL_HIDDEN = 5000;
 
 window.chrome = require('./chrome/index.js');
-var tabInfo = require('./tabInfo.js');
+tabInfo.init();
 
 // the non-existence of window.chrome on the top makes sure that this listener is installed only once
 var iframesParent = require('./iframes.js');
 iframesParent.install();
 
 if (window === window.top) {
-    window.chrome._tabId = tabInfo.topLevelTabId;
-    sayHello(tabInfo.topLevelTabId);
-}
-else {
-    tabInfo.tabId.then(tabId => sayHello(tabId));
+    tabInfo.sayHello();
 }
 
 window.addEventListener('pageshow', function() {
     // When user navigates back Safari ressurects page so we need to trigger hello also in
     // this case (because was dereferenced using beforeunload)
-    tabInfo.tabId.then(tabId => sayHello(tabId));
+    tabInfo.sayHello();
 });
 
 var lastUrl = window.location.href;
 
 if (window === window.top) {
-    window.addEventListener('pagehide', sayBye);
-    window.addEventListener('beforeunload', sayBye);
+    window.addEventListener('pagehide', tabInfo.sayBye);
+    window.addEventListener('beforeunload', tabInfo.sayBye);
 
     // history API has no change notification, so we have to use polling
     var scheduleMs = document.visibilityState === 'visible' ? URL_POLL_VISIBLE : URL_POLL_HIDDEN;
@@ -60,33 +57,8 @@ if (window === window.top) {
 function visibilityHello() {
     if (document.visibilityState !== 'prerender' && window.location.href !== lastUrl) {
         lastUrl = window.location.href;
-        sayHello(tabInfo.topLevelTabId);
+        tabInfo.sayHello();
     }
-}
-
-function sayHello(tabId) {
-    safari.extension.dispatchMessage('hello', {
-        tabId: tabId,
-        frameId: tabInfo.frameId,
-        payload: JSON.stringify({
-            tabId: tabId,
-            frameId: tabInfo.frameId,
-            eventName: 'hello',
-            url: window.location.href
-        })
-    });
-}
-
-function sayBye(event) {
-    safari.extension.dispatchMessage('bye', {
-        tabId: window.chrome._tabId,
-        payload: JSON.stringify({
-            tabId: window.chrome._tabId,
-            eventName: 'bye',
-            reason: event ? event.type : 'unknown',
-            url: window.location.href
-        })
-    });
 }
 
 })();
