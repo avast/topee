@@ -21,7 +21,7 @@ document.addEventListener('click', function (event) {
   }
 
   dlg = document.createElement('iframe');
-  dlg.src = safari.extension.baseURI + 'dialog.html';
+  dlg.src = chrome.runtime.getURL('dialog.html');
   dlg.style.position = 'absolute';
   dlg.style.left = Math.floor(event.clientX) + 'px';
   dlg.style.top = Math.floor(event.clientY) + 'px';

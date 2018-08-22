@@ -94,6 +94,11 @@ safari.self.addEventListener("message", function (event) {
 });
 
 runtime.getURL = function (path) {
+    if (!safari.extension.baseURI) {
+        // Sometimes this happens (on first page load after XCode build & run)
+        throw new Error('safari.extension.baseURI didn\'t return usable value');
+    }
+
     return safari.extension.baseURI + path;
 };
 
