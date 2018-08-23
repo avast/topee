@@ -87,6 +87,25 @@ class TopeePageRegistryTests: XCTestCase {
         XCTAssertEqual(registry.tabIds, [tabId2])
     }
     
+    func testNavigationWithKnownTabIdShouldClearByeHistory() {
+        let page1 = TestPage()
+        var registry = PageRegistry<TestPage>()
+        registry.hello(page: page1, tabId: 1, referrer: "")
+        let tabId1 = registry.pageToTabId(page1)
+        registry.bye(page: page1, url: "http://host1/abc")
+        
+        // Navigation (with known tabId)
+        let page2 = TestPage()
+        registry.hello(page: page2, tabId: 1, referrer: "http://host1/")
+
+        // Following unrelated navigation with same referrer but unknown tabId
+        let page3 = TestPage()
+        registry.hello(page: page3, tabId: nil, referrer: "http://host1/")
+        let tabId3 = registry.pageToTabId(page3)
+        XCTAssertEqual(registry.count, 2)
+        XCTAssertEqual(registry.tabIds.sorted(), [tabId1, tabId3])
+    }
+    
     func testHandlesUnrelatedNewPageAfterByeAsNewTab() {
         let page1 = TestPage()
         var registry = PageRegistry<TestPage>()
@@ -102,7 +121,22 @@ class TopeePageRegistryTests: XCTestCase {
         XCTAssertEqual(registry.tabIds, [tabId2])
     }
     
+    func testHandlesRelatedNavigationWithoutReferrer() {
+        // Referrer may be missing if source page contains Referrer-Policy: no-referrer header
+        let page1 = TestPage()
+        var registry = PageRegistry<TestPage>()
+        registry.hello(page: page1, tabId: nil, referrer: "")
+        let tabId1 = registry.pageToTabId(page1)
+        registry.bye(page: page1, url: "http://host1/abc", historyLength: 1)
+        
+        // Navigation
+        let page2 = TestPage()
+        registry.hello(page: page2, tabId: nil, referrer: "", historyLength: 2)
+        XCTAssertEqual(registry.count, 1)
+        XCTAssertEqual(registry.tabIds, [tabId1])
+    }
     
+
 
 }
 
