@@ -31,10 +31,12 @@ class TopeePageRegistryTests: XCTestCase {
         let page = TestPage()
         var registry = PageRegistry<TestPage>()
         registry.hello(page: page, tabId: 1)
-        registry.bye(tabId: 1)
+        registry.bye(page: page)
         XCTAssertEqual(registry.count, 0)
         XCTAssertEqual(registry.tabIds, [])
     }
+    
+    
 }
 
 class TopeeTests: XCTestCase {

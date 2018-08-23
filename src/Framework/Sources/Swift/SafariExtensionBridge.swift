@@ -61,9 +61,9 @@ struct PageRegistry<PageT: Equatable> {
         }
     }
 
-    mutating public func bye(tabId: UInt64?) {
-        if tabId != nil {
-            pages[tabId!] = nil
+    mutating public func bye(page: PageT) {
+        if let tabId = pageToTabId(page) {
+            pages[tabId] = nil
         }
     }
     
@@ -172,7 +172,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 // so let's handle them in same way.
                 pageRegistry.hello(page: page, tabId: userInfo?["tabId"] as? UInt64)
             case .bye:
-                pageRegistry.bye(tabId: userInfo?["tabId"] as? UInt64)
+                pageRegistry.bye(page: page)
             }
 
             // Relays the messages to the background script
