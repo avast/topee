@@ -41,8 +41,16 @@ enum MessageHandler: String {
 }
 
 struct PageRegistry<PageT: Equatable> {
-    private var pages: [UInt64: PageT] = [:]
+    private let MAX_BYES = 16   // something like 1 or 2 should be enough for the purpose to match the subsequent hello
     
+    private struct ByeRecord {
+        let tabId: UInt64
+        let url: String
+    }
+
+    private var pages: [UInt64: PageT] = [:]
+    private var recentlyByedPages = [ByeRecord]()
+
     var count: Int {
         get {
             return pages.count
@@ -55,14 +63,33 @@ struct PageRegistry<PageT: Equatable> {
         }
     }
 
-    mutating public func hello(page: PageT, tabId: UInt64?) {
+    mutating public func hello(page: PageT, tabId: UInt64?, referrer: String) {
         if tabId != nil {
             pages[tabId!] = page
         }
+        else {
+            if (referrer != "") {
+                if let byeIdx = recentlyByedPages.index(where: {$0.url.hasPrefix(referrer)}) {
+                    pages[recentlyByedPages[byeIdx].tabId] = page
+                    recentlyByedPages.remove(at: byeIdx)
+                    return
+                }
+            }
+            //Int.random(in: 1 .. 9007199254740991)  // 2^53 - 1, JS Number.MAX_SAFE_INTEGER
+            let newTabId = ((UInt64(arc4random_uniform(0xFFFFFFFE)) | (UInt64(arc4random_uniform(0x1FFFFFF)) << 32))) + 1
+            pages[newTabId] = page
+        }
     }
 
-    mutating public func bye(page: PageT) {
+    mutating public func bye(page: PageT, url: String) {
+        while recentlyByedPages.count >= MAX_BYES {
+            recentlyByedPages.removeLast()
+        }
         if let tabId = pageToTabId(page) {
+            recentlyByedPages.insert(ByeRecord(
+                tabId: tabId,
+                url: url
+            ), at: 0)
             pages[tabId] = nil
         }
     }
@@ -170,9 +197,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             case .hello, .request:
                 // Messages may come out of order, e.g. request is faster than hello here
                 // so let's handle them in same way.
-                pageRegistry.hello(page: page, tabId: userInfo?["tabId"] as? UInt64)
+                pageRegistry.hello(page: page, tabId: userInfo?["tabId"] as? UInt64, referrer: userInfo?["referrer"] as? String ?? "")
             case .bye:
-                pageRegistry.bye(page: page)
+                pageRegistry.bye(page: page, url: userInfo?["url"] as? String ?? "")
             }
 
             // Relays the messages to the background script
