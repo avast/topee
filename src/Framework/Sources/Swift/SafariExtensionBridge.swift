@@ -48,7 +48,7 @@ struct PageRegistry<PageT: Equatable> {
     private struct ByeRecord {
         let tabId: UInt64
         let url: String
-        let historyLength: Int?
+        let historyLength: Int64?
     }
 
     private var pages: [UInt64: PageT] = [:]
@@ -70,28 +70,31 @@ struct PageRegistry<PageT: Equatable> {
         }
     }
     
-    mutating public func hello(page: PageT, tabId: UInt64?, referrer: String, historyLength: Int? = nil) {
+    @discardableResult
+    mutating public func hello(page: PageT, tabId: UInt64?, referrer: String, historyLength: Int64? = nil) -> UInt64 {
         assert(Thread.current == _thread)
         
         let closedPageIndex = recentlyClosedPage(tabId: tabId, referrer: referrer, historyLength: historyLength)
 
         if (closedPageIndex != nil) {
-            pages[recentlyByedPages[closedPageIndex!].tabId] = page
+            let id = recentlyByedPages[closedPageIndex!].tabId
+            pages[id] = page
             recentlyByedPages.remove(at: closedPageIndex!)
-            return
+            return id
         }
 
         if tabId != nil {
             pages[tabId!] = page
-            return
+            return tabId!
         }
             
         //Int.random(in: 1 .. 9007199254740991)  // 2^53 - 1, JS Number.MAX_SAFE_INTEGER
-        let newTabId = ((UInt64(arc4random_uniform(0xFFFFFFFE)) | (UInt64(arc4random_uniform(0x1FFFFFF)) << 32))) + 1
+        let newTabId = ((UInt64(arc4random_uniform(0xFFFFFFFE)) | (UInt64(arc4random_uniform(0x3FFFFF)) << 32))) + 1
         pages[newTabId] = page
+        return newTabId
     }
     
-    private func recentlyClosedPage(tabId: UInt64?, referrer: String, historyLength: Int?) -> Int? {
+    private func recentlyClosedPage(tabId: UInt64?, referrer: String, historyLength: Int64?) -> Int? {
         if (tabId != nil) {
             if let i = recentlyByedPages.index(where : {$0.tabId == tabId}) {
                 return i;
@@ -111,7 +114,7 @@ struct PageRegistry<PageT: Equatable> {
         return nil
     }
 
-    mutating public func bye(page: PageT, url: String, historyLength: Int? = nil) {
+    mutating public func bye(page: PageT, url: String, historyLength: Int64? = nil) {
         assert(Thread.current == _thread)
         
         while recentlyByedPages.count >= MAX_BYES {
@@ -231,12 +234,19 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         if let message = Message.Content.Request(rawValue: messageName) {
             // Manages the registry of pages based on the type of message received
             switch message {
-            case .hello, .request:
+            case .hello:
                 // Messages may come out of order, e.g. request is faster than hello here
                 // so let's handle them in same way.
-                pageRegistry.hello(page: page, tabId: userInfo?["tabId"] as? UInt64, referrer: userInfo?["referrer"] as? String ?? "")
+                let tabId = pageRegistry.hello(
+                    page: page,
+                    tabId: userInfo?["tabId"] as? UInt64,
+                    referrer: userInfo?["referrer"] as? String ?? "",
+                    historyLength: userInfo?["historyLength"] as? Int64)
+                page.dispatchMessageToScript(withName: "forceTabId", userInfo: ["tabId" : tabId])
             case .bye:
                 pageRegistry.bye(page: page, url: userInfo?["url"] as? String ?? "")
+            case .request:
+                break
             }
 
             // Relays the messages to the background script
