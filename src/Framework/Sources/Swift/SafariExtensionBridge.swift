@@ -40,8 +40,8 @@ enum MessageHandler: String {
     case log
 }
 
-struct PageRegistry {
-    private var pages: [UInt64: SFSafariPage] = [:]
+struct PageRegistry<PageT: Equatable> {
+    private var pages: [UInt64: PageT] = [:]
     
     var count: Int {
         get {
@@ -55,7 +55,7 @@ struct PageRegistry {
         }
     }
 
-    mutating public func hello(page: SFSafariPage, tabId: UInt64?) {
+    mutating public func hello(page: PageT, tabId: UInt64?) {
         if tabId != nil {
             pages[tabId!] = page
         }
@@ -67,16 +67,18 @@ struct PageRegistry {
         }
     }
     
-    public func pageToTabId(_ page: SFSafariPage) -> UInt64? {
+    public func pageToTabId(_ page: PageT) -> UInt64? {
         guard let item = pages.first(where: { $0.value == page }) else { return nil }
         return item.key
     }
     
-    public func tabIdToPage(_ tabId: UInt64) -> SFSafariPage? {
+    public func tabIdToPage(_ tabId: UInt64) -> PageT? {
         return pages[tabId]
     }
 
 }
+
+typealias SFSafariPageRegistry = PageRegistry<SFSafariPage>
 
 // MARK: -
 
@@ -92,7 +94,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var webViewURL: URL = URL(string: "http://topee.local")!
     private var icons: [String: NSImage] = [:]
 
-    private var pageRegistry = PageRegistry()
+    private var pageRegistry = SFSafariPageRegistry()
     private var webView: WKWebView?
     private var isBackgroundReady: Bool = false
     // Accumulates messages until the background scripts

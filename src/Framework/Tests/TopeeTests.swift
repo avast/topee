@@ -5,6 +5,38 @@
 import XCTest
 @testable import Topee
 
+class TopeePageRegistryTests: XCTestCase {
+    
+    typealias TestPage = NSObject
+    
+    override func setUp() {
+        super.setUp()
+        // Put setup code here. This method is called before the invocation of each test method in the class.
+    }
+    
+    override func tearDown() {
+        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        super.tearDown()
+    }
+    
+    func testAddsPage() {
+        let page = TestPage()
+        var registry = PageRegistry<TestPage>()
+        registry.hello(page: page, tabId: 1)
+        XCTAssertEqual(registry.count, 1)
+        XCTAssertEqual(registry.tabIds, [ 1 ])
+    }
+
+    func testRemovesPage() {
+        let page = TestPage()
+        var registry = PageRegistry<TestPage>()
+        registry.hello(page: page, tabId: 1)
+        registry.bye(tabId: 1)
+        XCTAssertEqual(registry.count, 0)
+        XCTAssertEqual(registry.tabIds, [])
+    }
+}
+
 class TopeeTests: XCTestCase {
     
     override func setUp() {
