@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		806E5C6221306E4300C369EB /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806E5C6121306E4300C369EB /* TestHelper.swift */; };
 		80BEB8AA2111B68600DA4C7B /* topee-background.js in Resources */ = {isa = PBXBuildFile; fileRef = 80BEB8A92111B68600DA4C7B /* topee-background.js */; };
 		80C79F982125724200A06D24 /* SFSafariApplicationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C79F972125724200A06D24 /* SFSafariApplicationHelper.swift */; };
 		EF80A765210F2B68002C6F3F /* Topee.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF80A75B210F2B67002C6F3F /* Topee.framework */; };
@@ -33,6 +34,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		806E5C6121306E4300C369EB /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
 		80BEB8A42111B3E600DA4C7B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
 		80BEB8A62111B58900DA4C7B /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = content.js; sourceTree = "<group>"; };
 		80BEB8A92111B68600DA4C7B /* topee-background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "topee-background.js"; path = "Build/topee-background.js"; sourceTree = SOURCE_ROOT; };
@@ -151,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				EF80A769210F2B68002C6F3F /* TopeeTests.swift */,
+				806E5C6121306E4300C369EB /* TestHelper.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 			files = (
 				EFF799BE2110966A00646663 /* Message.swift in Sources */,
 				80C79F982125724200A06D24 /* SFSafariApplicationHelper.swift in Sources */,
+				806E5C6221306E4300C369EB /* TestHelper.swift in Sources */,
 				EFF799BC2110963600646663 /* SafariExtensionBridge.swift in Sources */,
 				EFF799C52110ADDE00646663 /* WKWebView.swift in Sources */,
 				EFF799C32110ADBC00646663 /* WKUserScript.swift in Sources */,

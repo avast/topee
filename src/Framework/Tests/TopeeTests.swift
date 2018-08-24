@@ -6,11 +6,11 @@ import XCTest
 @testable import Topee
 
 class TopeePageRegistryTests: XCTestCase {
-    
-    typealias TestPage = NSObject
-    
+    private var registry: PageRegistry<TestPage>! = nil
+
     override func setUp() {
         super.setUp()
+        registry = PageRegistry<TestPage>()
         // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
@@ -19,47 +19,54 @@ class TopeePageRegistryTests: XCTestCase {
         super.tearDown()
     }
     
-    func testAddsPage() {
-        let page = TestPage()
-        var registry = PageRegistry<TestPage>()
-        registry.hello(page: page, tabId: 1, referrer: "", historyLength: 1)
-        XCTAssertEqual(registry.count, 1)
-        XCTAssertEqual(registry.tabIds, [ 1 ])
+    private func buildTab(trace: Bool = false) -> TestTab {
+        return TestTab(registry: registry, trace: trace)
     }
+    
+    func testAddsPage() {
+        let tab1 = buildTab().navigate(url: "http://host1")
+        
+        XCTAssertEqual(registry.count, 1)
+        XCTAssertEqual(registry.tabIds, [ tab1.id ])
+    }
+    
+    func testAddsPages() {
+        let tab1 = buildTab().navigate(url: "http://host1")
+        let tab2 = buildTab().navigate(url: "http://host2")
 
+        XCTAssertEqual(registry.count, 2)
+        XCTAssertEqual(registry.tabIds.sorted(), [tab1.id!, tab2.id!].sorted())
+    }
+    
     func testRemovesPage() {
-        let page = TestPage()
-        var registry = PageRegistry<TestPage>()
-        registry.hello(page: page, tabId: 1, referrer: "", historyLength: 1)
-        registry.bye(page: page, url: "", historyLength: 1)
+        buildTab().navigate(url: "http://host1").close()
+
         XCTAssertEqual(registry.count, 0)
         XCTAssertEqual(registry.tabIds, [])
     }
     
-    func testAddsPageWithoutTabId() {
-        let page = TestPage()
-        var registry = PageRegistry<TestPage>()
-        registry.hello(page: page, tabId: nil, referrer: "", historyLength: 1)
+    func testDetectsPageNavigationAndKeepsSameTabId() {
+        let tab1 = buildTab().navigate(url: "http://host1/abc").navigate(url: "http://host1")
         XCTAssertEqual(registry.count, 1)
+        XCTAssertEqual(registry.tabIds, [tab1.id])
+    }
+
+    func testDetectsPageNavigationAndKeepsSameTabIdOtherDomain() {
+        let tab1 = buildTab().navigate(url: "http://host1/abc").navigate(url: "http://host2")
+        XCTAssertEqual(registry.count, 1)
+        XCTAssertEqual(registry.tabIds, [tab1.id])
     }
     
-    func testDetectsPageNavigationAndKeepsSameTabId() {
-        let page1 = TestPage()
-        var registry = PageRegistry<TestPage>()
-        registry.hello(page: page1, tabId: nil, referrer: "", historyLength: nil)
-        let tabId = registry.pageToTabId(page1)
-        registry.bye(page: page1, url: "http://host1/abc", historyLength: nil)
-
-        // Navigation
-        let page2 = TestPage()
-        registry.hello(page: page2, tabId: nil, referrer: "http://host1/", historyLength: nil)
-        XCTAssertEqual(registry.count, 1)
-        XCTAssertEqual(registry.tabIds, [tabId])
+    func testDetectsPageNavigationAndKeepsSameTabIdOtherDomainNoReferrer() {
+        // Should be handled by history lenght matching
+//        let tab1 = buildTab().navigate(url: "http://host1/abc", referrerPolicy: "no-referrer")
+//            .navigate(url: "http://host2")
+//        XCTAssertEqual(registry.count, 1)
+//        XCTAssertEqual(registry.tabIds, [tab1.id])
     }
-
+    
     func testOneByeOnlyMatchesFirstHelloForMatchingReferrer	() {
         let page1 = TestPage()
-        var registry = PageRegistry<TestPage>()
         registry.hello(page: page1, tabId: nil, referrer: "", historyLength: nil)
         registry.bye(page: page1, url: "http://host1/abc", historyLength: nil)
         
@@ -75,7 +82,6 @@ class TopeePageRegistryTests: XCTestCase {
     
     func testPrefersTabIdOverReferrer() {
         let page1 = TestPage()
-        var registry = PageRegistry<TestPage>()
         registry.hello(page: page1, tabId: 1, referrer: "", historyLength: 1)
         registry.bye(page: page1, url: "http://host1/abc", historyLength: 1)
         
@@ -88,8 +94,6 @@ class TopeePageRegistryTests: XCTestCase {
     }
     
     func testPrefersTabIdOverHistory() {
-        var registry = PageRegistry<TestPage>()
-        
         let page1 = TestPage()
         registry.hello(page: page1, tabId: 1, referrer: "", historyLength: 1)
         registry.bye(page: page1, url: "http://host1", historyLength: 1)
@@ -103,7 +107,6 @@ class TopeePageRegistryTests: XCTestCase {
     
     func testNavigationWithKnownTabIdShouldClearByeHistory() {
         let page1 = TestPage()
-        var registry = PageRegistry<TestPage>()
         registry.hello(page: page1, tabId: 1, referrer: "", historyLength: 1)
         let tabId1 = registry.pageToTabId(page1)
         registry.bye(page: page1, url: "http://host1/abc", historyLength: 1)
@@ -122,7 +125,6 @@ class TopeePageRegistryTests: XCTestCase {
     
     func testHandlesUnrelatedNewPageAfterByeAsNewTab() {
         let page1 = TestPage()
-        var registry = PageRegistry<TestPage>()
         registry.hello(page: page1, tabId: nil, referrer: "", historyLength: 1)
         let tabId1 = registry.pageToTabId(page1)
         registry.bye(page: page1, url: "http://host1/abc", historyLength: 1)
@@ -138,7 +140,6 @@ class TopeePageRegistryTests: XCTestCase {
     func testHandlesRelatedNavigationWithoutReferrer() {
         // Referrer may be missing if source page contains Referrer-Policy: no-referrer header
         let page1 = TestPage()
-        var registry = PageRegistry<TestPage>()
         registry.hello(page: page1, tabId: nil, referrer: "", historyLength: 1)
         let tabId1 = registry.pageToTabId(page1)
         registry.bye(page: page1, url: "http://host1/abc", historyLength: 1)
@@ -149,33 +150,4 @@ class TopeePageRegistryTests: XCTestCase {
         XCTAssertEqual(registry.count, 1)
         XCTAssertEqual(registry.tabIds, [tabId1])
     }
-    
-
-
-}
-
-class TopeeTests: XCTestCase {
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
 }
