@@ -25,9 +25,10 @@ else {
     tabInfo.frameId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 }
 
-var storedTabId = parseInt(sessionStorage.getItem('topee_tabId'));
-
-
+// this will break when navigating somewhere and then back here, because referrer is not what it should be in this case
+// sessionStorage forks, so further writes to it don't affect the original (that called window.open) document's sessionStorage
+var storedTabId = window.opener ? NaN : parseInt(sessionStorage.getItem('topee_tabId'));
+var helloWithNullTabIdSent = false;
 
 function init() {
     if (window === window.top) {
@@ -76,6 +77,11 @@ function init() {
 
 function sayHello() {
     var tabId = isNaN(storedTabId) ? null : storedTabId;
+    if (tabId === null) {
+        if (helloWithNullTabIdSent)
+            return;
+        helloWithNullTabIdSent = true;
+    }
 
     safari.extension.dispatchMessage('hello', {
         tabId: tabId,
