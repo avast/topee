@@ -232,6 +232,20 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
         assert(Thread.isMainThread)
         NSLog("#appex(content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
+        var payload: [String:Any]? = nil
+        if let payloadStr = userInfo?["payload"] as? String {
+            do {
+                let payloadAny: Any?
+                try payloadAny = JSONSerialization.jsonObject(with: payloadStr.data(using: .utf8)!)
+                if payloadAny as? [String:Any] != nil {
+                    payload = (payloadAny as! [String:Any])
+                }
+            }
+            catch {
+                payload = nil
+            }
+        }
+
         if let message = Message.Content.Request(rawValue: messageName) {
             // Manages the registry of pages based on the type of message received
             switch message {
@@ -247,7 +261,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     assert(userInfo?["tabId"] as? UInt64 != nil)
                     assert(userInfo?["tabId"] as? UInt64 == tabId)
                 }
-                page.dispatchMessageToScript(withName: "forceTabId", userInfo: ["tabId" : tabId])
+                payload!["tabId"] = tabId
+                dispatchMessageToScript(page: page, withName: "forceTabId", userInfo: ["tabId" : tabId])
             case .bye:
                 pageRegistry.bye(page: page, url: userInfo?["url"] as? String ?? "", historyLength: userInfo?["historyLength"] as? Int64)
             case .request:
@@ -255,13 +270,20 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
 
             // Relays the messages to the background script
-            if let payload = userInfo?["payload"] as? String {
+            if payload != nil {
+                var serializedPayload: String
+                do {
+                    try serializedPayload = String(data: JSONSerialization.data(withJSONObject: payload!), encoding: .utf8)!
+                }
+                catch {
+                    serializedPayload = ""
+                }
                 // TODO: It would be nice if we didn't have to
                 // replicate the message structure inside the
                 // payload. Instead we could try to encode
                 // the userInfo into a JSON object at the swift level.
                 // e.g: https://stackoverflow.com/questions/48297263/how-to-use-any-in-codable-type
-                invokeMethod(payload: payload)
+                invokeMethod(payload: serializedPayload)
             }
         }
         NSLog("#appex(content): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
@@ -296,6 +318,11 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
         }
     }
+    
+    private func dispatchMessageToScript(page: SFSafariPage, withName: String, userInfo: [String : Any]? = nil) {
+        NSLog("#appex(tocontent): page \(page.hashValue) message { name: \(withName), userInfo: \(userInfo ?? [:]) }")
+        page.dispatchMessageToScript(withName: withName, userInfo: userInfo)
+    }
 
     // MARK: - WKScriptMessageHandler
 
@@ -318,7 +345,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             guard let tabId = userInfo["tabId"] as? UInt64 else { return }
             guard let eventName = userInfo["eventName"] as? String else { return }
             guard let page = pageRegistry.tabIdToPage(tabId) else { return }
-            page.dispatchMessageToScript(withName: eventName, userInfo: userInfo)
+            dispatchMessageToScript(page: page, withName: eventName, userInfo: userInfo)
         case .appex:
             guard let typeName = userInfo["type"] as? String else { return }
             guard let type = Message.Background(rawValue: typeName) else { return }
