@@ -29,7 +29,7 @@ tabInfo.tabId.then(tabId => {
             tabId: tabId,
             payload: JSON.stringify(payload)
         });
-    }
+    };
 });
 
 runtime.sendMessage = function(message, callback) {
