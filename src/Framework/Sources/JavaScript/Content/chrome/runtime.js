@@ -68,6 +68,7 @@ runtime.onMessage = {
 };
 
 safari.self.addEventListener("message", function (event) {
+    // message from the background script and a response
     if (event.name === 'request' && (!event.message.frameId || event.message.frameId === tabInfo.frameId)) {
         tabInfo.tabId.then(tabId => {
             eventEmitter.emit('message', event.message.payload, {id: 'topee'}, function (message) {

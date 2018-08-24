@@ -5,9 +5,11 @@ var tabInfo = require('./tabInfo.js');
 if (typeof window.chrome === 'object') {
     console.log('chrome api already loaded');
 
-    // in case this is injected multiple times (https://bugreport.apple.com/web/?problemID=43086339), the first injects don't received these events
-    window.addEventListener('pagehide', tabInfo.sayBye);
-    window.addEventListener('beforeunload', tabInfo.sayBye);
+    if (window === window.top) {
+        // in case this is injected multiple times (https://bugreport.apple.com/web/?problemID=43086339), the first injects don't received these events
+        window.addEventListener('pagehide', tabInfo.sayBye);
+        window.addEventListener('beforeunload', tabInfo.sayBye);
+    }
 
     return;
 }

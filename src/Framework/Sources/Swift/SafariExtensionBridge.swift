@@ -71,7 +71,7 @@ struct PageRegistry<PageT: Equatable> {
     }
     
     @discardableResult
-    mutating public func hello(page: PageT, tabId: UInt64?, referrer: String, historyLength: Int64? = nil) -> UInt64 {
+    mutating public func hello(page: PageT, tabId: UInt64?, referrer: String, historyLength: Int64?) -> UInt64 {
         assert(Thread.current == _thread)
         
         let closedPageIndex = recentlyClosedPage(tabId: tabId, referrer: referrer, historyLength: historyLength)
@@ -89,7 +89,7 @@ struct PageRegistry<PageT: Equatable> {
         }
             
         //Int.random(in: 1 .. 9007199254740991)  // 2^53 - 1, JS Number.MAX_SAFE_INTEGER
-        let newTabId = ((UInt64(arc4random_uniform(0xFFFFFFFE)) | (UInt64(arc4random_uniform(0x3FFFFF)) << 32))) + 1
+        let newTabId = UInt64(arc4random_uniform(0x7FFFFFFE)) + 1 //((UInt64(arc4random_uniform(0xFFFFFFFE)) | (UInt64(arc4random_uniform(0x3FFFFF)) << 32))) + 1
         pages[newTabId] = page
         return newTabId
     }
@@ -99,6 +99,7 @@ struct PageRegistry<PageT: Equatable> {
             if let i = recentlyByedPages.index(where : {$0.tabId == tabId}) {
                 return i;
             }
+            return nil
         }
         if referrer != "" {
             if let i = recentlyByedPages.index(where: {$0.url.hasPrefix(referrer)}) {
@@ -114,7 +115,7 @@ struct PageRegistry<PageT: Equatable> {
         return nil
     }
 
-    mutating public func bye(page: PageT, url: String, historyLength: Int64? = nil) {
+    mutating public func bye(page: PageT, url: String, historyLength: Int64?) {
         assert(Thread.current == _thread)
         
         while recentlyByedPages.count >= MAX_BYES {
@@ -242,9 +243,13 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     tabId: userInfo?["tabId"] as? UInt64,
                     referrer: userInfo?["referrer"] as? String ?? "",
                     historyLength: userInfo?["historyLength"] as? Int64)
+                if userInfo?["tabId"] != nil && !(userInfo?["tabId"] is NSNull) {
+                    assert(userInfo?["tabId"] as? UInt64 != nil)
+                    assert(userInfo?["tabId"] as? UInt64 == tabId)
+                }
                 page.dispatchMessageToScript(withName: "forceTabId", userInfo: ["tabId" : tabId])
             case .bye:
-                pageRegistry.bye(page: page, url: userInfo?["url"] as? String ?? "")
+                pageRegistry.bye(page: page, url: userInfo?["url"] as? String ?? "", historyLength: userInfo?["historyLength"] as? Int64)
             case .request:
                 break
             }

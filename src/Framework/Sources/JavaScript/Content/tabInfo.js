@@ -53,10 +53,6 @@ function init() {
                 setTabId(event.message.tabId);
             }
         });
-
-        // TODO: test code, remove
-        storedTabId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-        setTabId(storedTabId);
         return;
     }
 
