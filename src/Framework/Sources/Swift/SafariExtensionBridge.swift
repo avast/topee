@@ -222,7 +222,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     public func toolbarItemClicked(in window: SFSafariWindow) {
         safariHelper.toolbarItemClicked(in: window)
-        self.invokeMethod(payload: "{\"eventName\": \"toolbarItemClicked\"}")
+        self.invokeMethod(payload: [ "eventName": "toolbarItemClicked" ])
     }
 
     public func toolbarItemNeedsUpdate(in window: SFSafariWindow) {
@@ -344,23 +344,35 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 safariHelper.getActivePage { page in
                     guard page != nil,
                         let tabId = self.pageRegistry.pageToTabId(page!) else {
-                        self.invokeMethod(payload: "{\"eventName\": \"activeTabId\", \"tabId\": null}")
+                            self.invokeMethod(
+                                payload: [ "eventName": "activeTabId", "tabId": NSNull() ])
                         return
                     }
 
-                    self.invokeMethod(payload: "{\"eventName\": \"activeTabId\", \"tabId\": \(tabId)}")
+                    self.invokeMethod(
+                        payload: [ "eventName": "activeTabId", "tabId": tabId ])
                 }
             case .getManifest:
                 guard let infoPlist = Bundle(for: SafariExtensionBridge.self).path(forResource: "Info", ofType: "plist"),
                     let infoPlistDictionary = NSDictionary(contentsOfFile: infoPlist) else
                 {
-                    self.invokeMethod(payload: "{\"eventName\": \"extensionManifest\", \"manifest\": {}}")
+                    self.invokeMethod(
+                        payload: [ "eventName": "extensionManifest", "manifest": [:] ])
                     return
                 }
                 let version = infoPlistDictionary["CFBundleShortVersionString"] as? String
                 let name = infoPlistDictionary["CFBundleDisplayName"] as? String
                 let extId = infoPlistDictionary["CFBundleIdentifier"] as? String
-                invokeMethod(payload: "{\"eventName\": \"extensionManifest\", \"manifest\": {\"version\": \"\(version ?? "")\", \"name\": \"\(name ?? "")\", \"id\": \"\(extId ?? "")\"}}")
+                self.invokeMethod(
+                    payload: [
+                        "eventName": "extensionManifest",
+                        "manifest": [
+                            "version": version ?? "",
+                            "name": name ?? "",
+                            "id": extId ?? ""
+                        ]
+                    ]
+                )
             case .setIconTitle:
                 guard let title = userInfo["title"] as? String else { return }
                 safariHelper.setToolbarIconTitle(title)
