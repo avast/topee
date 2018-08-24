@@ -88,12 +88,12 @@ function sayHello() {
         referrer: document.referrer,
         historyLength: history.length,
         frameId: tabInfo.frameId,
-        payload: JSON.stringify({
+        payload: {
             tabId: tabId,
             frameId: tabInfo.frameId,
             eventName: 'hello',
             url: window.location.href
-        })
+        }
     });
 }
 
@@ -104,12 +104,12 @@ function sayBye(event) {
         tabId: tabId,
         referrer: document.referrer,
         historyLength: history.length,
-        payload: JSON.stringify({
+        payload: {
             tabId: tabId,
             eventName: 'bye',
             reason: event ? event.type : 'unknown',
             url: window.location.href
-        })
+        }
     });
 }
 

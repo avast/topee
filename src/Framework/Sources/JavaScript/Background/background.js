@@ -11,9 +11,7 @@ window.chrome = require('./chrome/index.js');
 
 var serviceEvents = ['hello', 'bye', 'activeTabId', 'extensionManifest', 'toolbarItemClicked'];
 
-function manageRequest(stringifiedPayload) {
-    var payload = JSON.parse(stringifiedPayload);
-
+function manageRequest(payload) {
     if (payload.eventName === 'sendMessage') {
         chrome.tabs.get(payload.tabId, function (tab) {
             if (!tab) {  // should not happen

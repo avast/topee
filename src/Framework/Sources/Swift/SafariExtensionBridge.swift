@@ -232,19 +232,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
         assert(Thread.isMainThread)
         NSLog("#appex(content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
-        var payload: [String:Any]? = nil
-        if let payloadStr = userInfo?["payload"] as? String {
-            do {
-                let payloadAny: Any?
-                try payloadAny = JSONSerialization.jsonObject(with: payloadStr.data(using: .utf8)!)
-                if payloadAny as? [String:Any] != nil {
-                    payload = (payloadAny as! [String:Any])
-                }
-            }
-            catch {
-                payload = nil
-            }
-        }
+        var payload = userInfo?["payload"] as? [String: Any]
 
         if let message = Message.Content.Request(rawValue: messageName) {
             // Manages the registry of pages based on the type of message received
@@ -271,19 +259,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
             // Relays the messages to the background script
             if payload != nil {
-                var serializedPayload: String
-                do {
-                    try serializedPayload = String(data: JSONSerialization.data(withJSONObject: payload!), encoding: .utf8)!
-                }
-                catch {
-                    serializedPayload = ""
-                }
-                // TODO: It would be nice if we didn't have to
-                // replicate the message structure inside the
-                // payload. Instead we could try to encode
-                // the userInfo into a JSON object at the swift level.
-                // e.g: https://stackoverflow.com/questions/48297263/how-to-use-any-in-codable-type
-                invokeMethod(payload: serializedPayload)
+                invokeMethod(payload: payload)
             }
         }
         NSLog("#appex(content): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
@@ -298,7 +274,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
         
         func handler() {
-            self.webView!.evaluateJavaScript("topee.manageRequest('\(payload.replacingOccurrences(of: "'", with: "\\\'"))')"){ result, error in
+            self.webView!.evaluateJavaScript("topee.manageRequest(\(payload))"){ result, error in
                 guard error == nil else {
                     NSLog("Received JS error: \(error! as NSError)")
                     return
@@ -316,6 +292,16 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             DispatchQueue.main.async {
                 handler()
             }
+        }
+    }
+
+    private func invokeMethod(payload: [String: Any]?) {
+        do {
+            invokeMethod(
+                payload: try String(data: JSONSerialization.data(withJSONObject: payload!), encoding: .utf8)!)
+        }
+        catch {
+            fatalError("Failed to serialize payload for invokeMethod")
         }
     }
     

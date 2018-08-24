@@ -17,7 +17,7 @@ var dispatchRequest = function(payload) {
         payload.tabId = tabId;
         safari.extension.dispatchMessage('request', {
             tabId: tabId,
-            payload: JSON.stringify(payload)
+            payload: payload
         });
     });
 };
@@ -27,7 +27,7 @@ tabInfo.tabId.then(tabId => {
         payload.tabId = tabId;
         safari.extension.dispatchMessage('request', {
             tabId: tabId,
-            payload: JSON.stringify(payload)
+            payload: payload
         });
     };
 });
