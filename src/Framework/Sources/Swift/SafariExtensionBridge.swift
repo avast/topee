@@ -40,7 +40,7 @@ enum MessageHandler: String {
     case log
 }
 
-struct PageRegistry<PageT: Equatable> {
+class PageRegistry<PageT: Equatable> {
     private let _thread = Thread.current
     
     private let MAX_BYES = 16   // something like 1 or 2 should be enough for the purpose to match the subsequent hello
@@ -71,7 +71,7 @@ struct PageRegistry<PageT: Equatable> {
     }
     
     @discardableResult
-    mutating public func hello(page: PageT, tabId: UInt64?, referrer: String, historyLength: Int64?) -> UInt64 {
+    public func hello(page: PageT, tabId: UInt64?, referrer: String, historyLength: Int64?) -> UInt64 {
         assert(Thread.current == _thread)
         
         let closedPageIndex = recentlyClosedPage(tabId: tabId, referrer: referrer, historyLength: historyLength)
@@ -115,7 +115,7 @@ struct PageRegistry<PageT: Equatable> {
         return nil
     }
 
-    mutating public func bye(page: PageT, url: String, historyLength: Int64?) {
+    public func bye(page: PageT, url: String, historyLength: Int64?) {
         assert(Thread.current == _thread)
         
         while recentlyByedPages.count >= MAX_BYES {
