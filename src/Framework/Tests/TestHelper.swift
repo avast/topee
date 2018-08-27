@@ -83,6 +83,18 @@ class TestTab: NSObject {
     }
     
     @discardableResult
+    public func reload() -> TestTab {
+        self.bye()
+        let nextPage = TestPage(
+            url: self.currentPage!.url,
+            referrer: self.currentPage!.referrer,
+            referrerPolicy: self.currentPage!.referrerPolicy
+        )
+        self.hello(page: nextPage)
+        return self
+    }
+
+    @discardableResult
     public func navigate(
         url: String,
         referrerPolicy: ReferrerPolicy = .notSpecified,

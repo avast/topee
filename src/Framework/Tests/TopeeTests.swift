@@ -130,4 +130,15 @@ class TopeePageRegistryTests: XCTestCase {
         XCTAssertEqual(registry.count, 1)
         XCTAssertEqual(registry.tabIds, [tab2.id!])
     }
+
+    func testHandlesReload() {
+        let tab1 = buildTab()
+            .navigate(url: "http://host1/")
+            .navigate(url: "http://host2/")
+
+        tab1.reload()
+        
+        XCTAssertEqual(registry.count, 1)
+        XCTAssertEqual(registry.tabIds, [tab1.id!])
+    }
 }
