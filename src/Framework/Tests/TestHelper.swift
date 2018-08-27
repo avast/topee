@@ -89,9 +89,7 @@ class TestTab: NSObject {
         assert(!isClosed)
         
         func byeFn() {
-            //// Say bye from current page
-            let currentPage = self.currentPage
-            self.bye(currentPage)
+            self.bye()
         }
         
         func helloFn() {
@@ -153,12 +151,13 @@ class TestTab: NSObject {
     @discardableResult
     func close() -> TestTab {
         isClosed = true
-        bye(currentPage)
+        bye()
         
         return self
     }
     
-    func bye(_ page: TestPage?) {
+    func bye() {
+        let page = self.currentPage
         if page != nil {
             if trace {
                 NSLog("#\(testTabId) bye(page: <\(page!.hashValue)>, url: \(page!.url), historyLength: \(history.count) <- \(self.id!)")
