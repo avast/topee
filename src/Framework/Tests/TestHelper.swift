@@ -6,10 +6,12 @@ import Foundation
 
 class TestPage: NSObject {
     public var url: String
+    public let referrer: String
     public let referrerPolicy: ReferrerPolicy
 
-    init(url: String = "http://whatever", referrerPolicy: ReferrerPolicy = .notSpecified) {
+    init(url: String = "http://whatever", referrer: String, referrerPolicy: ReferrerPolicy = .notSpecified) {
         self.url = url
+        self.referrer = referrer
         self.referrerPolicy = referrerPolicy
     }
     
@@ -98,7 +100,11 @@ class TestTab: NSObject {
             let _currentPage = self.currentPage
 
             //// Say hello
-            let nextPage = TestPage(url: url, referrerPolicy: referrerPolicy)
+            let nextPage = TestPage(
+                url: url,
+                referrer: _currentPage?.makeReferrer() ?? "",
+                referrerPolicy: referrerPolicy
+            )
             let nextIndex = currentIndex != nil ? currentIndex! + 1 : 0
             
             // Trim history if we are not going to insert at the end
@@ -108,12 +114,11 @@ class TestTab: NSObject {
             currentIndex = nextIndex
             
             let tabId = storedTabId[baseURL(nextPage.url)]
-            let referrer = _currentPage?.makeReferrer() ?? ""
             
             let id = registry.hello(
                 page: nextPage,
                 tabId: tabId,
-                referrer: referrer,
+                referrer: nextPage.referrer,
                 historyLength: Int64(history.count)
             )
             
