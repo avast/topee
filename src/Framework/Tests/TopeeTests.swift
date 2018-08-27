@@ -11,26 +11,17 @@ class TopeePageRegistryTests: XCTestCase {
     override func setUp() {
         super.setUp()
         registry = PageRegistry<TestPage>()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
     override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
     
-    private func buildTab(trace: Bool = false) -> TestTab {
+    private func buildTab(trace: Bool = true) -> TestTab {
         return TestTab(registry: registry, trace: trace)
     }
     
-    func testAddsPage() {
-        let tab1 = buildTab().navigate(url: "http://host1")
-        
-        XCTAssertEqual(registry.count, 1)
-        XCTAssertEqual(registry.tabIds, [ tab1.id ])
-    }
-    
-    func testAddsPages() {
+    func testEachNewTabIsRegistered() {
         let tab1 = buildTab().navigate(url: "http://host1")
         let tab2 = buildTab().navigate(url: "http://host2")
 
@@ -38,116 +29,86 @@ class TopeePageRegistryTests: XCTestCase {
         XCTAssertEqual(registry.tabIds.sorted(), [tab1.id!, tab2.id!].sorted())
     }
     
-    func testRemovesPage() {
+    func testClosedPageIsRemoved() {
         buildTab().navigate(url: "http://host1").close()
 
         XCTAssertEqual(registry.count, 0)
         XCTAssertEqual(registry.tabIds, [])
     }
     
-    func testDetectsPageNavigationAndKeepsSameTabId() {
-        let tab1 = buildTab().navigate(url: "http://host1/abc").navigate(url: "http://host1")
+    func testPageNavigationInTabKeepsSameTabId() {
+        let tab1 = buildTab().navigate(url: "http://host1/1")
+            .navigate(url: "http://host1/2")
         XCTAssertEqual(registry.count, 1)
         XCTAssertEqual(registry.tabIds, [tab1.id])
     }
 
-    func testDetectsPageNavigationAndKeepsSameTabIdOtherDomain() {
-        let tab1 = buildTab().navigate(url: "http://host1/abc").navigate(url: "http://host2")
+    func testPageNavigationInTabKeepsSameTabIdOtherDomain() {
+        let tab1 = buildTab().navigate(url: "http://host1/abc")
+            .navigate(url: "http://host2/")
         XCTAssertEqual(registry.count, 1)
         XCTAssertEqual(registry.tabIds, [tab1.id])
     }
     
-    func testDetectsPageNavigationAndKeepsSameTabIdOtherDomainNoReferrer() {
-        // Should be handled by history lenght matching
-//        let tab1 = buildTab().navigate(url: "http://host1/abc", referrerPolicy: "no-referrer")
-//            .navigate(url: "http://host2")
-//        XCTAssertEqual(registry.count, 1)
-//        XCTAssertEqual(registry.tabIds, [tab1.id])
-    }
-    
-    func testOneByeOnlyMatchesFirstHelloForMatchingReferrer	() {
-        let page1 = TestPage()
-        registry.hello(page: page1, tabId: nil, referrer: "", historyLength: nil)
-        registry.bye(page: page1, url: "http://host1/abc", historyLength: nil)
+    func testByeIsOnlyMatchedOnce() {
+        // Say bye from host1 and consume it right away in hellow
+        buildTab().navigate(url: "http://host1/abc").navigate(url: "http://host2/")
         
-        // Navigation
-        let page2 = TestPage()
-        registry.hello(page: page2, tabId: nil, referrer: "http://host1/", historyLength: nil)
-
         // New, unrelated page (but for same domain as previous bye)
-        let page3 = TestPage()
-        registry.hello(page: page3, tabId: nil, referrer: "http://host1/", historyLength: nil)
+        buildTab().navigate(url: "http://host1/")
+        
         XCTAssertEqual(registry.count, 2)
     }
     
-    func testPrefersTabIdOverReferrer() {
-        let page1 = TestPage()
-        registry.hello(page: page1, tabId: 1, referrer: "", historyLength: 1)
-        registry.bye(page: page1, url: "http://host1/abc", historyLength: 1)
+    func testLatestMatchingByeIsChosen() {
+        let tab1 = buildTab().navigate(url: "http://host1/").navigate(url: "http://host2/")
+        let tab2 = buildTab().navigate(url: "http://host1/").navigate(url: "http://host2/")
         
-        // Navigation in other tab (with already assigned tabId which doesn't match previous bye
-        let page2 = TestPage()
-        registry.hello(page: page2, tabId: 2, referrer: "http://host1/", historyLength: 2)
-        let tabId2 = registry.pageToTabId(page2)
-        XCTAssertEqual(registry.count, 1)
-        XCTAssertEqual(registry.tabIds, [tabId2])
-    }
-    
-    func testPrefersTabIdOverHistory() {
-        let page1 = TestPage()
-        registry.hello(page: page1, tabId: 1, referrer: "", historyLength: 1)
-        registry.bye(page: page1, url: "http://host1", historyLength: 1)
-        
-        let page2 = TestPage()
-        registry.hello(page: page2, tabId: 2, referrer: "", historyLength: 2)
-        
-        let tabId2 = registry.pageToTabId(page2)
-        XCTAssertEqual(tabId2, 2)
-    }
-    
-    func testNavigationWithKnownTabIdShouldClearByeHistory() {
-        let page1 = TestPage()
-        registry.hello(page: page1, tabId: 1, referrer: "", historyLength: 1)
-        let tabId1 = registry.pageToTabId(page1)
-        registry.bye(page: page1, url: "http://host1/abc", historyLength: 1)
-        
-        // Navigation (with known tabId)
-        let page2 = TestPage()
-        registry.hello(page: page2, tabId: 1, referrer: "http://host1/", historyLength: 2)
+        tab2.navigate(url: "http://host3/") { bye2, hello2 in
+            tab1.close()
+            bye2()
+            hello2()
+        }
 
-        // Following unrelated navigation with same referrer but unknown tabId
-        let page3 = TestPage()
-        registry.hello(page: page3, tabId: nil, referrer: "http://host1/", historyLength: 2)
-        let tabId3 = registry.pageToTabId(page3)
-        XCTAssertEqual(registry.count, 2)
-        XCTAssertEqual(registry.tabIds.sorted(), [tabId1, tabId3])
+        XCTAssertEqual(registry.count, 1)
+        XCTAssertEqual(registry.tabIds, [tab2.id!])
     }
     
-    func testHandlesUnrelatedNewPageAfterByeAsNewTab() {
-        let page1 = TestPage()
-        registry.hello(page: page1, tabId: nil, referrer: "", historyLength: 1)
-        let tabId1 = registry.pageToTabId(page1)
-        registry.bye(page: page1, url: "http://host1/abc", historyLength: 1)
+    func testUsesSessionStorageForTabIdPersistence() {
+        let tab1 = buildTab().navigate(url: "http://host1/a")
+        let tab2 = buildTab().navigate(url: "http://host1/a")
         
-        // New, unrelated page opened
-        let page2 = TestPage()
-        registry.hello(page: page2, tabId: nil, referrer: "http://host2/", historyLength: 1)
-        let tabId2 = registry.pageToTabId(page2)
-        XCTAssertNotEqual(tabId1, tabId2)
-        XCTAssertEqual(registry.tabIds, [tabId2])
+        // Both tabs navigate from same origin, but tab2 is faster
+        tab1.navigate(url: "http://host1/b") { bye1, hello1 in
+            tab2.navigate(url: "http://host1/b") { bye2, hello2 in
+                bye2()
+                bye1()
+                hello2()
+                hello1()
+            }
+        }
+
+        // They both should keep their IDs
+        XCTAssertNotEqual(tab1.id!, tab2.id!)
+    }
+    
+    func testHandlesNavigationInATabAfterCloseOfOtherTab() {
+        let tab1 = buildTab().navigate(url: "http://host1/")
+        let tab2 = buildTab().navigate(url: "http://host1/")
+        
+        tab1.close()
+        tab2.navigate(url: "http://host2/")
+
+        XCTAssertNotEqual(tab1.id, tab2.id)
+        XCTAssertEqual(registry.tabIds, [tab2.id])
     }
     
     func testHandlesRelatedNavigationWithoutReferrer() {
-        // Referrer may be missing if source page contains Referrer-Policy: no-referrer header
-        let page1 = TestPage()
-        registry.hello(page: page1, tabId: nil, referrer: "", historyLength: 1)
-        let tabId1 = registry.pageToTabId(page1)
-        registry.bye(page: page1, url: "http://host1/abc", historyLength: 1)
-        
-        // Navigation
-        let page2 = TestPage()
-        registry.hello(page: page2, tabId: nil, referrer: "", historyLength: 2)
+        let tab1 = buildTab().navigate(url: "http://host1/", referrerPolicy: .noReferrer)
+
+        tab1.navigate(url: "http://host2/")
+
         XCTAssertEqual(registry.count, 1)
-        XCTAssertEqual(registry.tabIds, [tabId1])
+        XCTAssertEqual(registry.tabIds, [tab1.id!])
     }
 }
