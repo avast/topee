@@ -34,7 +34,7 @@ function init() {
     if (window === window.top) {
         // tabId responder
         window.addEventListener('message', function (msg) {
-            if (msg.data.type === tabInfo.Event.GET_TAB_ID) {
+            if (msg.data && msg.data.type === tabInfo.Event.GET_TAB_ID) {
                 tabInfo.tabId.then(id => msg.source.postMessage({ type: tabInfo.Event.TAB_ID, detail: id }, msg.origin));
             }
         });
@@ -61,7 +61,7 @@ function init() {
     if (window !== window.top) {
         var poller;
         window.addEventListener('message', function (msg) {
-            if (msg.data.type === tabInfo.Event.TAB_ID && typeof msg.data.detail === 'number') {
+            if (msg.data && msg.data.type === tabInfo.Event.TAB_ID && typeof msg.data.detail === 'number') {
                 storedTabId = msg.data.detail;
                 setTabId(msg.data.detail);
                 clearInterval(poller);
