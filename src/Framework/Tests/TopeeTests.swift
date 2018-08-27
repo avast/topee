@@ -111,4 +111,23 @@ class TopeePageRegistryTests: XCTestCase {
         XCTAssertEqual(registry.count, 1)
         XCTAssertEqual(registry.tabIds, [tab1.id!])
     }
+
+    func testUsesHistoryLengthToExcludeByeMatches() {
+        let tab1 = buildTab()
+            .navigate(url: "http://host1/")
+            .navigate(url: "http://host2/")
+            .navigate(url: "http://host3/")
+
+        let tab2 = buildTab()
+            .navigate(url: "http://host3/")
+        
+        tab2.navigate(url: "http://host4") { bye2, hello2 in
+            bye2()
+            tab1.close()
+            hello2()
+        }
+        
+        XCTAssertEqual(registry.count, 1)
+        XCTAssertEqual(registry.tabIds, [tab2.id!])
+    }
 }
