@@ -26,13 +26,13 @@ iframesParent.install();
 
 if (window === window.top) {
     tabInfo.sayHello();
+    
+    window.addEventListener('pageshow', function() {
+        // When user navigates back Safari ressurects page so we need to trigger hello also in
+        // this case (because was dereferenced using beforeunload)
+        tabInfo.sayHello();
+    });    
 }
-
-window.addEventListener('pageshow', function() {
-    // When user navigates back Safari ressurects page so we need to trigger hello also in
-    // this case (because was dereferenced using beforeunload)
-    tabInfo.sayHello();
-});
 
 var lastUrl = window.location.href;
 
