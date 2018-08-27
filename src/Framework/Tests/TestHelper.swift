@@ -95,47 +95,19 @@ class TestTab: NSObject {
         }
         
         func helloFn() {
-            // Keep reference to current page, code below it's going to change it,
-            // but we need it to compute referrer
-            let _currentPage = self.currentPage
-
-            //// Say hello
             let nextPage = TestPage(
                 url: url,
-                referrer: _currentPage?.makeReferrer() ?? "",
+                referrer: self.currentPage?.makeReferrer() ?? "",
                 referrerPolicy: referrerPolicy
             )
-            let nextIndex = currentIndex != nil ? currentIndex! + 1 : 0
             
+            let nextIndex = currentIndex != nil ? currentIndex! + 1 : 0
             // Trim history if we are not going to insert at the end
             history = Array(history.dropLast(history.count - nextIndex))
             history.append(nextPage)
-            
             currentIndex = nextIndex
-            
-            let tabId = storedTabId[baseURL(nextPage.url)]
-            
-            let id = registry.hello(
-                page: nextPage,
-                tabId: tabId,
-                referrer: nextPage.referrer,
-                historyLength: Int64(history.count)
-            )
-            
-            if trace {
-                let sTabId = tabId != nil ? String(tabId!) : "nil"
-                NSLog("#\(testTabId) hello(page: <\(nextPage.hashValue)>, tabId: \(sTabId), referrer: \(referrer), historyLength: \(history.count) -> \(id)")
-            }
-            
-            // Tab should never change it's ID
-            if self.id != nil && self.id != id {
-                let message = "#\(testTabId) Tab ID changed from \(self.id!) to \(id)."
-                NSLog(message)
-                fatalError(message)
-            }
-            self.id = id
-            
-            storedTabId[baseURL(nextPage.url)] = self.id
+
+            hello(page: nextPage)
         }
         
         completion(byeFn, helloFn)
@@ -159,6 +131,32 @@ class TestTab: NSObject {
         bye()
         
         return self
+    }
+    
+    func hello(page: TestPage) {
+        let tabId = storedTabId[baseURL(page.url)]
+        
+        let id = registry.hello(
+            page: page,
+            tabId: tabId,
+            referrer: page.referrer,
+            historyLength: Int64(history.count)
+        )
+        
+        if trace {
+            let sTabId = tabId != nil ? String(tabId!) : "nil"
+            NSLog("#\(testTabId) hello(page: <\(page.hashValue)>, tabId: \(sTabId), referrer: \(page.referrer), historyLength: \(history.count) -> \(id)")
+        }
+        
+        // Tab should never change it's ID
+        if self.id != nil && self.id != id {
+            let message = "#\(testTabId) Tab ID changed from \(self.id!) to \(id)."
+            NSLog(message)
+            fatalError(message)
+        }
+        self.id = id
+        
+        storedTabId[baseURL(page.url)] = self.id
     }
     
     func bye() {
