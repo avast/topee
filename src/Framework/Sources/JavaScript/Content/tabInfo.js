@@ -92,7 +92,8 @@ function sayHello() {
         return;
     }
 
-    console.debug(`topee.hello(tabId: ${tabId}, referrer: "${document.referrer}", historyLength: ${history.length}) @ ${window.location.href}`);
+    tabInfo.tabId.then(
+        assignedTabId => console.debug(`topee.hello(tabId: ${tabId}, referrer: "${document.referrer}", historyLength: ${history.length}) @ ${window.location.href} -> ${assignedTabId}`));
 
     safari.extension.dispatchMessage('hello', {
         tabId: tabId,
