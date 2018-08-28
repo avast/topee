@@ -92,6 +92,8 @@ function sayHello() {
         return;
     }
 
+    console.debug(`topee.hello(tabId: ${tabId}, referrer: "${document.referrer}", historyLength: ${history.length}) @ ${window.location.href}`);
+
     safari.extension.dispatchMessage('hello', {
         tabId: tabId,
         referrer: document.referrer,
@@ -114,6 +116,8 @@ function sayBye(event) {
     if (!window.isTabRegistered) {
         return;
     }
+
+    console.debug(`topee.bye(tabId: ${tabId}, url: ${window.location.href}`);
 
     safari.extension.dispatchMessage('bye', {
         tabId: tabId,
