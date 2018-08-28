@@ -117,7 +117,7 @@ function sayBye(event) {
         return;
     }
 
-    console.debug(`topee.bye(tabId: ${tabId}, url: ${window.location.href}`);
+    console.debug(`topee.bye(tabId: ${tabId}, url: ${window.location.href})`);
 
     safari.extension.dispatchMessage('bye', {
         tabId: tabId,
