@@ -1,5 +1,15 @@
 (function () {
 
+if (!{
+        'http:': true,
+        'https:': true,
+        'about:': true,
+        'safari-extension:': true
+    }[window.location.protocol])
+{
+    return;
+}
+
 var tabInfo = require('./tabInfo.js');
     
 if (typeof window.chrome === 'object') {
