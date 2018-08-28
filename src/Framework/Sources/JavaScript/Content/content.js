@@ -17,6 +17,7 @@ if (typeof window.chrome === 'object') {
 
     if (window === window.top) {
         // in case this is injected multiple times (https://bugreport.apple.com/web/?problemID=43086339), the first injects don't received these events
+        window.isTabRegistered = true; // Let's be sure that we send bye in this weird multi-inject state
         window.addEventListener('pagehide', tabInfo.sayBye);
         window.addEventListener('beforeunload', tabInfo.sayBye);
     }
@@ -36,12 +37,12 @@ iframesParent.install();
 
 if (window === window.top) {
     tabInfo.sayHello();
-    
+
     window.addEventListener('pageshow', function() {
         // When user navigates back Safari ressurects page so we need to trigger hello also in
         // this case (because was dereferenced using beforeunload)
         tabInfo.sayHello();
-    });    
+    });
 }
 
 var lastUrl = window.location.href;
@@ -62,7 +63,7 @@ if (window === window.top) {
         else {
             scheduleMs = URL_POLL_HIDDEN;
         }
-        visibilityPoll = setInterval(visibilityHello, scheduleMs);            
+        visibilityPoll = setInterval(visibilityHello, scheduleMs);
     });
 }
 

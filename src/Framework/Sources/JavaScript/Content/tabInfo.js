@@ -75,12 +75,21 @@ function init() {
     }
 }
 
+// True if hello has been sent and bye wasn't yet. This prevents multiple
+// hellos/byes being sent from same page (as we listen on multiple load/unload
+// events).
+window.isTabRegistered = false;
+
 function sayHello() {
     var tabId = isNaN(storedTabId) ? null : storedTabId;
     if (tabId === null) {
         if (helloWithNullTabIdSent)
             return;
         helloWithNullTabIdSent = true;
+    }
+
+    if (window.isTabRegistered) {
+        return;
     }
 
     safari.extension.dispatchMessage('hello', {
@@ -95,10 +104,16 @@ function sayHello() {
             url: window.location.href
         }
     });
+
+    window.isTabRegistered = true;
 }
 
 function sayBye(event) {
     var tabId = isNaN(storedTabId) ? null : storedTabId;
+
+    if (!window.isTabRegistered) {
+        return;
+    }
 
     safari.extension.dispatchMessage('bye', {
         tabId: tabId,
@@ -111,6 +126,8 @@ function sayBye(event) {
             url: window.location.href
         }
     });
+
+    window.isTabRegistered = false;
 }
 
 
