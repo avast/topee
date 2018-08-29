@@ -21,6 +21,7 @@
 		EFF799BE2110966A00646663 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BD2110966A00646663 /* Message.swift */; };
 		EFF799C32110ADBC00646663 /* WKUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799C22110ADBC00646663 /* WKUserScript.swift */; };
 		EFF799C52110ADDE00646663 /* WKWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799C42110ADDE00646663 /* WKWebView.swift */; };
+		FD4FC48B2136EA210045FABE /* FilterLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FC48A2136EA210045FABE /* FilterLogger.swift */; };
 		FDD7715921304F8500F6BC46 /* topee-iframe-resources.js in Resources */ = {isa = PBXBuildFile; fileRef = FDD7715821304F8500F6BC46 /* topee-iframe-resources.js */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,7 @@
 		EFF799C92110B0A100646663 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
 		EFF799CA2110B0A100646663 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
 		EFF799CD2110B0A600646663 /* tabInfo.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabInfo.js; sourceTree = "<group>"; };
+		FD4FC48A2136EA210045FABE /* FilterLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLogger.swift; sourceTree = "<group>"; };
 		FD80BAF6211DA1E600CCFB1E /* iframe-resources.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "iframe-resources.js"; path = "Sources/JavaScript/IframeResources/iframe-resources.js"; sourceTree = SOURCE_ROOT; };
 		FDD7715821304F8500F6BC46 /* topee-iframe-resources.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "topee-iframe-resources.js"; path = "../Build/topee-iframe-resources.js"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -224,6 +226,7 @@
 				EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */,
 				80C79F972125724200A06D24 /* SFSafariApplicationHelper.swift */,
 				80AA2BAD2136B93D008014EF /* PageRegistry.swift */,
+				FD4FC48A2136EA210045FABE /* FilterLogger.swift */,
 			);
 			path = Swift;
 			sourceTree = "<group>";
@@ -395,6 +398,7 @@
 				EFF799BC2110963600646663 /* SafariExtensionBridge.swift in Sources */,
 				EFF799C52110ADDE00646663 /* WKWebView.swift in Sources */,
 				EFF799C32110ADBC00646663 /* WKUserScript.swift in Sources */,
+				FD4FC48B2136EA210045FABE /* FilterLogger.swift in Sources */,
 				EFF799BA2110868F00646663 /* TopeeSafariExtensionHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

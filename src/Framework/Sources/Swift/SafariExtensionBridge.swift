@@ -72,7 +72,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var backgroundScripts: [URL]?
     private var webViewURL: URL = URL(string: "http://topee.local")!
     private var icons: [String: NSImage] = [:]
-    private var messageLogFilter: [String:NSRegularExpression]? = nil
+    private var log: FilterLogger.LogFunc = FilterLogger.create(nil)
 
     private var pageRegistry = SFSafariPageRegistry()
     private var webView: WKWebView?
@@ -116,7 +116,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         self.webViewURL = webViewURL
         self.icons = icons
         self.manifest = manifest
-        self.messageLogFilter = messageLogFilter
+        self.log = FilterLogger.create(messageLogFilter)
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
@@ -155,32 +155,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         safariHelper.toolbarItemNeedsUpdate(in: window)
     }
     
-    private func logAllowed(_ payload: [String:Any]?) -> Bool {
-        guard messageLogFilter != nil else {
-            return true
-        }
-        guard payload != nil else {
-            return false
-        }
-        for f in messageLogFilter!.keys {
-            if payload![f] != nil {
-                if let val = payload![f] as? String {
-                    return !(messageLogFilter![f]!.matches(in: val, range: NSRange(val.startIndex..., in: val)).isEmpty)
-                }
-                else {
-                    return false
-                }
-            }
-        }
-        return false
-    }
-
     public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
         assert(Thread.isMainThread)
+        log(userInfo, "#appex(content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
         var payload = userInfo?["payload"] as? [String: Any]
-        if logAllowed(payload) {
-            NSLog("#appex(content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
-        }
 
         if let message = Message.Content.Request(rawValue: messageName) {
             // Manages the registry of pages based on the type of message received
@@ -214,9 +192,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 invokeMethod(payload: payload)
             }
         }
-        if logAllowed(payload) {
-            NSLog("#appex(content): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
-        }
+        log(userInfo, "#appex(content): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
     }
 
     // MARK: - Private API
@@ -260,7 +236,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
     
     private func dispatchMessageToScript(page: SFSafariPage, withName: String, userInfo: [String : Any]? = nil) {
-        NSLog("#appex(tocontent): page \(page.hashValue) message { name: \(withName), userInfo: \(userInfo ?? [:]) }")
+        log(userInfo, "#appex(tocontent): page \(page.hashValue) message { name: \(withName), userInfo: \(userInfo ?? [:]) }")
         page.dispatchMessageToScript(withName: withName, userInfo: userInfo)
     }
 
@@ -270,7 +246,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         assert(Thread.isMainThread)
         if message.name != MessageHandler.log.rawValue {
             // Ignore log messages (they are logged few lines below).
-            NSLog("#appex(background): { 'name': \(message.name), 'body': \(message.body) }")
+            log(["name":message.name, "body":message.body], "#appex(background): { 'name': \(message.name), 'body': \(message.body) }")
         }
 
         guard let handler = MessageHandler(rawValue: message.name) else { return }
