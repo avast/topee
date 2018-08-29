@@ -103,4 +103,12 @@ runtime.getURL = function (path) {
     return safari.extension.baseURI + path;
 };
 
+runtime.getPlatformInfo = function (fn) {
+    fn({
+        os: 'mac',
+        arch: 'x86-64',
+        nacl_arch: 'x86-64'
+    });
+};
+
 module.exports = runtime;
