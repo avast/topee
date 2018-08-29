@@ -26,7 +26,8 @@ public protocol SafariExtensionBridgeType {
         backgroundScripts: [URL],
         webViewURL: URL,
         icons: [String: NSImage],
-        manifest: TopeeExtensionManifest)
+        manifest: TopeeExtensionManifest,
+        messageLogFilter: [String:NSRegularExpression]?)
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
@@ -38,13 +39,15 @@ public extension SafariExtensionBridgeType {
         backgroundScripts: [URL],
         webViewURL: URL = URL(string: "http://topee.local")!,
         icons: [String: NSImage] = [:],
-        manifest: TopeeExtensionManifest? = nil)
+        manifest: TopeeExtensionManifest? = nil,
+        messageLogFilter: [String:NSRegularExpression]? = nil)
     {
         setup(
             backgroundScripts: backgroundScripts,
             webViewURL: webViewURL,
             icons: icons,
-            manifest: manifest ?? TopeeExtensionManifest()
+            manifest: manifest ?? TopeeExtensionManifest(),
+            messageLogFilter: messageLogFilter
         )
     }
 }
@@ -69,6 +72,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var backgroundScripts: [URL]?
     private var webViewURL: URL = URL(string: "http://topee.local")!
     private var icons: [String: NSImage] = [:]
+    private var messageLogFilter: [String:NSRegularExpression]? = nil
 
     private var pageRegistry = SFSafariPageRegistry()
     private var webView: WKWebView?
@@ -88,7 +92,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         backgroundScripts: [URL],
         webViewURL: URL,
         icons: [String: NSImage],
-        manifest: TopeeExtensionManifest)
+        manifest: TopeeExtensionManifest,
+        messageLogFilter: [String: NSRegularExpression]?)
     {
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
@@ -111,6 +116,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         self.webViewURL = webViewURL
         self.icons = icons
         self.manifest = manifest
+        self.messageLogFilter = messageLogFilter
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
@@ -148,11 +154,33 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     public func toolbarItemNeedsUpdate(in window: SFSafariWindow) {
         safariHelper.toolbarItemNeedsUpdate(in: window)
     }
+    
+    private func logAllowed(_ payload: [String:Any]?) -> Bool {
+        guard messageLogFilter != nil else {
+            return true
+        }
+        guard payload != nil else {
+            return false
+        }
+        for f in messageLogFilter!.keys {
+            if payload![f] != nil {
+                if let val = payload![f] as? String {
+                    return !(messageLogFilter![f]!.matches(in: val, range: NSRange(val.startIndex..., in: val)).isEmpty)
+                }
+                else {
+                    return false
+                }
+            }
+        }
+        return false
+    }
 
     public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
         assert(Thread.isMainThread)
-        NSLog("#appex(content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
         var payload = userInfo?["payload"] as? [String: Any]
+        if logAllowed(payload) {
+            NSLog("#appex(content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
+        }
 
         if let message = Message.Content.Request(rawValue: messageName) {
             // Manages the registry of pages based on the type of message received
@@ -186,7 +214,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 invokeMethod(payload: payload)
             }
         }
-        NSLog("#appex(content): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
+        if logAllowed(payload) {
+            NSLog("#appex(content): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
+        }
     }
 
     // MARK: - Private API
