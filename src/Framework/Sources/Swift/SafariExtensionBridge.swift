@@ -149,7 +149,14 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     public func toolbarItemClicked(in window: SFSafariWindow) {
         safariHelper.toolbarItemClicked(in: window)
-        self.invokeMethod(payload: [ "eventName": "toolbarItemClicked" ])
+        window.getActiveTab { tab in
+            tab?.getActivePage { page in
+                DispatchQueue.main.sync {
+                    let tabId = self.pageRegistry.pageToTabId(page!)
+                    self.invokeMethod(payload: [ "eventName": "toolbarItemClicked", "tab": [ "id": tabId ] ])
+                }
+            }
+        }
     }
 
     public func toolbarItemNeedsUpdate(in window: SFSafariWindow) {

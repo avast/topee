@@ -22,11 +22,11 @@ browserAction.setIcon = function ({path, imageData, tabId}) {
 
 browserAction.onClicked = {
     addListener: function (fn) {
-        eventEmitter.addListener('toolbarItemClicked', function () {
+        eventEmitter.addListener('toolbarItemClicked', function (event) {
             // Only call fn if popup isn't defined
             if (!state.popup.popup) {
                 // TODO: Also check tabId
-                fn();
+                fn(event.tab);
             }
         });
     }
