@@ -6,6 +6,13 @@ import Foundation
 import WebKit
 
 extension WKUserScript {
+    convenience init(scripts: [String],
+                     injectionTime: WKUserScriptInjectionTime = .atDocumentStart,
+                     forMainFrameOnly: Bool = true) {
+        let script = scripts.joined(separator: "\n")
+        self.init(source: script, injectionTime: injectionTime, forMainFrameOnly: forMainFrameOnly)
+    }
+
     convenience init(urls: [URL],
                      injectionTime: WKUserScriptInjectionTime = .atDocumentStart,
                      forMainFrameOnly: Bool = true) {

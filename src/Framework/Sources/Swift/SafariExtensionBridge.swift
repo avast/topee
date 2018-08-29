@@ -89,8 +89,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             let webConfiguration = WKWebViewConfiguration()
             let backgroundEndURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "topee-background-end", withExtension: "js")!
             let backgroundURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "topee-background", withExtension: "js")!
-            let urls = [backgroundURL] + backgroundScripts + [backgroundEndURL]
-            let script = WKUserScript(urls: urls)
+            let scripts = [readFile(backgroundURL)]
+                + readFiles(backgroundScripts)
+                + [readFile(backgroundEndURL)]
+            let script = WKUserScript(scripts: scripts)
             let contentController: WKUserContentController = WKUserContentController()
             contentController.addUserScript(script)
             contentController.add(self, name: MessageHandler.content.rawValue)
@@ -281,5 +283,13 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 }
             }
         }
+    }
+
+    private func readFile(_ url: URL) -> String {
+        return try! String(contentsOf: url, encoding: .utf8)
+    }
+
+    private func readFiles(_ urls: [URL]) -> [String] {
+        return urls.map { try! String(contentsOf: $0, encoding: .utf8) }
     }
 }
