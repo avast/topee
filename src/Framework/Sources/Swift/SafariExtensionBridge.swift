@@ -7,12 +7,26 @@ import SafariServices
 import WebKit
 
 // MARK: -
+public struct TopeeExtensionManifest: Equatable {
+    public let id: String
+    public let version: String
+    public let name: String
+    
+    public init(id: String = "my.extension", version: String = "0.0.1", name: String = "My Extension") {
+        self.id = id
+        self.version = version
+        self.name = name
+    }
+}
+
+// MARK: -
 
 public protocol SafariExtensionBridgeType {
     func setup(
         backgroundScripts: [URL],
         webViewURL: URL,
-        icons: [String: NSImage])
+        icons: [String: NSImage],
+        manifest: TopeeExtensionManifest)
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
@@ -23,12 +37,14 @@ public extension SafariExtensionBridgeType {
     func setup(
         backgroundScripts: [URL],
         webViewURL: URL = URL(string: "http://topee.local")!,
-        icons: [String: NSImage] = [:])
+        icons: [String: NSImage] = [:],
+        manifest: TopeeExtensionManifest? = nil)
     {
         setup(
             backgroundScripts: backgroundScripts,
             webViewURL: webViewURL,
-            icons: icons
+            icons: icons,
+            manifest: manifest ?? TopeeExtensionManifest()
         )
     }
 }
@@ -49,6 +65,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     
     // MARK: - Private Members
 
+    private var manifest: TopeeExtensionManifest?
     private var backgroundScripts: [URL]?
     private var webViewURL: URL = URL(string: "http://topee.local")!
     private var icons: [String: NSImage] = [:]
@@ -67,7 +84,12 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         super.init()
     }
     
-    public func setup(backgroundScripts: [URL], webViewURL: URL, icons: [String: NSImage]) {
+    public func setup(
+        backgroundScripts: [URL],
+        webViewURL: URL,
+        icons: [String: NSImage],
+        manifest: TopeeExtensionManifest)
+    {
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
             if backgroundScripts != self.backgroundScripts {
@@ -78,18 +100,23 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 fatalError("You can only specify one webViewURL")
             }
             
+            if manifest != self.manifest {
+                fatalError("You can only specify one manifest")
+            }
+            
             return
         }
 
         self.backgroundScripts = backgroundScripts
         self.webViewURL = webViewURL
         self.icons = icons
+        self.manifest = manifest
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
             let backgroundEndURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "topee-background-end", withExtension: "js")!
             let backgroundURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "topee-background", withExtension: "js")!
-            let scripts = [readFile(backgroundURL)]
+            let scripts = [readFile(backgroundURL), buildManifestScript()]
                 + readFiles(backgroundScripts)
                 + [readFile(backgroundEndURL)]
             let script = WKUserScript(scripts: scripts)
@@ -249,27 +276,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     self.invokeMethod(
                         payload: [ "eventName": "activeTabId", "tabId": tabId ])
                 }
-            case .getManifest:
-                guard let infoPlist = Bundle(for: SafariExtensionBridge.self).path(forResource: "Info", ofType: "plist"),
-                    let infoPlistDictionary = NSDictionary(contentsOfFile: infoPlist) else
-                {
-                    self.invokeMethod(
-                        payload: [ "eventName": "extensionManifest", "manifest": [:] ])
-                    return
-                }
-                let version = infoPlistDictionary["CFBundleShortVersionString"] as? String
-                let name = infoPlistDictionary["CFBundleDisplayName"] as? String
-                let extId = infoPlistDictionary["CFBundleIdentifier"] as? String
-                self.invokeMethod(
-                    payload: [
-                        "eventName": "extensionManifest",
-                        "manifest": [
-                            "version": version ?? "",
-                            "name": name ?? "",
-                            "id": extId ?? ""
-                        ]
-                    ]
-                )
             case .setIconTitle:
                 guard let title = userInfo["title"] as? String else { return }
                 safariHelper.setToolbarIconTitle(title)
@@ -283,6 +289,16 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 }
             }
         }
+    }
+    
+    private func buildManifestScript() -> String {
+        return """
+        chrome.runtime._manifest = {
+            "version": "\(manifest!.version)",
+            "name": "\(manifest!.name)",
+            "id": "\(manifest!.id)"
+        }
+        """
     }
 
     private func readFile(_ url: URL) -> String {

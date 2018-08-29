@@ -1,7 +1,11 @@
 'use strict';
 var eventEmitter = require('../event-bus.js');
 
-var runtime = {};
+var runtime = {
+    // Manifest will be updated by Topee SafariExtensionBridge before user
+    // background scripts are executed.
+    _manifest: undefined
+};
 
 runtime.onMessage = {
     addListener: function (listener) {
@@ -22,14 +26,8 @@ runtime.onUpdateAvailable = {
     }
 };
 
-var manifest = {};
-window.webkit.messageHandlers.appex.postMessage({type: "getManifest"});
-eventEmitter.once('extensionManifest', function (event) {
-    manifest = event.manifest;
-});
-    
 runtime.getManifest = function () {
-    return manifest;
+    return runtime._manifest;
 };
 
 module.exports = runtime;
