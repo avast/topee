@@ -6,7 +6,7 @@ import Foundation
 import SafariServices
 
 class PageRegistry<PageT: Equatable> {
-    private let _thread = Thread.current
+    private let _thread: Thread
     
     private let MAX_BYES = 16   // something like 1 or 2 should be enough for the purpose to match the subsequent hello
     
@@ -33,6 +33,10 @@ class PageRegistry<PageT: Equatable> {
             
             return Array(pages.keys)
         }
+    }
+    
+    init(thread: Thread) {
+        _thread = thread
     }
     
     @discardableResult

@@ -74,7 +74,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var icons: [String: NSImage] = [:]
     private var log: FilterLogger.LogFunc = FilterLogger.create(nil)
 
-    private var pageRegistry = SFSafariPageRegistry()
+    private var pageRegistry: SFSafariPageRegistry
     private var webView: WKWebView?
     private var isBackgroundReady: Bool = false
     // Accumulates messages until the background scripts
@@ -85,6 +85,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     // MARK: - Initializers
     
     override init() {
+        pageRegistry = SFSafariPageRegistry(thread: Thread.main)
         super.init()
     }
     
