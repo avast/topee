@@ -63,6 +63,7 @@ class TestTab: NSObject {
     private var testTabId: Int
     public var id: TabId? = nil
     private let trace: Bool!
+    private let assertTabId: Bool!
     private var isClosed = false
     private let registry: PageRegistry<TestPage>
     private var history: [TestPage] = []
@@ -74,9 +75,10 @@ class TestTab: NSObject {
     }
     private var storedTabId: [String: TabId] = [:] // sessionStorage
     
-    init(registry: PageRegistry<TestPage>, trace: Bool = false) {
+    init(registry: PageRegistry<TestPage>, trace: Bool = false, assertTabId: Bool = true) {
         self.registry = registry
         self.trace = trace
+        self.assertTabId = assertTabId
         TestTab.testTabIdCounter = TestTab.testTabIdCounter + 1
         testTabId = TestTab.testTabIdCounter
         super.init()
@@ -161,7 +163,7 @@ class TestTab: NSObject {
         }
         
         // Tab should never change it's ID
-        if self.id != nil && self.id != id {
+        if assertTabId && self.id != nil && self.id != id {
             let message = "#\(testTabId) Tab ID changed from \(self.id!) to \(id)."
             NSLog(message)
             fatalError(message)

@@ -17,8 +17,12 @@ class TopeePageRegistryTests: XCTestCase {
         super.tearDown()
     }
     
-    private func buildTab(trace: Bool = true) -> TestTab {
-        return TestTab(registry: registry, trace: trace)
+    private func buildTab(trace: Bool = true, assertTabId: Bool = true) -> TestTab {
+        return TestTab(
+            registry: registry,
+            trace: trace,
+            assertTabId: assertTabId
+        )
     }
     
     func testEachNewTabIsRegistered() {
@@ -92,6 +96,27 @@ class TopeePageRegistryTests: XCTestCase {
         XCTAssertNotEqual(tab1.id!, tab2.id!)
     }
     
+    func testTabsMayGetMixedIfTabIdIsntInSession() {
+        let tab1 = buildTab(assertTabId: false).navigate(url: "http://host1/")
+        let tab2 = buildTab(assertTabId: false).navigate(url: "http://host1/")
+        let tab1IdStart = tab1.id!
+        let tab2IdStart = tab2.id!
+
+        // Both tabs navigate from same origin, but tab2 is faster (+ cross origin)
+        tab1.navigate(url: "http://host2/a") { bye1, hello1 in
+            tab2.navigate(url: "http://host2/b") { bye2, hello2 in
+                bye2()
+                bye1()
+                hello2()
+                hello1()
+            }
+        }
+        
+        // Unfortunatelly tab IDs get mixed
+        XCTAssertEqual(tab1IdStart, tab2.id!)
+        XCTAssertEqual(tab2IdStart, tab1.id!)
+    }
+
     func testHandlesNavigationInATabAfterCloseOfOtherTab() {
         let tab1 = buildTab().navigate(url: "http://host1/")
         let tab2 = buildTab().navigate(url: "http://host1/")
