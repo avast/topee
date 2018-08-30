@@ -48,8 +48,31 @@ if (window === window.top) {
 var lastUrl = window.location.href;
 
 if (window === window.top) {
-    window.addEventListener('pagehide', tabInfo.sayBye);
-    window.addEventListener('beforeunload', tabInfo.sayBye);
+    // Say bye when page is unloaded. This is kind of tricky due to Safari not
+    // supporting unload event correctly. For regular page navigation, pagehide
+    // works best, but it's not triggered when tab is closed.
+    //
+    // Page reload events:
+    //   - beforeunload
+    //   - pagehide
+    //   - unload
+    //
+    // Page navigation events:
+    //   - beforeunload
+    //   - pagehide (only triggered if user or script didn't cancel unload)
+    //
+    // Tab close events:
+    //   - beforeunload
+
+    var unloadHelloTimer = undefined;
+    window.addEventListener('beforeunload', () => {
+        tabInfo.sayBye();
+        unloadHelloTimer = setTimeout(() => tabInfo.sayHello(), 500);
+    });
+    window.addEventListener('pagehide', () => {
+        clearTimeout(unloadHelloTimer);
+        tabInfo.sayBye();
+    });
 
     // history API has no change notification, so we have to use polling
     var scheduleMs = document.visibilityState === 'visible' ? URL_POLL_VISIBLE : URL_POLL_HIDDEN;
