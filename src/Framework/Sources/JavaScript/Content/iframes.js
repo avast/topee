@@ -31,7 +31,7 @@ function install() {
         if (!safari.extension.baseURI.toLowerCase().startsWith(event.origin.toLowerCase())) {
             return;
         }
-    
+
         if (event.data && event.data.type === 'topee_get_iframe_key') {
             childFrames.add(event.data.frameId, event.source);
 
@@ -41,23 +41,24 @@ function install() {
                     event.source.postMessage({ type: 'topee_iframe_key', value: key}, event.origin);
                 });
         }
-    
+
         if (event.data && event.data.type === 'topee_iframe_request') {
             txtCrypto.decrypt(event.data.value)
                 .then(function (str) {
-                    var payload = JSON.parse(str);
-                    console.log('got message from iframe:', payload, event.data);
-    
-                    if (typeof event.data.messageId !== 'undefined') {
+                    var message = JSON.parse(str);
+                    console.log('got message from iframe:', message, event.data);
+
+                    var messageId = message.value.payload.messageId;
+                    if (typeof messageId !== 'undefined') {
                         safari.self.addEventListener("message", listener);
                     }
-    
+
                     // the correct tabId should already be there
-                    safari.extension.dispatchMessage(payload.name, payload.value);
-                
+                    safari.extension.dispatchMessage(message.name, message.value);
+
                     function listener(responseEvent) {
-                        if (responseEvent.name === 'response' && responseEvent.message.messageId === event.data.messageId) {
-                            console.log("sending a callback id", event.data.messageId);
+                        if (responseEvent.name === 'response' && responseEvent.message.messageId === messageId) {
+                            console.log("sending a callback id", messageId);
                             txtCrypto.encrypt(JSON.stringify(responseEvent.message))
                                 .then(function (e) {
                                     event.source.postMessage({ type: 'topee_iframe_response', value: e}, event.origin);
@@ -67,7 +68,7 @@ function install() {
                     }
             });
         }
-    });    
+    });
 }
 
 function sendMessage(frameId, message) {
