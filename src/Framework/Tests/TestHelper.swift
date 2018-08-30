@@ -177,8 +177,8 @@ class TestTab: NSObject {
         )
         
         if trace {
-            let sTabId = tabId != nil ? String(tabId!) : "nil"
-            NSLog("#\(testTabId) hello(page: <\(page.hashValue)>, tabId: \(sTabId), referrer: \(page.referrer), historyLength: \(history.count) -> \(id)")
+            let sTabId = tabId != nil ? String(tabId!) : "null"
+            NSLog("#\(testTabId)/\(page.hashValue) hello(tabId: \(sTabId), referrer: \"\(page.referrer)\", historyLength: \(history.count)) @ \(page.url) -> \(id)")
         }
         
         // Tab should never change it's ID
@@ -196,7 +196,7 @@ class TestTab: NSObject {
         let page = self.currentPage
         if page != nil {
             if trace {
-                NSLog("#\(testTabId) bye(page: <\(page!.hashValue)>, url: \(page!.url), historyLength: \(history.count) <- \(self.id!)")
+                NSLog("#\(testTabId)/\(page!.hashValue) bye(tabId: \(self.id!), url: \(page!.url))")
             }
             
             registry.bye(
