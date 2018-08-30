@@ -1,7 +1,70 @@
 <html>
   <body>
-    <a href="http://host1:3000/">http://host1</a> <a href="http://host1:3000/a">/a</a> <a href="http://host1:3000/b">/b</a> <a href="http://host1:3000/c">/c</a><br/>
-    <a href="http://host2:3000/">http://host2</a> <a href="http://host2:3000/a">/a</a> <a href="http://host2:3000/b">/b</a> <a href="http://host1:3000/c">/c</a><br/>
-    <a href="http://host3:3000/">http://host3</a> <a href="http://host3:3000/a">/a</a> <a href="http://host3:3000/b">/b</a> <a href="http://host1:3000/c">/c</a><br/>
+    <ul>
+      <li>
+        <a href="http://host1:3000/">host1</a>
+        <a href="http://host1:3000/a">/a</a> <a href="http://host1:3000/b">/b</a> <a href="http://host1:3000/c">/c</a>
+        <ul>
+          <li>
+            <a href="http://host1:3000/?referrerPolicy=noReferrer">host1</a>
+            <a href="http://host1:3000/a?referrerPolicy=noReferrer">/a</a>
+            <a href="http://host1:3000/b?referrerPolicy=noReferrer">/b</a>
+            <a href="http://host1:3000/c?referrerPolicy=noReferrer">/c</a> (no referrer)
+          </li>
+          <li>
+            <a href="http://host1:3000/?referrerPolicy=origin">host1</a>
+            <a href="http://host1:3000/a?referrerPolicy=origin">/a</a>
+            <a href="http://host1:3000/b?referrerPolicy=origin">/b</a>
+            <a href="http://host1:3000/c?referrerPolicy=origin">/c</a> (just origin)
+          </li>
+          <li>
+            <a href="http://host1:3000/?delay=7">host1</a>
+            <a href="http://host1:3000/a?delay=7">/a</a>
+            <a href="http://host1:3000/b?delay=7">/b</a>
+            <a href="http://host1:3000/c?delay=7">/c</a> (with delay)
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="http://host2:3000/">host2</a>
+        <a href="http://host2:3000/a">/a</a> <a href="http://host2:3000/b">/b</a> <a href="http://host2:3000/c">/c</a>
+        <ul>
+          <li>
+            <a href="http://host2:3000/?referrerPolicy=noReferrer">host2</a>
+            <a href="http://host2:3000/a?referrerPolicy=noReferrer">/a</a>
+            <a href="http://host2:3000/b?referrerPolicy=noReferrer">/b</a>
+            <a href="http://host2:3000/c?referrerPolicy=noReferrer">/c</a> (no referrer)
+          </li>
+          <li>
+            <a href="http://host2:3000/?referrerPolicy=origin">host2</a>
+            <a href="http://host2:3000/a?referrerPolicy=origin">/a</a>
+            <a href="http://host2:3000/b?referrerPolicy=origin">/b</a>
+            <a href="http://host2:3000/c?referrerPolicy=origin">/c</a> (just origin)
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="http://host3:3000/">host3</a>
+        <a href="http://host3:3000/a">/a</a> <a href="http://host3:3000/b">/b</a> <a href="http://host3:3000/c">/c</a>
+        <ul>
+          <li>
+            <a href="http://host3:3000/?referrerPolicy=noReferrer">host3</a>
+            <a href="http://host3:3000/a?referrerPolicy=noReferrer">/a</a>
+            <a href="http://host3:3000/b?referrerPolicy=noReferrer">/b</a>
+            <a href="http://host3:3000/c?referrerPolicy=noReferrer">/c</a> (no referrer)
+          </li>
+          <li>
+            <a href="http://host3:3000/?referrerPolicy=origin">host3</a>
+            <a href="http://host3:3000/a?referrerPolicy=origin">/a</a>
+            <a href="http://host3:3000/b?referrerPolicy=origin">/b</a>
+            <a href="http://host3:3000/c?referrerPolicy=origin">/c</a> (just origin)
+          </li>
+        </ul>
+      </li>
+    </ul>
   </body>
 </html>

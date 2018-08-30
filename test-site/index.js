@@ -4,6 +4,25 @@ const app = express();
 
 const index = express.static('static');
 
+app.use('/', function(req, res, next) {
+  res.header('Cache-Control', 'private; max-age=0');
+
+  var delay = req.query.delay || 0;
+
+  switch (req.query.referrerPolicy) {
+  case 'noReferrer':
+    res.header('Referrer-Policy', 'no-referrer');
+    break;
+  case 'origin':
+    res.header('Referrer-Policy', 'origin');
+    break;
+  default:
+    // noop
+  }
+
+  setTimeout(() => next(), delay * 1000);
+});
+
 app.use('/', index);
 app.use('/a', index);
 app.use('/b', index);
