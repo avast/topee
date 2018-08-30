@@ -2,7 +2,7 @@ const WebCrypto = require('node-webcrypto-ossl');
 global.crypto = new WebCrypto();
 
 describe('binary conversion', function () {
-    const bc = require('../binary-conversion.js');
+    const bc = require('../Common/binary-conversion.js');
     const bytes = [ 2, 245 ];
     const strbytes = '\x02\xF5';
     const unibytes = '\uFF02\uFFF5';
@@ -69,7 +69,7 @@ describe('binary conversion', function () {
 });
 
 describe('aes crypto', function () {
-    const aesCrypto = require('../aes-crypto.js');
+    const aesCrypto = require('../Common/aes-crypto.js');
 
     it('generates 16 byte salt', function () {
         expect(aesCrypto.createSalt().length).toBe(16);
@@ -104,7 +104,7 @@ describe('aes crypto', function () {
 });
 
 describe('TextCrypto', function () {
-    const TextCrypto = require('../text-crypto.js');
+    const TextCrypto = require('../Common/text-crypto.js');
     it("decodes back from encoded", async function () {
         let encoder = new TextCrypto();
         await encoder.readyPromise;

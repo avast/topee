@@ -2,7 +2,7 @@ build: node_modules
 	npx webpack
 
 lint: node_modules
-	npx eslint Background/ Content/ IframeResources/
+	npx eslint Background/ Content/ IframeResources/ Common/
 
 test: node_modules lint
 	npx jasmine

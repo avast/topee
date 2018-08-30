@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-var TextCrypto = require('../text-crypto.js');
+var TextCrypto = require('../Common/text-crypto.js');
 
 var txtCrypto = null;
 var buffer = [];
@@ -48,7 +48,7 @@ if (typeof safari.self.addEventListener === 'undefined') {
                     .then(function (str) {
                         var payload = JSON.parse(str);
                         console.log('got message in iframe:', payload);
-                    
+
                         if (payload.messageId === callback.messageId)  {
                             //window.removeEventListener('message', decryptingCallback);
                             callback({ name: payload.eventName, message: { messageId: payload.messageId, payload: payload.payload } });
@@ -60,7 +60,7 @@ if (typeof safari.self.addEventListener === 'undefined') {
                     .then(function (str) {
                         var payload = JSON.parse(str);
                         console.log('got message in iframe:', payload);
-                    
+
                         callback({ name: payload.eventName, message: { messageId: payload.messageId, payload: payload.payload } });
                 });
             }
@@ -85,7 +85,7 @@ window.addEventListener('message', function (event) {
             console.error('cannot overwrite encryption key');
             return;
         }
-    
+
         txtCrypto = new TextCrypto(event.data.value);
         txtCrypto.readyPromise
             .then(function () {

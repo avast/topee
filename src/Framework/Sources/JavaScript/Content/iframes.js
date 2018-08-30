@@ -1,6 +1,6 @@
 'use strict';
 
-var TextCrypto = require('../text-crypto.js');
+var TextCrypto = require('../Common/text-crypto.js');
 var txtCrypto = new TextCrypto();
 
 var childFrames = {
