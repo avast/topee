@@ -136,7 +136,7 @@ class TestTab: NSObject {
             
             let nextIndex = currentIndex != nil ? currentIndex! + 1 : 0
             // Trim history if we are not going to insert at the end
-            history = Array(history.dropLast(history.count - nextIndex))
+            history = Array(history[..<nextIndex])
             history.append(nextPage)
             currentIndex = nextIndex
 
