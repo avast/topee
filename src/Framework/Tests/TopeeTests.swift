@@ -10,7 +10,7 @@ class TopeePageRegistryTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        registry = PageRegistry<TestPage>()
+        registry = PageRegistry<TestPage>(thread: Thread.current)
     }
     
     override func tearDown() {
