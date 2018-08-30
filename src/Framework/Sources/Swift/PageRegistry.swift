@@ -81,11 +81,16 @@ class PageRegistry<PageT: Equatable> {
             }
         }
         
-        // Match by history lenght only
+        // Match by history lenght only (navigation forward)
         if let i = recentlyByedPages.index(where: {$0.historyLength == historyLength - 1}) {
             return i
         }
-        
+
+        // User may navigated few pages back and then visited new page thus shortening history
+        if let i = recentlyByedPages.index(where: {$0.historyLength >= historyLength}) {
+            return i
+        }
+
         return nil
     }
     
@@ -95,14 +100,18 @@ class PageRegistry<PageT: Equatable> {
         while recentlyByedPages.count >= MAX_BYES {
             recentlyByedPages.removeLast()
         }
-        if let tabId = pageToTabId(page) {
-            recentlyByedPages.insert(ByeRecord(
-                tabId: tabId,
-                url: url,
-                historyLength: historyLength
-            ), at: 0)
-            pages[tabId] = nil
+        
+        guard let tabId = pageToTabId(page) else {
+            NSLog("Warning: Can't find tabId for given page")
+            return
         }
+        
+        recentlyByedPages.insert(ByeRecord(
+            tabId: tabId,
+            url: url,
+            historyLength: historyLength
+        ), at: 0)
+        pages[tabId] = nil
     }
     
     public func pageToTabId(_ page: PageT) -> UInt64? {

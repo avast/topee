@@ -97,6 +97,25 @@ class TestTab: NSObject {
     }
 
     @discardableResult
+    public func back() -> TestTab {
+        assert((currentIndex ?? -1) > 0)
+
+        self.bye()
+        currentIndex = currentIndex! - 1
+
+        let nextPage = TestPage(
+            url: self.currentPage!.url,
+            referrer: self.currentPage!.referrer,
+            referrerPolicy: self.currentPage!.referrerPolicy
+        )
+        history.remove(at: currentIndex!)
+        history.insert(nextPage, at: currentIndex!)
+
+        self.hello(page: nextPage)
+        return self
+    }
+    
+    @discardableResult
     public func navigate(
         url: String,
         referrerPolicy: ReferrerPolicy = .notSpecified,
