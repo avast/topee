@@ -135,8 +135,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
-            let backgroundEndURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "topee-background-end", withExtension: "js")!
-            let backgroundURL = Bundle(for: SafariExtensionBridge.self).url(forResource: "topee-background", withExtension: "js")!
+            let backgroundEndURL = Bundle(for: SafariExtensionBridge.self)
+                .url(forResource: "topee-background-end", withExtension: "js")!
+            let backgroundURL = Bundle(for: SafariExtensionBridge.self)
+                .url(forResource: "topee-background", withExtension: "js")!
             let scripts = [readFile(backgroundURL), buildManifestScript()]
                 + readFiles(backgroundScripts)
                 + [readFile(backgroundEndURL)]
@@ -167,7 +169,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             tab?.getActivePage { page in
                 DispatchQueue.main.sync {
                     let tabId = self.pageRegistry.pageToTabId(page!)
-                    self.invokeMethod(payload: [ "eventName": "toolbarItemClicked", "tab": [ "id": tabId ] ])
+                    self.sendMessageToBackgroundScript(payload: [
+                        "eventName": "toolbarItemClicked",
+                        "tab": [ "id": tabId ] ])
                 }
             }
         }
@@ -179,7 +183,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     
     public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
         assert(Thread.isMainThread)
-        log(userInfo, "#appex(content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
+        log(userInfo, "#appex(<-content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
         var payload = userInfo?["payload"] as? [String: Any]
 
         if let message = Message.Content.Request(rawValue: messageName) {
@@ -198,7 +202,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     assert(userInfo?["tabId"] as? UInt64 == tabId)
                 }
                 payload!["tabId"] = tabId
-                dispatchMessageToScript(page: page, withName: "forceTabId", userInfo: ["tabId" : tabId])
+                sendMessageToContentScript(
+                    page: page,
+                    withName: "forceTabId",
+                    userInfo: ["tabId" : tabId])
             case .bye:
                 pageRegistry.bye(
                     page: page,
@@ -211,15 +218,15 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
             // Relays the messages to the background script
             if payload != nil {
-                invokeMethod(payload: payload)
+                sendMessageToBackgroundScript(payload: payload)
             }
         }
-        log(userInfo, "#appex(content): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
+        log(userInfo, "#appex(<-content): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
     }
 
     // MARK: - Private API
 
-    private func invokeMethod(payload: String) {
+    private func sendMessageToBackgroundScript(payload: String) {
         if !isBackgroundReady {
             messageQueue.append(payload)
             return
@@ -247,28 +254,33 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
     }
 
-    private func invokeMethod(payload: [String: Any]?) {
+    private func sendMessageToBackgroundScript(payload: [String: Any]?) {
+        log(payload, "#appex(->background): message { payload: \(payload ?? [:]) }")
+
         do {
-            invokeMethod(
+            sendMessageToBackgroundScript(
                 payload: try String(data: JSONSerialization.data(withJSONObject: payload!), encoding: .utf8)!)
         }
         catch {
-            fatalError("Failed to serialize payload for invokeMethod")
+            fatalError("Failed to serialize payload for sendMessageToBackgroundScript")
         }
     }
     
-    private func dispatchMessageToScript(page: SFSafariPage, withName: String, userInfo: [String : Any]? = nil) {
-        log(userInfo, "#appex(tocontent): page \(page.hashValue) message { name: \(withName), userInfo: \(userInfo ?? [:]) }")
+    private func sendMessageToContentScript(page: SFSafariPage, withName: String, userInfo: [String : Any]? = nil) {
+        log(userInfo, "#appex(->content): page \(page.hashValue) message { name: \(withName), userInfo: \(userInfo ?? [:]) }")
         page.dispatchMessageToScript(withName: withName, userInfo: userInfo)
     }
 
     // MARK: - WKScriptMessageHandler
 
+    /**
+     Handles messages from background script(s).
+     */
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         assert(Thread.isMainThread)
         if message.name != MessageHandler.log.rawValue {
             // Ignore log messages (they are logged few lines below).
-            log(["name":message.name, "body":message.body], "#appex(background): { 'name': \(message.name), 'body': \(message.body) }")
+            log(["name":message.name, "body":message.body], "#appex(<-background): { 'name': \(message.name), 'body': \(message.body) }")
         }
 
         guard let handler = MessageHandler(rawValue: message.name) else { return }
@@ -278,30 +290,30 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         case .log:
             guard let logLevel = userInfo["level"] as? String else { return }
             guard let message = userInfo["message"] as? String else { return }
-            NSLog("background.js [\(logLevel)]: \(message)")
+            NSLog("#appex(background) [\(logLevel)]: \(message)")
         case .content:
             guard let tabId = userInfo["tabId"] as? UInt64 else { return }
             guard let eventName = userInfo["eventName"] as? String else { return }
             guard let page = pageRegistry.tabIdToPage(tabId) else { return }
-            dispatchMessageToScript(page: page, withName: eventName, userInfo: userInfo)
+            sendMessageToContentScript(page: page, withName: eventName, userInfo: userInfo)
         case .appex:
             guard let typeName = userInfo["type"] as? String else { return }
             guard let type = Message.Background(rawValue: typeName) else { return }
             switch type {
             case .ready:
                 isBackgroundReady = true
-                messageQueue.forEach { invokeMethod(payload: $0) }
+                messageQueue.forEach { sendMessageToBackgroundScript(payload: $0) }
                 messageQueue = []
             case .getActiveTabId:
                 safariHelper.getActivePage { page in
                     guard page != nil,
                         let tabId = self.pageRegistry.pageToTabId(page!) else {
-                            self.invokeMethod(
+                            self.sendMessageToBackgroundScript(
                                 payload: [ "eventName": "activeTabId", "tabId": NSNull() ])
                         return
                     }
 
-                    self.invokeMethod(
+                    self.sendMessageToBackgroundScript(
                         payload: [ "eventName": "activeTabId", "tabId": tabId ])
                 }
             case .setIconTitle:
