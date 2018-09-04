@@ -8,6 +8,7 @@ enum Message {
     enum Content {
         enum Request: String {
             case hello
+            case alive
             case bye
             case request
         }

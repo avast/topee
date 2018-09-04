@@ -212,6 +212,11 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     url: userInfo?["url"] as? String ?? "",
                     historyLength: userInfo?["historyLength"] as! Int64
                 )
+            case .alive:
+                if let tabId = userInfo?["tabId"] as? UInt64 {
+                    pageRegistry.touch(page: page, tabId: tabId)
+                }
+                return
             case .request:
                 if let tabId = userInfo?["tabId"] as? UInt64 {
                     pageRegistry.touch(page: page, tabId: tabId)
