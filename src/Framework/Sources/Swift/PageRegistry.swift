@@ -39,6 +39,10 @@ class PageRegistry<PageT: Equatable> {
         _thread = thread
     }
     
+    public func touch(page: PageT, tabId: UInt64) {
+        pages[tabId] = page
+    }
+
     @discardableResult
     public func hello(page: PageT, tabId: UInt64?, referrer: String, historyLength: Int64) -> UInt64 {
         assert(Thread.current == _thread)

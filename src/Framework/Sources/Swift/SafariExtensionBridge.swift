@@ -213,6 +213,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     historyLength: userInfo?["historyLength"] as! Int64
                 )
             case .request:
+                if let tabId = userInfo?["tabId"] as? UInt64 {
+                    pageRegistry.touch(page: page, tabId: tabId)
+                }
                 break
             }
 
