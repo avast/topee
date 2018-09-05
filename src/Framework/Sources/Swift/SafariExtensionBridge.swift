@@ -183,54 +183,57 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     
     public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
         assert(Thread.isMainThread)
+
+        guard let message = Message.Content.Request(rawValue: messageName) else {
+            NSLog("#appex(<-content) [ERROR]: unknown message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
+            return
+        }
+
         log(userInfo, "#appex(<-content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
         var payload = userInfo?["payload"] as? [String: Any]
 
-        if let message = Message.Content.Request(rawValue: messageName) {
-            // Manages the registry of pages based on the type of message received
-            switch message {
-            case .hello:
-                // Messages may come out of order, e.g. request is faster than hello here
-                // so let's handle them in same way.
-                let tabId = pageRegistry.hello(
-                    page: page,
-                    tabId: userInfo?["tabId"] as? UInt64,
-                    referrer: userInfo?["referrer"] as? String ?? "",
-                    historyLength: userInfo?["historyLength"] as! Int64)
-                if userInfo?["tabId"] != nil && !(userInfo?["tabId"] is NSNull) {
-                    assert(userInfo?["tabId"] as? UInt64 != nil)
-                    assert(userInfo?["tabId"] as? UInt64 == tabId)
-                }
-                payload!["tabId"] = tabId
-                sendMessageToContentScript(
-                    page: page,
-                    withName: "forceTabId",
-                    userInfo: ["tabId" : tabId])
-            case .alive:
-                if let tabId = userInfo?["tabId"] as? UInt64 {
-                    pageRegistry.touch(page: page, tabId: tabId)
-                }
-                return
-            case .bye:
-                pageRegistry.bye(
-                    page: page,
-                    url: userInfo?["url"] as? String ?? "",
-                    historyLength: userInfo?["historyLength"] as! Int64
-                )
-            case .request:
-                if let tabId = userInfo?["tabId"] as? UInt64 {
-                    pageRegistry.touch(page: page, tabId: tabId)
-                }
-                break
+        // Manages the registry of pages based on the type of message received
+        switch message {
+        case .hello:
+            // Messages may come out of order, e.g. request is faster than hello here
+            // so let's handle them in same way.
+            let tabId = pageRegistry.hello(
+                page: page,
+                tabId: userInfo?["tabId"] as? UInt64,
+                referrer: userInfo?["referrer"] as? String ?? "",
+                historyLength: userInfo?["historyLength"] as! Int64)
+            if userInfo?["tabId"] != nil && !(userInfo?["tabId"] is NSNull) {
+                assert(userInfo?["tabId"] as? UInt64 != nil)
+                assert(userInfo?["tabId"] as? UInt64 == tabId)
             }
-
-            // Relays the messages to the background script
-            if payload != nil {
-                sendMessageToBackgroundScript(payload: payload)
+            payload!["tabId"] = tabId
+            sendMessageToContentScript(
+                page: page,
+                withName: "forceTabId",
+                userInfo: ["tabId" : tabId])
+        case .alive, .request:
+            if let tabId = userInfo?["tabId"] as? UInt64 {
+                pageRegistry.touch(page: page, tabId: tabId)
+            }
+        case .bye:
+            pageRegistry.bye(
+                page: page,
+                url: userInfo?["url"] as? String ?? "",
+                historyLength: userInfo?["historyLength"] as! Int64
+            )
+            if let tabId = userInfo?["tabId"] as? UInt64 {
+                pageRegistry.touch(page: page, tabId: tabId)
             }
         }
 
-        log(userInfo, "#appex(pageRegistry): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
+        // Relays the messages to the background script
+        if payload != nil {
+            sendMessageToBackgroundScript(payload: payload)
+        }
+
+        if message == .hello || message == .bye {
+            log(userInfo, "#appex(pageRegistry): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
+        }
     }
 
     // MARK: - Private API
