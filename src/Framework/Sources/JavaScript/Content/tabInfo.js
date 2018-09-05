@@ -9,6 +9,7 @@ var tabInfo = {
 
     init: init,
     sayHello: sayHello,
+    sayAlive: sayAlive,
     sayBye: sayBye
 };
 
@@ -109,6 +110,10 @@ function sayHello() {
     });
 
     window.isTabRegistered = true;
+}
+
+function sayAlive() {
+    safari.extension.dispatchMessage('alive', {tabId: storedTabId});
 }
 
 function sayBye(event) {

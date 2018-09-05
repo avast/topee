@@ -74,6 +74,10 @@ if (window === window.top) {
         tabInfo.sayBye();
     });
 
+    tabInfo.tabId.then(() => {
+        setInterval(() => tabInfo.sayAlive(), 5000);
+    });
+
     // history API has no change notification, so we have to use polling
     var scheduleMs = document.visibilityState === 'visible' ? URL_POLL_VISIBLE : URL_POLL_HIDDEN;
     var visibilityPoll = setInterval(visibilityHello, scheduleMs);

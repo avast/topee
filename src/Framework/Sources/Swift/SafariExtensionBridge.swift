@@ -206,17 +206,17 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     page: page,
                     withName: "forceTabId",
                     userInfo: ["tabId" : tabId])
+            case .alive:
+                if let tabId = userInfo?["tabId"] as? UInt64 {
+                    pageRegistry.touch(page: page, tabId: tabId)
+                }
+                return
             case .bye:
                 pageRegistry.bye(
                     page: page,
                     url: userInfo?["url"] as? String ?? "",
                     historyLength: userInfo?["historyLength"] as! Int64
                 )
-            case .alive:
-                if let tabId = userInfo?["tabId"] as? UInt64 {
-                    pageRegistry.touch(page: page, tabId: tabId)
-                }
-                return
             case .request:
                 if let tabId = userInfo?["tabId"] as? UInt64 {
                     pageRegistry.touch(page: page, tabId: tabId)
@@ -229,7 +229,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 sendMessageToBackgroundScript(payload: payload)
             }
         }
-        log(userInfo, "#appex(<-content): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
+
+        log(userInfo, "#appex(pageRegistry): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
     }
 
     // MARK: - Private API
