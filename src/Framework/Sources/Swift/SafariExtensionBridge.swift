@@ -318,15 +318,17 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 messageQueue = []
             case .getActiveTabId:
                 safariHelper.getActivePage { page in
-                    guard page != nil,
-                        let tabId = self.pageRegistry.pageToTabId(page!) else {
-                            self.sendMessageToBackgroundScript(
-                                payload: [ "eventName": "activeTabId", "tabId": NSNull() ])
-                        return
-                    }
+                    DispatchQueue.main.sync {
+                        guard page != nil,
+                            let tabId = self.pageRegistry.pageToTabId(page!) else {
+                                self.sendMessageToBackgroundScript(
+                                    payload: [ "eventName": "activeTabId", "tabId": NSNull() ])
+                            return
+                        }
 
-                    self.sendMessageToBackgroundScript(
-                        payload: [ "eventName": "activeTabId", "tabId": tabId ])
+                        self.sendMessageToBackgroundScript(
+                            payload: [ "eventName": "activeTabId", "tabId": tabId ])
+                    }
                 }
             case .setIconTitle:
                 guard let title = userInfo["title"] as? String else { return }
