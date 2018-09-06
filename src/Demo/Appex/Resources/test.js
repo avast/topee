@@ -15,6 +15,28 @@ promise.callback = function () {
   return signal;
 }
 
+class Future {
+  constructor () {
+    this._promise = new Promise((resolve, reject) => {
+      this._resolve = resolve;
+    });
+  }
+
+  complete(value) {
+    this._resolve(value);
+  }
+
+  async getValue() {
+    return await this._promise;
+  }
+}
+
+function timeoutAfter(ms) {
+  return new Promise(resolve => {
+    setTimeout(() => resolve('timeout'), ms);
+  });
+}
+
 describe('jasmine setup', function () {
   it('sets and shuts down listeners', async function () {
     var resp = await promise(chrome.runtime.sendMessage({ type: 'test.setupListeners', value: {
@@ -55,6 +77,32 @@ describe('jasmine setup', function () {
 
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBeGreaterThan(0);
+  });
+});
+
+describe('background', function () {
+  describe('chrome.runtime.sendMessage', function () {
+    it('is able to receive reply', async function () {
+      chrome.runtime.onMessage.addListener(response);
+
+      await promise(chrome.runtime.sendMessage({ type: 'test.backgroundRequestResponse' }, promise.callback()));
+
+      chrome.runtime.onMessage.removeListener(response);
+
+      var success = new Future();
+      var result = await Promise.race([success.getValue(), timeoutAfter(500)]);
+      expect(result).toBe('success');
+
+      function response (message, sender, callback) {
+        if (message.type === 'test.backgroundRequestResponse.request') {
+          callback('test.backgroundRequestResponse.response');
+        }
+
+        if (message.type === 'test.backgroundRequestResponse.success') {
+          success.complete('success');
+        }
+      }
+    });
   });
 });
 

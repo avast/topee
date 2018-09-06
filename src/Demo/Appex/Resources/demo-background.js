@@ -4,7 +4,7 @@ var activeListeners = {};
 function setupListeners(listeners) {
     var namespace;
     var listenerIds = {};
-    
+
     for (var key in listeners) {
         namespace = window;
         var parts = key.split('.');
@@ -86,7 +86,7 @@ function invokeFunction(context, sender, sendResponse) {
 
 function shutdownListeners(listeners) {
     var count = 0;
-    
+
     for (var key in listeners) {
         if (!activeListeners[listeners[key]]) {
             console.error('listener', key, 'not found');
@@ -109,15 +109,23 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.type === 'test.backgroundInvoke') {
         invokeFunction(message.value, sender, sendResponse);
         return;
-    }    
+    }
     if (message.type === 'test.shutdownListeners') {
         sendResponse(shutdownListeners(message.value));
         return;
     }
+    if (message.type === 'test.backgroundRequestResponse') {
+        chrome.tabs.sendMessage(sender.tab.id, {type: 'test.backgroundRequestResponse.request' }, {}, function (message) {
+            if (message === 'test.backgroundRequestResponse.response') {
+                // Let content script know that sendMessage callback has been called successfuly
+                chrome.tabs.sendMessage(sender.tab.id, {type: 'test.backgroundRequestResponse.success' }, {});
+            }
+        });
+    }
     if (message.type && Object.values(activeListeners).some(l => l.type === message.type)) {
         return;
     }
-            
+
     if (message.type === 'getDemoDlgBackground') {
         sendResponse(Math.random() >= 0.5 ? 'pink' : 'honeydew');
         setTimeout(function () {

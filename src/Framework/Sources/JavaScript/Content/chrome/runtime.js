@@ -55,14 +55,11 @@ safari.self.addEventListener("message", function (event) {
             eventEmitter.emit('message', event.message.payload, {id: 'topee'}, function (message) {
                 safari.extension.dispatchMessage('request', {
                     tabId: tabId,
-                    payload: JSON.stringify({
-                        tabId: tabId,
+                    payload: {
                         eventName: 'messageResponse',
-                        frameId: tabInfo.frameId,
                         messageId: event.message.messageId,
-                        url: window.location.href,
                         message: message
-                    })
+                    }
                 });
             });
         });
