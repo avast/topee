@@ -14,27 +14,10 @@ var eventEmitter = new EventEmitter();
 eventEmitter.setMaxListeners(1024);
 
 runtime.sendMessage = function(message, callback) {
-    var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-
-    if (callback) {
-        listener.messageId = messageId;  // this is needed for iframe-resources.js communication
-        safari.self.addEventListener("message", listener);
-    }
-
     background.dispatchRequest({
         eventName: 'sendMessage',
-        frameId: tabInfo.frameId,
-        messageId: messageId,
-        url: window.location.href,
         message: message
-    });
-
-    function listener(event) {
-        if (event.name === 'response' && event.message.messageId === messageId) {
-            callback(event.message.payload);
-            safari.self.removeEventListener("message", listener);
-        }
-    }
+    }, callback);
 };
 
 runtime.onMessage = {
