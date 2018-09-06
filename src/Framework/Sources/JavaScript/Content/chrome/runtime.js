@@ -3,6 +3,7 @@
 var EventEmitter = require('events');
 var tabInfo = require('../tabInfo.js');
 var iframesParent = require('../iframes.js');
+var background = require('../background-bridge.js');
 
 var runtime = {};
 
@@ -12,26 +13,6 @@ var eventEmitter = new EventEmitter();
 // (node) warning: possible EventEmitter memory leak detected. 11 listeners added. Use emitter.setMaxListeners() to increase limit.
 eventEmitter.setMaxListeners(1024);
 
-var dispatchRequest = function(payload) {
-    tabInfo.tabId.then(tabId => {
-        payload.tabId = tabId;
-        safari.extension.dispatchMessage('request', {
-            tabId: tabId,
-            payload: payload
-        });
-    });
-};
-
-tabInfo.tabId.then(tabId => {
-    dispatchRequest = function (payload) {
-        payload.tabId = tabId;
-        safari.extension.dispatchMessage('request', {
-            tabId: tabId,
-            payload: payload
-        });
-    };
-});
-
 runtime.sendMessage = function(message, callback) {
     var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
 
@@ -40,7 +21,7 @@ runtime.sendMessage = function(message, callback) {
         safari.self.addEventListener("message", listener);
     }
 
-    dispatchRequest({
+    background.dispatchRequest({
         eventName: 'sendMessage',
         frameId: tabInfo.frameId,
         messageId: messageId,
