@@ -75,9 +75,21 @@ tabs.query = function(queryInfo, callback) {
 
 };
 
+eventEmitter.addListener('tabs.query', function (message) {
+    tabs.query(message.queryInfo, function (tabs) {
+        window.webkit.messageHandlers.content.postMessage({
+            eventName: 'response',
+            tabId: message.tabId,
+            frameId: message.frameId,
+            messageId: message.messageId,
+            payload: tabs
+        });
+    });
+});
+
 tabs.get = function(id, callback) {
     callback(browserTabs[id]);
-}
+};
 
 tabs.sendMessage._emit = function (payload) {
     eventEmitter.emit('messageResponse', payload);

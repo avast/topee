@@ -9,7 +9,7 @@ var eventEmitter = require('./event-bus.js');
 
 window.chrome = require('./chrome/index.js');
 
-var serviceEvents = ['hello', 'bye', 'activeTabId', 'extensionManifest', 'toolbarItemClicked'];
+var serviceEvents = ['hello', 'bye', 'activeTabId', 'extensionManifest', 'toolbarItemClicked', 'tabs.query'];
 
 function manageRequest(payload) {
     if (payload.eventName === 'sendMessage') {
