@@ -140,6 +140,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             let backgroundURL = Bundle(for: SafariExtensionBridge.self)
                 .url(forResource: "topee-background", withExtension: "js")!
             let scripts = [readFile(backgroundURL), buildManifestScript()]
+                + readLocales()
                 + readFiles(backgroundScripts)
                 + [readFile(backgroundEndURL)]
             let script = WKUserScript(scripts: scripts)
@@ -351,7 +352,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             "version": "\(manifest!.version)",
             "name": "\(manifest!.name)",
             "id": "\(manifest!.id)"
-        }
+        };
         """
     }
 
@@ -361,5 +362,17 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     private func readFiles(_ urls: [URL]) -> [String] {
         return urls.map { try! String(contentsOf: $0, encoding: .utf8) }
+    }
+    
+    private func readLocales() -> [String] {
+        let localePaths = Bundle.main.paths(forResourcesOfType: "", inDirectory: "_locales")
+        return localePaths
+            .map { $0 + "/messages.json" }
+            .map {
+                let lang = (($0 as NSString).deletingLastPathComponent as NSString).lastPathComponent
+                let json = (try? String(contentsOfFile: $0, encoding: .utf8)) ?? ""
+                return json.isEmpty ? json :
+                    "(function () { chrome.i18n._locales['"+lang+"']=" + json + "; })();"
+            }
     }
 }
