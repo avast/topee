@@ -14,13 +14,15 @@
       "sendMessage"
     ],
     "i18n": [
-      "getMessage",
       "getUILanguage"
     ]
   },
   "partly": {
     "tabs": [
       "query"
+    ],
+    "i18n": [
+      "getMessage"
     ]
   },
   "bugs": {
