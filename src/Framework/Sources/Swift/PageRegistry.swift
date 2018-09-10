@@ -62,7 +62,7 @@ class PageRegistry<PageT: Equatable> {
         }
         
         //Int.random(in: 1 .. 9007199254740991)  // 2^53 - 1, JS Number.MAX_SAFE_INTEGER
-        let newTabId = UInt64(arc4random_uniform(0x7FFFFFFE)) + 1 //((UInt64(arc4random_uniform(0xFFFFFFFE)) | (UInt64(arc4random_uniform(0x3FFFFF)) << 32))) + 1
+        let newTabId = ((UInt64(arc4random_uniform(0xFFFFFFFE)) | (UInt64(arc4random_uniform(0x3FFFFF)) << 32))) + 1
         pages[newTabId] = page
         return newTabId
     }
