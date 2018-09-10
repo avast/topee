@@ -7,6 +7,9 @@ i18n.getUILanguage = function () {
 };
 
 // TODO: Implementation
+// this may be impossible to implement nicely:
+// * either you have to include the language files in Info.plist for content scripts and reference them for resource iframes
+// * or you cannot call getMessage before the translations are loaded
 i18n.getMessage = function (messageName) {
     return messageName;
 };
