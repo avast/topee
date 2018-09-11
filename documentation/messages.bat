@@ -66,6 +66,15 @@ digraph Avast_Password_Manager {
         color = cornsilk;
     }
 
+    subgraph cluster_extension {
+        response
+        request
+        
+        label = "extension";
+        style = filled;
+        color = cornsilk;
+    }
+
     subgraph cluster_iframe {
         "safari.self.addEventListener" [ shape=polygon; sides=4; skew=.2; ]
         "chrome.runtime.sendMessage" -> "background-bridge.dispatchRequest"
@@ -84,22 +93,15 @@ digraph Avast_Password_Manager {
         "window.parent.postMessage" -> cs_topee_iframe_request [ label=AES ]
         
         cs_event_source_postMessage -> "decryptingCallback" [ color=darkred; label=AES ]           
+
+        request -> "chrome.runtime.sendMessage"
         "decryptingCallback" -> response  [ color=darkred; label=callback ]
+
         
-//        "safari.self.addEventListener" -> cs_safari_self_addEventListener [ style=dotted;]          
+//        "safari.self.addEventListener" -> cs_safari_self_addEventListener [ style=dotted; constraint=false ]          
         
         label = "safari-extension:// iframe";
         style = filled;
         color = cornsilk;
     }
-    
-    subgraph cluster_extension {
-        response
-        request -> "chrome.runtime.sendMessage"
-
-        label = "extension";
-        style = filled;
-        color = cornsilk;
-    }
-
 }
