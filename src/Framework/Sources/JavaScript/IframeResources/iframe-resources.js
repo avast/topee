@@ -39,7 +39,7 @@ if (typeof safari.self.addEventListener === 'undefined') {
             }, 1000);  // to prevent leaks
         }
 
-        pendingResponseListeners.push({ type: type, safariCallback: callback, messageCallback: decryptingCallback });
+        pendingResponseListeners.push({ type: type, safariCallback: callback, decryptingCallback: decryptingCallback });
         window.addEventListener('message', decryptingCallback);
 
         function decryptingCallback(event) {
