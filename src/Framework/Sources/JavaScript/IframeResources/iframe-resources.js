@@ -50,7 +50,7 @@ if (typeof safari.self.addEventListener === 'undefined') {
                         console.log('got message in iframe:', payload);
 
                         if (payload.messageId === callback.messageId)  {
-                            //window.removeEventListener('message', decryptingCallback);
+                            window.removeEventListener('message', callback);
                             callback({ name: payload.eventName, message: { messageId: payload.messageId, payload: payload.payload } });
                         }
                 });
