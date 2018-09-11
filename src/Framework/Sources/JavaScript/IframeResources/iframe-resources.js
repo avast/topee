@@ -28,7 +28,7 @@ if (typeof safari.extension.dispatchMessage === 'undefined') {
 if (typeof safari.self.addEventListener === 'undefined') {
     safari.self.addEventListener = function (type, callback) {
         if (type !== 'message') {
-            console.error('unexcpected message listener:', type);
+            console.error('Unexpected message listener:', type);
             return;
         }
 
