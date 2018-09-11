@@ -115,15 +115,15 @@ function bufferMessage(name, value) {
 
 function dispatchMessage(name, value) {
     var messageId = null;
-    if (value && typeof value.payload === 'string') {
-        try {
-            messageId = JSON.parse(value.payload).messageId;
-            if (typeof messageId === 'undefined' || !freshListeners[messageId]) {
-                messageId = null;
-            }
-            delete freshListeners[messageId];
+
+    if (value && value.payload) {
+        messageId = value.payload.messageId;
+
+        if (typeof messageId === 'undefined' || !freshListeners[messageId]) {
+            messageId = null;
         }
-        catch (ex) { console.log(ex); }
+
+        delete freshListeners[messageId];
     }
 
     txtCrypto.encrypt(JSON.stringify({ name: name, value: value }))
