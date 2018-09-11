@@ -1,5 +1,7 @@
 function uint8array2str(ua) {
-  return String.fromCharCode.apply(null, ua);
+  var chars = [];
+  ua.forEach(byte => chars.push(String.fromCharCode(byte)));
+  return chars.join('');
 }
 
 function arrayBuffer2str(ab) {
