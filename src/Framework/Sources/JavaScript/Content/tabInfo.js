@@ -99,6 +99,8 @@ function sayHello() {
 
     safari.extension.dispatchMessage('hello', {
         tabId: tabId,
+        isVisible: !document.hidden,
+        hasFocus: document.hasFocus(),
         referrer: document.referrer,
         historyLength: history.length,
         frameId: tabInfo.frameId,
@@ -114,7 +116,11 @@ function sayHello() {
 }
 
 function sayAlive() {
-    safari.extension.dispatchMessage('alive', {tabId: storedTabId});
+    safari.extension.dispatchMessage('alive', {
+        tabId: storedTabId,
+        isVisible: !document.hidden,
+        hasFocus: document.hasFocus()
+    });
 }
 
 function sayBye(event) {

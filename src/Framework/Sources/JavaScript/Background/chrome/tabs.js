@@ -7,14 +7,29 @@ var tabs = {};
 
 // Internal state management
 var browserTabs = { /* id, url */ };
+var lastFocusedTabId = null;
 
-eventEmitter.addListener('hello', function (payload) {
-    if (payload.frameId !== 0) { return; }
-    browserTabs[payload.tabId] = {
-        id: payload.tabId,
-        url: payload.url
+function registerTab({tabId, frameId, hasFocus, isVisible, url}) {
+    if (frameId !== 0) { return; } // TODO: Change to assert? Only top window should send these messages
+
+    if (hasFocus) {
+        if (lastFocusedTabId && lastFocusedTabId !== tabId) {
+            browserTabs[lastFocusedTabId].hasFocus = false;
+        }
+
+        lastFocusedTabId = tabId;
+    }
+
+    browserTabs[tabId] = {
+        id: tabId,
+        url,
+        hasFocus,
+        isVisible
     };
-});
+}
+
+eventEmitter.addListener('hello', registerTab);
+eventEmitter.addListener('alive', registerTab);
 
 eventEmitter.addListener('bye', function (payload) {
     if (typeof payload.frameId !== 'undefined' && payload.frameId !== 0) { return; }
@@ -66,11 +81,7 @@ tabs.query = function(queryInfo, callback) {
 
     // Active tab (in last focussed window) filter
     if (queryInfo.active && queryInfo.lastFocusedWindow) {
-        eventEmitter.once('activeTabId', function (event) {
-            callback(tabs.filter(tab => tab.id === event.tabId));
-        });
-
-        window.webkit.messageHandlers.appex.postMessage({type: "getActiveTabId"});
+        callback(tabs.filter(tab => tab.id === lastFocusedTabId));
     } else {
         callback(tabs);
     }

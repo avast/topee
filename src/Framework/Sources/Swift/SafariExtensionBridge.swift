@@ -317,20 +317,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 isBackgroundReady = true
                 messageQueue.forEach { sendMessageToBackgroundScript(payload: $0) }
                 messageQueue = []
-            case .getActiveTabId:
-                safariHelper.getActivePage { page in
-                    DispatchQueue.main.sync {
-                        guard page != nil,
-                            let tabId = self.pageRegistry.pageToTabId(page!) else {
-                                self.sendMessageToBackgroundScript(
-                                    payload: [ "eventName": "activeTabId", "tabId": NSNull() ])
-                            return
-                        }
-
-                        self.sendMessageToBackgroundScript(
-                            payload: [ "eventName": "activeTabId", "tabId": tabId ])
-                    }
-                }
             case .setIconTitle:
                 guard let title = userInfo["title"] as? String else { return }
                 safariHelper.setToolbarIconTitle(title)
