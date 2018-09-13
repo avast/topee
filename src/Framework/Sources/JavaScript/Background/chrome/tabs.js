@@ -24,9 +24,11 @@ eventEmitter.addListener('bye', function (payload) {
 // chrome.tabs API
 tabs.sendMessage = function (tabId, message, options, responseCallback) {
     var messageId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+    options = options || {};
 
     if (typeof options === 'function') {
         responseCallback = options;
+        options = {};
     }
 
     if (responseCallback) {
@@ -36,7 +38,7 @@ tabs.sendMessage = function (tabId, message, options, responseCallback) {
     window.webkit.messageHandlers.content.postMessage({
         tabId: tabId,
         eventName: 'request',
-        frameId: (options && options.frameId) || undefined,
+        frameId: options.frameId,
         messageId: messageId,
         payload: message
     });

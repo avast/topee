@@ -10,7 +10,8 @@ var tabInfo = {
     init: init,
     sayHello: sayHello,
     sayAlive: sayAlive,
-    sayBye: sayBye
+    sayBye: sayBye,
+    isForThisFrame: isForThisFrame
 };
 
 var setTabId;
@@ -140,6 +141,13 @@ function sayBye(event) {
     window.isTabRegistered = false;
 }
 
+function isForThisFrame(targetFrameId) {
+    // Frame not specified, so it's broadcast
+    if (targetFrameId === null || targetFrameId === undefined) {
+        return true;
+    }
 
+    return targetFrameId === tabInfo.frameId;
+}
 
 module.exports = tabInfo;
