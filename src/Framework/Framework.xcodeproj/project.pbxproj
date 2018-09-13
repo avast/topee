@@ -21,13 +21,6 @@
 		EFF799BE2110966A00646663 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BD2110966A00646663 /* Message.swift */; };
 		EFF799C32110ADBC00646663 /* WKUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799C22110ADBC00646663 /* WKUserScript.swift */; };
 		EFF799C52110ADDE00646663 /* WKWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799C42110ADDE00646663 /* WKWebView.swift */; };
-		FD3468FF21465A2500A86D27 /* browser-action.js in Resources */ = {isa = PBXBuildFile; fileRef = FD3468FB21465A2400A86D27 /* browser-action.js */; };
-		FD34690021465A2500A86D27 /* context-menus.js in Resources */ = {isa = PBXBuildFile; fileRef = FD3468FC21465A2400A86D27 /* context-menus.js */; };
-		FD34690121465A2500A86D27 /* extension.js in Resources */ = {isa = PBXBuildFile; fileRef = FD3468FD21465A2400A86D27 /* extension.js */; };
-		FD34690221465A2500A86D27 /* i18n.js in Resources */ = {isa = PBXBuildFile; fileRef = FD3468FE21465A2500A86D27 /* i18n.js */; };
-		FD34690621465A4600A86D27 /* i18n.js in Resources */ = {isa = PBXBuildFile; fileRef = FD34690321465A4500A86D27 /* i18n.js */; };
-		FD34690721465A4600A86D27 /* tabs.js in Resources */ = {isa = PBXBuildFile; fileRef = FD34690421465A4500A86D27 /* tabs.js */; };
-		FD34690821465A4600A86D27 /* extension.js in Resources */ = {isa = PBXBuildFile; fileRef = FD34690521465A4500A86D27 /* extension.js */; };
 		FD4FC48B2136EA210045FABE /* FilterLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FC48A2136EA210045FABE /* FilterLogger.swift */; };
 		FDD7715921304F8500F6BC46 /* topee-iframe-resources.js in Resources */ = {isa = PBXBuildFile; fileRef = FDD7715821304F8500F6BC46 /* topee-iframe-resources.js */; };
 /* End PBXBuildFile section */
@@ -374,17 +367,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FD34690621465A4600A86D27 /* i18n.js in Resources */,
 				FDD7715921304F8500F6BC46 /* topee-iframe-resources.js in Resources */,
 				EFC86ECF21133BB40049CD8B /* topee-content.js in Resources */,
-				FD34690221465A2500A86D27 /* i18n.js in Resources */,
 				EFC86ECD21131A0B0049CD8B /* topee-background-end.js in Resources */,
 				80BEB8AA2111B68600DA4C7B /* topee-background.js in Resources */,
-				FD3468FF21465A2500A86D27 /* browser-action.js in Resources */,
-				FD34690021465A2500A86D27 /* context-menus.js in Resources */,
-				FD34690721465A4600A86D27 /* tabs.js in Resources */,
-				FD34690821465A4600A86D27 /* extension.js in Resources */,
-				FD34690121465A2500A86D27 /* extension.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
