@@ -1,5 +1,6 @@
 // https://developer.chrome.com/extensions/browserAction
 var eventEmitter = require('../event-bus.js');
+var tabs = require('./tabs.js');
 
 var browserAction = {};
 
@@ -26,7 +27,7 @@ browserAction.onClicked = {
             // Only call fn if popup isn't defined
             if (!state.popup.popup) {
                 // TODO: Also check tabId
-                fn(event.tab);
+                tabs.get(event.tab.id, tab => fn(tab));
             }
         });
     }
