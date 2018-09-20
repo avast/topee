@@ -21,6 +21,7 @@
 		EFF799BE2110966A00646663 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BD2110966A00646663 /* Message.swift */; };
 		EFF799C32110ADBC00646663 /* WKUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799C22110ADBC00646663 /* WKUserScript.swift */; };
 		EFF799C52110ADDE00646663 /* WKWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799C42110ADDE00646663 /* WKWebView.swift */; };
+		FD4AD1CE2153E1F900E13EA0 /* run-at-document-end.sh in Resources */ = {isa = PBXBuildFile; fileRef = FD4AD1CC2153E1E400E13EA0 /* run-at-document-end.sh */; };
 		FD4FC48B2136EA210045FABE /* FilterLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FC48A2136EA210045FABE /* FilterLogger.swift */; };
 		FDD7715921304F8500F6BC46 /* topee-iframe-resources.js in Resources */ = {isa = PBXBuildFile; fileRef = FDD7715821304F8500F6BC46 /* topee-iframe-resources.js */; };
 /* End PBXBuildFile section */
@@ -74,6 +75,7 @@
 		FD34690321465A4500A86D27 /* i18n.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = i18n.js; sourceTree = "<group>"; };
 		FD34690421465A4500A86D27 /* tabs.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabs.js; sourceTree = "<group>"; };
 		FD34690521465A4500A86D27 /* extension.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = extension.js; sourceTree = "<group>"; };
+		FD4AD1CC2153E1E400E13EA0 /* run-at-document-end.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "run-at-document-end.sh"; sourceTree = "<group>"; };
 		FD4FC48A2136EA210045FABE /* FilterLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLogger.swift; sourceTree = "<group>"; };
 		FD80BAF6211DA1E600CCFB1E /* iframe-resources.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "iframe-resources.js"; path = "Sources/JavaScript/IframeResources/iframe-resources.js"; sourceTree = SOURCE_ROOT; };
 		FDD7715821304F8500F6BC46 /* topee-iframe-resources.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "topee-iframe-resources.js"; path = "../Build/topee-iframe-resources.js"; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 		EF80A751210F2B67002C6F3F = {
 			isa = PBXGroup;
 			children = (
+				FD4AD1CB2153E1E400E13EA0 /* Scripts */,
 				EF80A77A210F2C1E002C6F3F /* Config */,
 				EF80A75C210F2B67002C6F3F /* Products */,
 				80BEB8A82111B65700DA4C7B /* Resources */,
@@ -229,6 +232,14 @@
 				EFF799CA2110B0A100646663 /* index.js */,
 			);
 			path = chrome;
+			sourceTree = "<group>";
+		};
+		FD4AD1CB2153E1E400E13EA0 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				FD4AD1CC2153E1E400E13EA0 /* run-at-document-end.sh */,
+			);
+			path = Scripts;
 			sourceTree = "<group>";
 		};
 		FD66CF7E211052AE003E0819 /* Swift */ = {
@@ -367,6 +378,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FD4AD1CE2153E1F900E13EA0 /* run-at-document-end.sh in Resources */,
 				FDD7715921304F8500F6BC46 /* topee-iframe-resources.js in Resources */,
 				EFC86ECF21133BB40049CD8B /* topee-content.js in Resources */,
 				EFC86ECD21131A0B0049CD8B /* topee-background-end.js in Resources */,
