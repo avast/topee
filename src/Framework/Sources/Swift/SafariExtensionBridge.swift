@@ -38,7 +38,6 @@ public struct TopeeExtensionManifest: Equatable {
 public protocol SafariExtensionBridgeType {
     func setup(
         webViewURL: URL,
-        icons: [String: NSImage],
         manifest: TopeeExtensionManifest,
         messageLogFilter: [String:NSRegularExpression]?)
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?)
@@ -50,13 +49,11 @@ public protocol SafariExtensionBridgeType {
 public extension SafariExtensionBridgeType {
     func setup(
         webViewURL: URL = URL(string: "http://topee.local")!,
-        icons: [String: NSImage] = [:],
         manifest: TopeeExtensionManifest? = nil,
         messageLogFilter: [String:NSRegularExpression]? = nil)
     {
         setup(
             webViewURL: webViewURL,
-            icons: icons,
             manifest: manifest ?? TopeeExtensionManifest(),
             messageLogFilter: messageLogFilter
         )
@@ -81,7 +78,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     private var manifest: TopeeExtensionManifest?
     private var webViewURL: URL = URL(string: "http://topee.local")!
-    private var icons: [String: NSImage] = [:]
     private var log: FilterLogger.LogFunc = FilterLogger.create(nil)
 
     private var pageRegistry: SFSafariPageRegistry
@@ -101,7 +97,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     
     public func setup(
         webViewURL: URL,
-        icons: [String: NSImage],
         manifest: TopeeExtensionManifest,
         messageLogFilter: [String: NSRegularExpression]?)
     {
@@ -129,7 +124,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             .compactMap { Bundle.main.url(forResource: $0, withExtension: "") }
 
         self.webViewURL = webViewURL
-        self.icons = icons
         self.manifest = manifest
         self.log = FilterLogger.create(messageLogFilter)
 
@@ -324,8 +318,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 if let path32 = ((userInfo["path"]
                     as? [String: Any])?["32"])
                     as? String,
-                    let icon = icons[path32]
+                    let iconUrl = Bundle.main.url(forResource: path32, withExtension: "")
                 {
+                    let icon = NSImage(byReferencing: iconUrl)
                     safariHelper.setToolbarIcon(icon)
                 }
             }
