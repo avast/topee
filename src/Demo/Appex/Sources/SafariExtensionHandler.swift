@@ -7,11 +7,4 @@ import SafariServices
 import Topee
 
 class SafariExtensionHandler: TopeeSafariExtensionHandler {
-    override func setupBridge() {
-        bridge.setup(
-            backgroundScripts: [
-                Bundle.main.url(forResource: "demo-background", withExtension: "js")!
-            ]
-        )
-    }
 }

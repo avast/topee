@@ -17,8 +17,9 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
         self.setupBridge()
     }
 
+    // override to pass optional parameters to bridge.setup()
     open func setupBridge() {
-        preconditionFailure("This method must be overridden, and it should call bridge.setup(...)")
+        bridge.setup()
     }
 
     // MARK: - SFSafariExtensionHandler

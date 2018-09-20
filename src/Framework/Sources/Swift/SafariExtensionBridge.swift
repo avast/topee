@@ -37,7 +37,6 @@ public struct TopeeExtensionManifest: Equatable {
 
 public protocol SafariExtensionBridgeType {
     func setup(
-        backgroundScripts: [URL],
         webViewURL: URL,
         icons: [String: NSImage],
         manifest: TopeeExtensionManifest,
@@ -50,14 +49,12 @@ public protocol SafariExtensionBridgeType {
 // Can't define default values in protocol so we need extension
 public extension SafariExtensionBridgeType {
     func setup(
-        backgroundScripts: [URL],
         webViewURL: URL = URL(string: "http://topee.local")!,
         icons: [String: NSImage] = [:],
         manifest: TopeeExtensionManifest? = nil,
         messageLogFilter: [String:NSRegularExpression]? = nil)
     {
         setup(
-            backgroundScripts: backgroundScripts,
             webViewURL: webViewURL,
             icons: icons,
             manifest: manifest ?? TopeeExtensionManifest(),
@@ -83,7 +80,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     // MARK: - Private Members
 
     private var manifest: TopeeExtensionManifest?
-    private var backgroundScripts: [URL]?
     private var webViewURL: URL = URL(string: "http://topee.local")!
     private var icons: [String: NSImage] = [:]
     private var log: FilterLogger.LogFunc = FilterLogger.create(nil)
@@ -104,7 +100,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
     
     public func setup(
-        backgroundScripts: [URL],
         webViewURL: URL,
         icons: [String: NSImage],
         manifest: TopeeExtensionManifest,
@@ -112,10 +107,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     {
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
-            if backgroundScripts != self.backgroundScripts {
-                fatalError("You can only inject one set of background scripts")
-            }
-            
             if webViewURL != self.webViewURL {
                 fatalError("You can only specify one webViewURL")
             }
@@ -126,8 +117,17 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             
             return
         }
+        
+        let backgroundScriptFileNames = (
+                (Bundle.main.infoDictionary?["NSExtension"]
+                    as? [String:Any])?["SFSafariBackgroundScript"]
+                    as? [[String:String]]
+                    ?? []
+            )
+            .compactMap {$0["Script"]}
+        let backgroundScriptUrls = backgroundScriptFileNames
+            .compactMap { Bundle.main.url(forResource: $0, withExtension: "") }
 
-        self.backgroundScripts = backgroundScripts
         self.webViewURL = webViewURL
         self.icons = icons
         self.manifest = manifest
@@ -141,7 +141,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 .url(forResource: "topee-background", withExtension: "js")!
             let scripts = [readFile(backgroundURL), buildManifestScript()]
                 + readLocales()
-                + readFiles(backgroundScripts)
+                + readFiles(backgroundScriptUrls)
                 + [readFile(backgroundEndURL)]
             let script = WKUserScript(scripts: scripts)
             let contentController: WKUserContentController = WKUserContentController()

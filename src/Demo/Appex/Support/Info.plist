@@ -75,6 +75,13 @@
 				<string>test.js</string>
 			</dict>
 		</array>
+		<key>SFSafariBackgroundScript</key>
+		<array>
+			<dict>
+				<key>Script</key>
+				<string>demo-background.js</string>
+			</dict>
+		</array>
 		<key>SFSafariToolbarItem</key>
 		<dict>
 			<key>Action</key>
