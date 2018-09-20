@@ -113,14 +113,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             return
         }
         
-        let backgroundScriptFileNames = (
-                (Bundle.main.infoDictionary?["NSExtension"]
-                    as? [String:Any])?["SFSafariBackgroundScript"]
-                    as? [[String:String]]
-                    ?? []
-            )
-            .compactMap {$0["Script"]}
-        let backgroundScriptUrls = backgroundScriptFileNames
+        let backgroundScriptUrls = backgroundScriptNames(from: Bundle.main.infoDictionary ?? [:])
             .compactMap { Bundle.main.url(forResource: $0, withExtension: "") }
 
         self.webViewURL = webViewURL
@@ -325,6 +318,12 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 }
             }
         }
+    }
+    
+    private func backgroundScriptNames(from dict: [String: Any]) -> [String] {
+        guard let extensionDictionary = dict["NSExtension"] as? [String: Any] else { return [] }
+        guard let backgroundScripts = extensionDictionary["SFSafariBackgroundScript"] as? [[String: String]] else { return [] }
+        return backgroundScripts.compactMap { $0["Script"] }
     }
     
     private func buildManifestScript() -> String {
