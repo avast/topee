@@ -7,6 +7,9 @@ Google Chrome Extension API for Safari
 Integration
 ====
 
+XCode Project
+-------------
+
 - Add `github https://github.com/avast/topee ~> 0.0.0` to your Cartfile
 - Link the `Topee` to your Appex target
 - Add a resource to your Appex pointing to `Carthage/Build/Mac/Topee.framework/Resources/topee-content.js`
@@ -26,6 +29,19 @@ class MySafariExtensionHandler: TopeeSafariExtensionHandler {
     }
 }
 ```
+
+Extension parts
+---------------
+
+Content scripts are listed in Info.plist as [specified](https://developer.apple.com/documentation/safariservices/safari_app_extensions/injecting_a_script_into_a_webpage) for the app extensions.
+Make sure to list Topee API (topee-content.js) as the first one.
+
+Background scripts are also listed in Info.plist in the same manner as content scripts, under SFSafariBackgroundScript key.
+topee-background.js should not be listed, but place it into the Appex resources.
+
+Injected iframes from web accessible resources need to reference topee-iframe-resources.js.
+
+Place browserAction icons into the Appex resources.
 
 Tests
 ====
