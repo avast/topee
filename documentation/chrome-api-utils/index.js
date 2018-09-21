@@ -25,11 +25,42 @@ const HEAD = `
 <!DOCTYPE html>
 <html>
 <head>
-<title></title>
+<title>Google Chrome Extension API Support</title>
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+<style>
+body { font-family: 'Roboto', sans-serif; }
+li { line-height: 1.5em; }
+p {
+    margin-bottom: 3em;
+}
+p, .content > span { color: grey; }
+p a {
+    color: white;
+    background-color: #668de5;
+    border-radius: 3px;
+    padding: 3px;
+}
+p a:hover {
+    background-color: #356be5;
+}
+.content {
+    max-width: 80em;
+    margin-top: 3em;
+    margin-left: auto;
+    margin-right: auto;
+}
+.buttongrouplabel {
+    margin-right: 3em;
+}
+.content input[name="categories"] {
+    margin-left: 1em;
+}
+</style>
 </head>
 <body>
+<div class="content">
 <h1>Google Chrome Extension API Support</h1>
-<p>API as documented at <a href="https://developer.chrome.com/extensions/api_index">Chrome APIs</a>.</p>
+<p>API as documented at <a href="https://developer.chrome.com/extensions/api_index">Chrome APIs.</a></p>
 <style>
 .collapsible-list li {
   list-style-type: none;
@@ -81,11 +112,12 @@ const HEAD = `
     display: none;
 }
 </style>
-<input type="checkbox" id="hide-not-done" /><span>What's done?</span>
+<span class="buttongrouplabel">Show</span><input type="radio" name="categories" checked /> All <input type="radio" name="categories" id="hide-not-done" /> Done
 <ul class="collapsible-list">
 `;
 const TAIL = `
 </ul>
+</div>
 </body>
 </html>
 `;
