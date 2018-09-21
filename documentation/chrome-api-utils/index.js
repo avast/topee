@@ -52,8 +52,11 @@ p a:hover {
 .buttongrouplabel {
     margin-right: 3em;
 }
-.content input[name="categories"] {
+input[name="categories"] {
     margin-left: 1em;
+}
+input[name="categories"]:checked + span {
+    color: black;
 }
 </style>
 </head>
@@ -112,7 +115,7 @@ p a:hover {
     display: none;
 }
 </style>
-<span class="buttongrouplabel">Show</span><input type="radio" name="categories" checked /> All <input type="radio" name="categories" id="hide-not-done" /> Done
+<span class="buttongrouplabel">Show</span><input type="radio" name="categories" checked /> <span>All</span> <input type="radio" name="categories" id="hide-not-done" /> <span>Done</span>
 <ul class="collapsible-list">
 `;
 const TAIL = `
