@@ -113,8 +113,14 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             return
         }
         
-        let backgroundScriptUrls = backgroundScriptNames(from: Bundle.main.infoDictionary ?? [:])
-            .compactMap { Bundle.main.url(forResource: $0, withExtension: "") }
+        let backgroundScriptUrls: [URL] = backgroundScriptNames(from: Bundle.main.infoDictionary ?? [:])
+            .compactMap {
+                let u: URL? = Bundle.main.url(forResource: $0, withExtension: "")
+                if (u == nil) {
+                    NSLog("Warning: \($0) not found")
+                }
+                return u
+            }
 
         self.webViewURL = webViewURL
         self.manifest = manifest
