@@ -47,6 +47,7 @@ Place browserAction icons into the Appex resources.
 How it works
 ====
 
+![documentation/integration.svg](https://raw.github.com/avast/topee/master/documentation/integration.svg?sanitize=true)
 To run Chrome-API-based extension, Topee creates an invisible WebView to run background scripts
 and `chrome` namespace implementations for background and content scripts, that provides [messaging](messaging.md)
 and other functionality.
