@@ -23,7 +23,7 @@ module.exports = class TextCrypto {
     /// @return { data: base64, salt: base64 }
     encrypt(str) {
         var salt = bin.createSalt();
-        return bin.encrypt(bc.str2arrayBuffer(str), salt, this.key)
+        return bin.encrypt(bc.str2arrayBuffer(encodeURI(str)), salt, this.key)
             .then(ab => {
                 return {
                     data: bc.arrayBuffer2base64(ab),
@@ -35,6 +35,6 @@ module.exports = class TextCrypto {
     /// dataObj: { data: base64, salt: base64 }
     decrypt(dataObj) {
         return bin.decrypt(bc.base642arrayBuffer(dataObj.data), bc.base642uint8array(dataObj.salt), this.key)
-            .then(ab => bc.arrayBuffer2str(ab));
+            .then(ab => decodeURI(bc.arrayBuffer2str(ab)));
     }
 };

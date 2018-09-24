@@ -115,7 +115,7 @@ describe('TextCrypto', function () {
         let decoder = new TextCrypto(textKey);
         await decoder.readyPromise;
 
-        const input = 'hello world';
+        const input = 'Hello Yeni Şafak';
 
         const encrypted = await encoder.encrypt(input);
         expect(typeof encrypted.data).toBe('string');
