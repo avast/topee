@@ -35,6 +35,7 @@ Extension parts
 
 Content scripts are listed in Info.plist as [specified](https://developer.apple.com/documentation/safariservices/safari_app_extensions/injecting_a_script_into_a_webpage) for the app extensions.
 Make sure to list Topee API (topee-content.js) as the first one.
+Content scripts are injected when document starts loading by default. src/Framework/Scripts/run-at-document-end.sh preprocesses them at build time to run when document body already exists.
 
 Background scripts are also listed in Info.plist in the same manner as content scripts, under SFSafariBackgroundScript key.
 topee-background.js should not be listed, but place it into the Appex resources.
