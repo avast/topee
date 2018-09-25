@@ -1,0 +1,47 @@
+Add JavaScript files as App Extension resources
+====
+
+Here is an example how to bundle various types of scripts,
+Topee Chrome API emulation for background, content and iframes
+and project background scripts, content scripts injected
+at _document_start_ or _document_end_ and web accessible resources.
+
+This can be done by a script step at the App Extension Build Phases.
+Start with creating symlinks in your extension resources directory
+pointing to the locations of the extension scripts (we will name it `Ext` here)
+and the Topee framework (`Topee`).
+This would typicallly be where Carthage updates them.
+Let's have variables pointing to the Resources directory and the resulting
+build path:
+
+```
+TARGET_RESOURCES="${SRCROOT}/AppExtension/Resources"
+BUNDLE_RESOURCES="${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"
+```
+
+Content scripts injected at _document_start_ would go simply as
+
+```
+rsync -rktv "${TARGET_RESOURCES}/Ext/document_start/" "${BUNDLE_RESOURCES}"
+```
+
+A content script injected at _document_end_ is proprocessed:
+
+```
+"${TARGET_RESOURCES}/Topee/run-at-document-end.sh" "${TARGET_RESOURCES}/Ext/document_end/content.js" > "${BUNDLE_RESOURCES}/content.js"
+```
+
+Topee Chrome API emulation for content scripts and resources would be coppied as
+
+```
+cp "${TARGET_RESOURCES}/Topee/topee-content.js" "${BUNDLE_RESOURCES}"
+cp "${TARGET_RESOURCES}/Topee/topee-iframe-resources.js" "${BUNDLE_RESOURCES}/web_accessible_resources"
+```
+
+Background scripts are exctly the same as content scripts:
+
+```
+rsync -rktv "${TARGET_RESOURCES}/Ext/background/" "${BUNDLE_RESOURCES}"
+```
+
+The Topee background Chrome API emulation is directly in the Topee bundle and does not need to be coppied.
