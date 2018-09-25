@@ -6,8 +6,8 @@ digraph Avast_Password_Manager {
 
     subgraph cluster_Topee {
         requestHandlers [ label = "request handlers [swift]"; ];
-        chromeApi [ label = "Chrome API emulation [js]"; ];
-        contentMsg [ label = "content script messaging [js]"; ];
+        chromeApi [ label = "background script chrome API [js]"; ];
+        contentMsg [ label = "content script chrome API [js]"; ];
         requestHandlers -> webView;
         webView -> chromeApi;
         chromeApi -> webView; 
@@ -21,11 +21,11 @@ digraph Avast_Password_Manager {
 
     subgraph cluster_Extension {
         carthage [ shape=polygon; sides=4; skew=.2; label = "get & build Topee via Carthage"; ];
-        resources [ shape=polygon; sides=4; skew=.2; label = "prepare script as appex resources"; ];
+        resources [ shape=polygon; sides=4; skew=.2; label = "prepare scripts as appex resources"; ];
 
         backgroundScript [ label = "background script [js]"; ];
         contentScript [ label = "content script [js]"; ];
-        platformCode [ label = "platform code (browserAction icon, ...) [swift]"; ];
+        platformCode [ label = "platform code (Topee setup) [swift]"; ];
     
         backgroundScript -> chromeApi;
         contentScript -> contentMsg;
