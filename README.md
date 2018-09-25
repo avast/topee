@@ -2,7 +2,7 @@ topee
 =====
 Google Chrome Extension API for Safari 
 
-Status: [API complete enough](http://htmlpreview.github.io/?https://github.com/avast/topee/blob/master/api.html)
+Status: [API complete enough](http://htmlpreview.github.io/?https://github.com/avast/topee/blob/master/api.html#)
 for a [product](https://www.avast.com/passwords#mac).
 
 Integration
