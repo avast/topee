@@ -48,19 +48,19 @@ input[name="categories"]:checked + span {
 
 .not-done:before {
     content: "\2718";
-    color: red;
+    color: #e64251;
     margin-right: 0.25em;
 }
 .all-done:before {
     content: "\2713";
     font-weight: bolder;
-    color: green;
+    color: #2bb95a;
     margin-right: 0.25em;
 }
 .some-done:before {
     content: "\2713";
     font-weight: bolder;
-    color: orange;
+    color: #f37d32;
     margin-right: 0.25em;
 }
 
@@ -140,7 +140,7 @@ input[name="categories"]:checked + span {
 
     <li id="browserAction" class="some-done"><a href="#browserAction" class="unfold">browserAction</a><a href="#" class="collapse">browserAction</a>
     <ul>
-      <li class="not-done">setTitle</li>
+      <li class="all-done">setTitle</li>
       <li class="not-done">getTitle</li>
       <li class="all-done">setIcon</li>
       <li class="not-done">setPopup</li>
@@ -590,5 +590,10 @@ input[name="categories"]:checked + span {
 
 </ul>
 </div>
+
+<div style="position: absolute; top: 0px; left: 0px; width: 100%; height: 1rem; background-color: #e64251;">
+  <span style="display: inline-block; width: 2.6785714285714284%; line-height: 100%; overflow: hidden; white-space: nowrap; color: #2bb95a; background-color: #2bb95a;">3% done</span><span style="display: inline-block; width: 0.5952380952380952%; line-height: 100%; overflow: hidden; white-space: nowrap; color: #f37d32; background-color: #f37d32;">1% in progress</span>
+</div>
+
 </body>
 </html>

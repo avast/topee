@@ -71,19 +71,19 @@ input[name="categories"]:checked + span {
 
 .not-done:before {
     content: "\\2718";
-    color: red;
+    color: #e64251;
     margin-right: 0.25em;
 }
 .all-done:before {
     content: "\\2713";
     font-weight: bolder;
-    color: green;
+    color: #2bb95a;
     margin-right: 0.25em;
 }
 .some-done:before {
     content: "\\2713";
     font-weight: bolder;
-    color: orange;
+    color: #f37d32;
     margin-right: 0.25em;
 }
 
@@ -118,12 +118,19 @@ input[name="categories"]:checked + span {
 <span class="buttongrouplabel">Show</span><input type="radio" name="categories" checked /> <span>All</span> <input type="radio" name="categories" id="hide-not-done" /> <span>Done</span>
 <ul class="collapsible-list">
 `;
-const TAIL = `
+const LIST_END = `
 </ul>
 </div>
+`;
+const TAIL = `
 </body>
 </html>
 `;
+
+let apiCount = 0;
+let doneCount = 0;
+let partlyCount = 0;
+
 
 const progress = require('./progress.json');
 let commonApi = glob('**/*.json',
@@ -146,7 +153,7 @@ commonApi.splice(commonApi.findIndex(f => f.namespace === 'sessions'), 0, { file
 const body = commonApi.map(f => { return { namespace: f.namespace, properties: propertyNames(f.fileName) }; })
  .reduce(( html, ns) => html + toHTML(ns), '');
 
-fs.writeFileSync('../../api.html', HEAD + body + TAIL);
+fs.writeFileSync('../../api.html', HEAD + body + LIST_END + progressIndicator(doneCount, partlyCount, apiCount) + TAIL);
 
 function namespaceName(fname) {
     const namespaces = fname.split('/');
@@ -181,6 +188,14 @@ function propertyNames(fname) {
 }
 
 function toHTML(ns) {
+    apiCount += ns.properties.length;
+    if (progress.done[ns.namespace]) {
+        doneCount += progress.done[ns.namespace].length;
+    }
+    if (progress.partly[ns.namespace]) {
+        partlyCount += progress.partly[ns.namespace].length;
+    }
+
     const nsStatus = (!progress.done[ns.namespace] && !progress.partly[ns.namespace]) ? 'not-done' : (progress.done[ns.namespace].length >= ns.properties.length ? 'all-done' : 'some-done');
     return `
     <li id="${ns.namespace}" class="${nsStatus}"><a href="#${ns.namespace}" class="unfold">${ns.namespace}</a><a href="#" class="collapse">${ns.namespace}</a>
@@ -198,4 +213,12 @@ function bugs(namespace, property) {
         return '';
     }
     return ' ' + progress.bugs[namespace][property].reduce(function (str, bug) { return str + `<a href="${bug}">${bug}</a>`; }, '');
+}
+
+function progressIndicator(done, partly, total) {
+    return `
+<div style="position: absolute; top: 0px; left: 0px; width: 100%; height: 1rem; background-color: #e64251;">
+  <span style="display: inline-block; width: ${100*done/total}%; line-height: 100%; overflow: hidden; white-space: nowrap; color: #2bb95a; background-color: #2bb95a;">${Math.round(100*done/total)}% done</span><span style="display: inline-block; width: ${100*partly/total}%; line-height: 100%; overflow: hidden; white-space: nowrap; color: #f37d32; background-color: #f37d32;">${Math.round(100*partly/total)}% in progress</span>
+</div>
+`;
 }

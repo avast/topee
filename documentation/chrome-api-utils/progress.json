@@ -2,6 +2,7 @@
   "done": {
     "browserAction": [
       "setIcon",
+      "setTitle",
       "onClicked"
     ],
     "runtime": [
