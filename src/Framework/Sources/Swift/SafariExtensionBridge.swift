@@ -179,11 +179,11 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         assert(Thread.isMainThread)
 
         guard let message = Message.Content.Request(rawValue: messageName) else {
-            NSLog("#appex(<-content) [ERROR]: unknown message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
+            NSLog("#appex(<-content) [ERROR]: unknown message { name: %@, userInfo: %@ }", messageName, pp(userInfo ?? [:]))
             return
         }
 
-        log(userInfo, "#appex(<-content): message { name: \(messageName), userInfo: \(userInfo ?? [:]) }")
+        log(userInfo, "#appex(<-content): message { name: %@, userInfo: %@ }", messageName, pp(userInfo ?? [:]))
         var payload = userInfo?["payload"] as? [String: Any]
 
         // Manages the registry of pages based on the type of message received
@@ -261,7 +261,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
 
     private func sendMessageToBackgroundScript(payload: [String: Any]?) {
-        log(payload, "#appex(->background): message { payload: \(payload ?? [:]) }")
+        log(payload, "#appex(->background): message { payload: %@ }", pp(payload ?? [:]))
 
         do {
             sendMessageToBackgroundScript(
@@ -273,7 +273,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
     
     private func sendMessageToContentScript(page: SFSafariPage, withName: String, userInfo: [String : Any]? = nil) {
-        log(userInfo, "#appex(->content): page \(page.hashValue) message { name: \(withName), userInfo: \(userInfo ?? [:]) }")
+        log(userInfo, "#appex(->content): page \(page.hashValue) message { name: %@, userInfo: %@ }", withName, pp(userInfo ?? [:]))
         page.dispatchMessageToScript(withName: withName, userInfo: userInfo)
     }
 
@@ -286,7 +286,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         assert(Thread.isMainThread)
         if message.name != MessageHandler.log.rawValue {
             // Ignore log messages (they are logged few lines below).
-            log(["name":message.name, "body":message.body], "#appex(<-background): { 'name': \(message.name), 'body': \(message.body) }")
+            NSLog("#appex(<-background): { 'name': %@, 'body': %@ }", message.name, pp(message.body))
         }
 
         guard let handler = MessageHandler(rawValue: message.name) else { return }
@@ -296,7 +296,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         case .log:
             guard let logLevel = userInfo["level"] as? String else { return }
             guard let message = userInfo["message"] as? String else { return }
-            NSLog("#appex(background) [\(logLevel)]: \(message)")
+            NSLog("#appex(background) [\(logLevel)]: %@", message)
         case .content:
             guard let tabId = userInfo["tabId"] as? UInt64 else { return }
             guard let eventName = userInfo["eventName"] as? String else { return }
@@ -360,5 +360,14 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 return json.isEmpty ? json :
                     "(function () { chrome.i18n._locales['"+lang+"']=" + json + "; })();"
             }
+    }
+    
+    /**
+     Pretty print given object (these objects are for/from JavaScript so they should always be serializable).
+     */
+    private func pp(_ obj: Any) -> String {
+        let str = try! JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)
+        
+        return String(data: str, encoding: .utf8)!
     }
 }
