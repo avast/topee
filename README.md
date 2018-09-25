@@ -2,7 +2,8 @@ topee
 =====
 Google Chrome Extension API for Safari 
 
-[Status: initiating](http://htmlpreview.github.io/?https://github.com/avast/topee/blob/master/api.html)
+Status: [API complete enough](http://htmlpreview.github.io/?https://github.com/avast/topee/blob/master/api.html)
+for a [product](https://www.avast.com/passwords#mac).
 
 Integration
 ====
@@ -15,20 +16,9 @@ XCode Project
 - Add a resource to your Appex pointing to `Carthage/Build/Mac/Topee.framework/Resources/topee-content.js`
 - Make sure the `topee-content.js` script is referenced in the plist of your appex under: `NSExtension > SFSafariContentScript` and appears as the first script in the array
 - Add a subclass of `TopeeSafariExtensionHandler` and override the `backgroundScripts` attribute like shown in the snippet below
-- Make sure the the plist entry: `NSExtension > NSExtensionPrincipalClass` of your appex plist points to `$(PRODUCT_MODULE_NAME).MySafariExtensionHandler` where `MySafariExtensionHandler` is the name of your `TopeeSafariExtensionHandler` subclass
+- Make sure the the plist entry: `NSExtension > NSExtensionPrincipalClass` of your appex plist points to `$(PRODUCT_MODULE_NAME).SafariExtensionHandler` where `SafariExtensionHandler` is the name of your `TopeeSafariExtensionHandler` subclass
 
-```swift
-import Foundation
-import SafariServices
-import Topee
-
-class MySafariExtensionHandler: TopeeSafariExtensionHandler {
-
-    override var backgroundScripts: [URL] {
-        return [Bundle.main.url(forResource: "demo-background", withExtension: "js")!]
-    }
-}
-```
+See [xcode.md](xcode.md) for more details.
 
 Extension parts
 ---------------
