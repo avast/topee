@@ -7,7 +7,11 @@ possibly as well as the cross-browser extension scripts.
 The only thing that's needed is to override _TopeeSafariExtensionHandler.setupBridge(...)_,
 optionally providing extra parameters.
 
-```
+```swift
+import Foundation
+import SafariServices
+import Topee
+
 class SafariExtensionHandler: TopeeSafariExtensionHandler {
     override open func setupBridge() {
         bridge.setup(webViewURL: "http://optional_url_that/servers/as/origin/on/XMLHttpRRequests")
