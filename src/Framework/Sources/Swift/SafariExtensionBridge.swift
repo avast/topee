@@ -314,9 +314,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 guard let title = userInfo["title"] as? String else { return }
                 safariHelper.setToolbarIconTitle(title)
             case .setIcon:
-                if let path = ((userInfo["path"]
-                    as? [String: Any])?[(userInfo["path"] as! [String:Any]).keys.first!])  // preferred "16" should be the first if present
-                    as? String,
+                if let path = bestIconSizePath(userInfo),
                     let iconUrl = Bundle.main.url(forResource: path, withExtension: "")
                 {
                     safariHelper.setToolbarIcon(loadAllResolutions(iconUrl))
@@ -345,6 +343,25 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
         
         return icon
+    }
+    
+    private func bestIconSizePath(_ userInfo: [String:Any]) -> String? {
+        guard let pathSpec = userInfo["path"] as? [String:Any] else { return nil }
+        let sizes = Array(pathSpec.keys)
+        if sizes.isEmpty { return nil }
+        
+        if let iconMap = (Bundle.main.infoDictionary?["NSExtension"] as? [String:Any])?["SFSafariToolbarIcons"] as? [String:String] {
+            let pathValues = pathSpec.compactMap { $0.value as? String }
+            if let (_, value) = iconMap.first(where: { return pathValues.contains($0.key) }) {
+                return value
+            }
+        }
+        
+        if sizes.contains("16") { return pathSpec["16"] as? String }
+        if sizes.contains("19") { return pathSpec["19"] as? String }
+        if sizes.contains("32") { return pathSpec["32"] as? String }
+        
+        return pathSpec[sizes.first!] as? String  // if 16, 19 and 32 px are missing, take anything else
     }
     
     private func backgroundScriptNames(from dict: [String: Any]) -> [String] {
