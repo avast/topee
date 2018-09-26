@@ -314,16 +314,37 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 guard let title = userInfo["title"] as? String else { return }
                 safariHelper.setToolbarIconTitle(title)
             case .setIcon:
-                if let path32 = ((userInfo["path"]
-                    as? [String: Any])?["32"])
+                if let path = ((userInfo["path"]
+                    as? [String: Any])?[(userInfo["path"] as! [String:Any]).keys.first!])  // preferred "16" should be the first if present
                     as? String,
-                    let iconUrl = Bundle.main.url(forResource: path32, withExtension: "")
+                    let iconUrl = Bundle.main.url(forResource: path, withExtension: "")
                 {
-                    let icon = NSImage(byReferencing: iconUrl)
-                    safariHelper.setToolbarIcon(icon)
+                    safariHelper.setToolbarIcon(loadAllResolutions(iconUrl))
                 }
             }
         }
+    }
+    
+    private func loadAllResolutions(_ iconUrl: URL) -> NSImage {
+        let icon = NSImage(byReferencing: iconUrl)
+        
+        if icon.representations.count == 0 {
+            return icon
+        }
+        
+        let fextension = iconUrl.pathExtension;
+        let fname = iconUrl.lastPathComponent.dropLast(fextension.count + 1);
+        let nonameUrl = iconUrl.deletingLastPathComponent()
+        
+        for scale in 2...4  {
+            let rep = NSImageRep(contentsOf: nonameUrl.appendingPathComponent(fname + "@" + String(scale) + "x." + fextension))
+            if rep != nil {
+                rep!.size = icon.representations[0].size
+                icon.addRepresentation(rep!)
+            }
+        }
+        
+        return icon
     }
     
     private func backgroundScriptNames(from dict: [String: Any]) -> [String] {
