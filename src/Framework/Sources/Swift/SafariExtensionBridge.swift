@@ -314,21 +314,59 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 guard let title = userInfo["title"] as? String else { return }
                 safariHelper.setToolbarIconTitle(title)
             case .setIcon:
-                if let path32 = ((userInfo["path"]
-                    as? [String: Any])?["32"])
-                    as? String,
-                    let iconUrl = Bundle.main.url(forResource: path32, withExtension: "")
+                if let path = bestIconSizePath(userInfo),
+                    let iconUrl = Bundle.main.url(forResource: path, withExtension: "")
                 {
-                    let icon = NSImage(byReferencing: iconUrl)
-                    safariHelper.setToolbarIcon(icon)
+                    safariHelper.setToolbarIcon(loadAllResolutions(iconUrl))
                 }
             }
         }
     }
     
+    private func loadAllResolutions(_ iconUrl: URL) -> NSImage {
+        let icon = NSImage(byReferencing: iconUrl)
+        
+        if icon.representations.count == 0 {
+            return icon
+        }
+        
+        let fextension = iconUrl.pathExtension;
+        let fname = iconUrl.lastPathComponent.dropLast(fextension.count + 1);
+        let nonameUrl = iconUrl.deletingLastPathComponent()
+        
+        for scale in 2...4  {
+            let rep = NSImageRep(contentsOf: nonameUrl.appendingPathComponent(fname + "@" + String(scale) + "x." + fextension))
+            if rep != nil {
+                rep!.size = icon.representations[0].size
+                icon.addRepresentation(rep!)
+            }
+        }
+        
+        return icon
+    }
+    
+    private func bestIconSizePath(_ userInfo: [String:Any]) -> String? {
+        guard let pathSpec = userInfo["path"] as? [String:Any] else { return nil }
+        let sizes = Array(pathSpec.keys)
+        if sizes.isEmpty { return nil }
+        
+        if let iconMap = (Bundle.main.infoDictionary?["NSExtension"] as? [String:Any])?["TopeeSafariToolbarIcons"] as? [String:String] {
+            let pathValues = pathSpec.compactMap { $0.value as? String }
+            if let (_, value) = iconMap.first(where: { return pathValues.contains($0.key) }) {
+                return value
+            }
+        }
+        
+        if sizes.contains("16") { return pathSpec["16"] as? String }
+        if sizes.contains("19") { return pathSpec["19"] as? String }
+        if sizes.contains("32") { return pathSpec["32"] as? String }
+        
+        return pathSpec[sizes.first!] as? String  // if 16, 19 and 32 px are missing, take anything else
+    }
+    
     private func backgroundScriptNames(from dict: [String: Any]) -> [String] {
         guard let extensionDictionary = dict["NSExtension"] as? [String: Any] else { return [] }
-        guard let backgroundScripts = extensionDictionary["SFSafariBackgroundScript"] as? [[String: String]] else { return [] }
+        guard let backgroundScripts = extensionDictionary["TopeeSafariBackgroundScript"] as? [[String: String]] else { return [] }
         return backgroundScripts.compactMap { $0["Script"] }
     }
     
