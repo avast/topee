@@ -66,3 +66,30 @@ rsync -rktv "${TARGET_RESOURCES}/Ext/background/" "${BUNDLE_RESOURCES}"
 ```
 
 The Topee background Chrome API emulation is directly in the Topee bundle and does not need to be coppied.
+
+Reference your files in Info.plist
+----
+
+Content scripts, including topee-content.js, are referenced normally, in `NSExtension / SFSafariContentScript`.
+
+Background script, excluding topee-background.js, are referenced in `NSExtension / TopeeSafariBackgroundScript`:
+```
+<key>TopeeSafariBackgroundScript</key>
+<array>
+  <dict>
+    <key>Script</key>
+    <string>background.js</string>
+  </dict>
+</array>
+```
+
+It is also possible to map your default toolbar icons, that would often be color 32x32 px,
+to black and white 16x16 px Safari-specific ones:
+```
+<key>TopeeSafariToolbarIcons</key>
+<dict>
+	<key>img/icon32x32.png</key>
+	<string>img/icon16x61bw.png</string>
+</dict>
+```
+Then, a call of `chrome.browserAction.setIcon({ path: { "32": "img/icon32x32.png" } })` would display `"img/icon16x61bw.png"` instead.
