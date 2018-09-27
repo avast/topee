@@ -350,7 +350,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         let sizes = Array(pathSpec.keys)
         if sizes.isEmpty { return nil }
         
-        if let iconMap = (Bundle.main.infoDictionary?["NSExtension"] as? [String:Any])?["SFSafariToolbarIcons"] as? [String:String] {
+        if let iconMap = (Bundle.main.infoDictionary?["NSExtension"] as? [String:Any])?["TopeeSafariToolbarIcons"] as? [String:String] {
             let pathValues = pathSpec.compactMap { $0.value as? String }
             if let (_, value) = iconMap.first(where: { return pathValues.contains($0.key) }) {
                 return value
@@ -366,7 +366,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     
     private func backgroundScriptNames(from dict: [String: Any]) -> [String] {
         guard let extensionDictionary = dict["NSExtension"] as? [String: Any] else { return [] }
-        guard let backgroundScripts = extensionDictionary["SFSafariBackgroundScript"] as? [[String: String]] else { return [] }
+        guard let backgroundScripts = extensionDictionary["TopeeSafariBackgroundScript"] as? [[String: String]] else { return [] }
         return backgroundScripts.compactMap { $0["Script"] }
     }
     

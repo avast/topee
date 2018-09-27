@@ -75,7 +75,7 @@
 				<string>test.js</string>
 			</dict>
 		</array>
-		<key>SFSafariBackgroundScript</key>
+		<key>TopeeSafariBackgroundScript</key>
 		<array>
 			<dict>
 				<key>Script</key>

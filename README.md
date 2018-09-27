@@ -14,8 +14,8 @@ XCode Project
 - Add `github https://github.com/avast/topee ~> 0.0.0` to your Cartfile
 - Link the `Topee` to your Appex target
 - Add a resource to your Appex pointing to `Carthage/Build/Mac/Topee.framework/Resources/topee-content.js`
-- Make sure the `topee-content.js` script is referenced in the plist of your appex under: `NSExtension > SFSafariContentScript` and appears as the first script in the array
-- Add a subclass of `TopeeSafariExtensionHandler` and override the `backgroundScripts` attribute like shown in the snippet below
+- Make sure the `topee-content.js` script is referenced in the plist of your appex under: `NSExtension / SFSafariContentScript` and appears as the first script in the array
+- Add a subclass of `TopeeSafariExtensionHandler` and reference your background script in the `NSExtension / TopeeSafariBackgroundScript` attribute like shown in the snippet below
 - Make sure the the plist entry: `NSExtension > NSExtensionPrincipalClass` of your appex plist points to `$(PRODUCT_MODULE_NAME).SafariExtensionHandler` where `SafariExtensionHandler` is the name of your `TopeeSafariExtensionHandler` subclass
 
 See [xcode.md](xcode.md) for more details.
