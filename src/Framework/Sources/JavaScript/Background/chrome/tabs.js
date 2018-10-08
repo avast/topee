@@ -33,7 +33,12 @@ eventEmitter.addListener('alive', registerTab);
 
 eventEmitter.addListener('bye', function (payload) {
     if (typeof payload.frameId !== 'undefined' && payload.frameId !== 0) { return; }
-    delete browserTabs[payload.tabId];
+    browserTabs[payload.tabId]._deleted = true;
+    setTimeout(function () {
+        if (browserTabs[payload.tabId]._deleted) {
+            delete browserTabs[payload.tabId];
+        }
+    }, 700);  // content.js revokes bye if still alive 500ms later. adding 200 ms margin
 });
 
 // chrome.tabs API
