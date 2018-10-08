@@ -41,12 +41,15 @@ safari.self.addEventListener("message", function (event) {
                 message: message
             });
         });
+        return;
     }
     if (event.name === 'request' && iframesParent.hasChild(event.message.frameId)) {
         iframesParent.forward(event.message.frameId, event.message);
+        return;
     }
-    if (event.name === 'request' && !event.message.frameId) {
+    if (event.name === 'request' && typeof event.message.frameId === 'undefined') {
         iframesParent.broadcast(event.message);
+        return;
     }
 });
 
