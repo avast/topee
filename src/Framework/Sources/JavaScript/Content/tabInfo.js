@@ -31,13 +31,15 @@ else {
 // sessionStorage forks, so further writes to it don't affect the original (that called window.open) document's sessionStorage
 var storedTabId = window.opener ? NaN : parseInt(sessionStorage.getItem('topee_tabId'));
 var helloWithNullTabIdSent = false;
+var topeeDebug = loadDebug();
+publishDebug();
 
 function init() {
     if (window === window.top) {
         // tabId responder
         window.addEventListener('message', function (msg) {
             if (msg.data && msg.data.type === tabInfo.Event.GET_TAB_ID) {
-                tabInfo.tabId.then(id => msg.source.postMessage({ type: tabInfo.Event.TAB_ID, detail: id }, msg.origin));
+                tabInfo.tabId.then(id => msg.source.postMessage({ type: tabInfo.Event.TAB_ID, detail: id, debug: topeeDebug }, msg.origin));
             }
         });
     }
@@ -53,6 +55,10 @@ function init() {
             if (event.name === 'forceTabId' && event.message && typeof event.message.tabId === 'number') {
                 storedTabId = event.message.tabId;
                 sessionStorage.setItem('topee_tabId', storedTabId);
+
+                publishDebug(event.message.debug);
+                storeDebug(event.message.debug);
+
                 setTabId(event.message.tabId);
             }
         });
@@ -65,6 +71,10 @@ function init() {
         window.addEventListener('message', function (msg) {
             if (msg.data && msg.data.type === tabInfo.Event.TAB_ID && typeof msg.data.detail === 'number') {
                 storedTabId = msg.data.detail;
+
+                publishDebug(msg.data.debug);
+                storeDebug(msg.data.debug);
+
                 setTabId(msg.data.detail);
                 clearInterval(poller);
             }
@@ -95,7 +105,7 @@ function sayHello() {
     }
 
     tabInfo.tabId.then(
-        assignedTabId => console.debug(`topee.hello(tabId: ${tabId}, referrer: "${document.referrer}", historyLength: ${history.length}) @ ${window.location.href} -> ${assignedTabId}`));
+        assignedTabId => window.topee_log && console.debug(`topee.hello(tabId: ${tabId}, referrer: "${document.referrer}", historyLength: ${history.length}) @ ${window.location.href} -> ${assignedTabId}`));
 
     safari.extension.dispatchMessage('hello', {
         tabId: tabId,
@@ -130,7 +140,7 @@ function sayBye(event) {
         return;
     }
 
-    console.debug(`topee.bye(tabId: ${tabId}, url: ${window.location.href})`);
+    window.topee_log && console.debug(`topee.bye(tabId: ${tabId}, url: ${window.location.href})`);
 
     safari.extension.dispatchMessage('bye', {
         tabId: tabId,
@@ -154,6 +164,47 @@ function isForThisFrame(targetFrameId) {
     }
 
     return targetFrameId === tabInfo.frameId;
+}
+
+function loadDebug() {
+    var debugStr = sessionStorage.getItem('topee_debug');
+    if (!debugStr) {
+        return {};
+    }
+    try {
+        var debugObj = JSON.parse(debugStr);
+        if (debugObj === null || typeof debugObj !== 'object') {
+            return {};
+        }
+
+        return debugObj;
+    }
+    catch (ex) {
+        return {};
+    }
+}
+
+function storeDebug(debugObj) {
+    if (typeof debugObj !== 'object' || debugObj === null) {
+        return;
+    }
+    sessionStorage.setItem('topee_debug', JSON.stringify(debugObj));
+}
+
+function publishDebug(debugObj) {
+    if (arguments.length > 0) {
+        if (typeof debugObj !== 'object' || debugObj === null) {
+            return;
+        }
+        topeeDebug = debugObj;
+    }
+
+    if (topeeDebug.log) {
+        window.topee_log = topeeDebug.log;
+    }
+    else {
+        delete window.topee_log;
+    }
 }
 
 module.exports = tabInfo;

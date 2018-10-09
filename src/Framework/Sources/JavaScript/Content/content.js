@@ -13,7 +13,7 @@ if (!{
 var tabInfo = require('./tabInfo.js');
 
 if (typeof window.chrome === 'object') {
-    console.log(`chrome api already loaded into ${window === window.top ? "top window" : "some frame"}`);
+    window.topee_log && console.log(`chrome api already loaded into ${window === window.top ? "top window" : "some frame"}`);
 
     if (window === window.top) {
         // in case this is injected multiple times (https://bugreport.apple.com/web/?problemID=43086339), the first injects don't received these events

@@ -46,7 +46,6 @@ function install() {
             txtCrypto.decrypt(event.data.value)
                 .then(function (str) {
                     var message = JSON.parse(str);
-                    console.log('got message from iframe:', message, event.data);
 
                     var messageId = message.value.payload.messageId;
                     if (typeof messageId !== 'undefined') {
@@ -58,7 +57,6 @@ function install() {
 
                     function listener(responseEvent) {
                         if (responseEvent.name === 'response' && responseEvent.message.messageId === messageId) {
-                            console.log("sending a callback id", messageId);
                             txtCrypto.encrypt(JSON.stringify(responseEvent.message))
                                 .then(function (e) {
                                     event.source.postMessage({ type: 'topee_iframe_response', value: e}, event.origin);
@@ -74,7 +72,7 @@ function install() {
 function sendMessage(frameId, message) {
     var win = childFrames.get(frameId);
     if (!win) {
-        console.log('frame', frameId, 'not found');
+        window.topee_log && console.log('frame', frameId, 'not found');
         return;
     }
     txtCrypto.readyPromise

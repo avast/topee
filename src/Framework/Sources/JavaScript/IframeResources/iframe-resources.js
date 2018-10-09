@@ -47,7 +47,6 @@ if (typeof safari.self.addEventListener === 'undefined') {
                 txtCrypto.decrypt(event.data.value)
                     .then(function (str) {
                         var payload = JSON.parse(str);
-                        console.log('got message in iframe:', payload);
 
                         if (payload.messageId === callback.messageId)  {
                             window.removeEventListener('message', callback);
@@ -59,7 +58,6 @@ if (typeof safari.self.addEventListener === 'undefined') {
                 txtCrypto.decrypt(event.data.value)
                     .then(function (str) {
                         var payload = JSON.parse(str);
-                        console.log('got message in iframe:', payload);
 
                         callback({ name: payload.eventName, message: { messageId: payload.messageId, payload: payload.payload } });
                 });
@@ -74,7 +72,7 @@ if (typeof safari.self.addEventListener === 'undefined') {
             pendingResponseListeners.splice(i, 1);
         }
         else {
-            console.log('listener for', type, 'not found');
+            window.topee_log && console.log('listener for', type, 'not found');
         }
     }
 }
@@ -132,7 +130,7 @@ function dispatchMessage(name, value) {
             if (messageId !== null) {
                 msg.messageId = messageId;  // to indicate that a response is awaited
             }
-            console.log('sending', msg);
+            window.topee_log && console.log('sending', msg);
             window.parent.postMessage(msg, '*');
         });
 }

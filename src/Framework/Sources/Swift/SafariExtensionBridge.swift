@@ -201,10 +201,14 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 assert(userInfo?["tabId"] as? UInt64 == tabId)
             }
             payload!["tabId"] = tabId
+            var tabIdInfo: [String:Any] = ["tabId" : tabId]
+            #if DEBUG
+            tabIdInfo["debug"] = ["log" : true]
+            #endif
             sendMessageToContentScript(
                 page: page,
                 withName: "forceTabId",
-                userInfo: ["tabId" : tabId])
+                userInfo: tabIdInfo)
         case .alive, .request:
             if let tabId = userInfo?["tabId"] as? UInt64 {
                 pageRegistry.touch(page: page, tabId: tabId)
