@@ -2,8 +2,9 @@
 //  Copyright © 2018 Avast. All rights reserved.
 //
 
+CLANG_ENABLE_OBJC_WEAK = YES
 FRAMEWORK_SEARCH_PATHS = $(inherited)
-MACOSX_DEPLOYMENT_TARGET = 10.11
 LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks @loader_path/../Frameworks
+MACOSX_DEPLOYMENT_TARGET = 10.11
 SDKROOT = macosx
-SWIFT_VERSION = 4.0
+SWIFT_VERSION = 4.2

@@ -343,12 +343,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0940;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1000;
 				ORGANIZATIONNAME = Avast;
 				TargetAttributes = {
 					EF80A75A210F2B67002C6F3F = {
 						CreatedOnToolsVersion = 9.4.1;
-						LastSwiftMigration = 0940;
+						LastSwiftMigration = 1000;
 					};
 					EF80A763210F2B68002C6F3F = {
 						CreatedOnToolsVersion = 9.4.1;
