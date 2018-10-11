@@ -5,10 +5,12 @@
 import Foundation
 import SafariServices
 
-class PageRegistry<PageT: Equatable> {
-    private let _thread: Thread
-
-    private let MAX_BYES = 16 // something like 1 or 2 should be enough for the purpose to match the subsequent hello
+class PageRegistry<Page: Equatable> {
+    private let thread: Thread
+    private var pages: [UInt64: Page] = [:]
+    private var recentlyByedPages = [ByeRecord]()
+    // 1 or 2 byes should be enough to match the subsequent hello
+    private let maxByes = 16
 
     private struct ByeRecord {
         let tabId: UInt64
@@ -16,32 +18,27 @@ class PageRegistry<PageT: Equatable> {
         let historyLength: Int64
     }
 
-    private var pages: [UInt64: PageT] = [:]
-    private var recentlyByedPages = [ByeRecord]()
-
     var count: Int {
-        assert(Thread.current == _thread)
-
+        assert(Thread.current == thread)
         return pages.count
     }
 
     var tabIds: [ UInt64 ] {
-        assert(Thread.current == _thread)
-
+        assert(Thread.current == thread)
         return Array(pages.keys)
     }
 
     init(thread: Thread) {
-        _thread = thread
+        self.thread = thread
     }
 
-    public func touch(page: PageT, tabId: UInt64) {
+    public func touch(page: Page, tabId: UInt64) {
         pages[tabId] = page
     }
 
     @discardableResult
-    public func hello(page: PageT, tabId: UInt64?, referrer: String, historyLength: Int64) -> UInt64 {
-        assert(Thread.current == _thread)
+    public func hello(page: Page, tabId: UInt64?, referrer: String, historyLength: Int64) -> UInt64 {
+        assert(Thread.current == thread)
 
         let closedPageIndex = recentlyClosedPage(tabId: tabId, referrer: referrer, historyLength: historyLength)
 
@@ -81,12 +78,12 @@ class PageRegistry<PageT: Equatable> {
             }
         }
 
-        // Match by history lenght only (navigation forward)
+        // Match by history length only (navigation forward)
         if let i = recentlyByedPages.index(where: { $0.historyLength == historyLength - 1 }) {
             return i
         }
 
-        // User may navigated few pages back and then visited new page thus shortening history
+        // User may have navigated few pages back and then visited new page thus shortening history
         if let i = recentlyByedPages.index(where: { $0.historyLength >= historyLength }) {
             return i
         }
@@ -94,10 +91,10 @@ class PageRegistry<PageT: Equatable> {
         return nil
     }
 
-    public func bye(page: PageT, url: String, historyLength: Int64) {
-        assert(Thread.current == _thread)
+    public func bye(page: Page, url: String, historyLength: Int64) {
+        assert(Thread.current == thread)
 
-        while recentlyByedPages.count >= MAX_BYES {
+        while recentlyByedPages.count >= maxByes {
             recentlyByedPages.removeLast()
         }
 
@@ -112,16 +109,14 @@ class PageRegistry<PageT: Equatable> {
         pages[tabId] = nil
     }
 
-    public func pageToTabId(_ page: PageT) -> UInt64? {
-        assert(Thread.current == _thread)
-
+    public func pageToTabId(_ page: Page) -> UInt64? {
+        assert(Thread.current == thread)
         guard let item = pages.first(where: { $0.value == page }) else { return nil }
         return item.key
     }
 
-    public func tabIdToPage(_ tabId: UInt64) -> PageT? {
-        assert(Thread.current == _thread)
-
+    public func tabIdToPage(_ tabId: UInt64) -> Page? {
+        assert(Thread.current == thread)
         return pages[tabId]
     }
 }
