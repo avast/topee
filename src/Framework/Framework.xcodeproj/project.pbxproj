@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		806E5C6221306E4300C369EB /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806E5C6121306E4300C369EB /* TestHelper.swift */; };
 		80BEB8AA2111B68600DA4C7B /* topee-background.js in Resources */ = {isa = PBXBuildFile; fileRef = 80BEB8A92111B68600DA4C7B /* topee-background.js */; };
-		EF2B6DF0216F8CAA003B4D7E /* FilterLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE5216F8CAA003B4D7E /* FilterLogger.swift */; };
+		EF2B6DF0216F8CAA003B4D7E /* FilteredLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE5216F8CAA003B4D7E /* FilteredLogger.swift */; };
 		EF2B6DF1216F8CAA003B4D7E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE6216F8CAA003B4D7E /* Message.swift */; };
 		EF2B6DF2216F8CAA003B4D7E /* WKWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE8216F8CAA003B4D7E /* WKWebView.swift */; };
 		EF2B6DF3216F8CAA003B4D7E /* WKUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE9216F8CAA003B4D7E /* WKUserScript.swift */; };
@@ -46,7 +46,7 @@
 		EF1FACD0211467FD005876A2 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
 		EF1FACD1211467FD005876A2 /* tabs.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabs.js; sourceTree = "<group>"; };
 		EF1FACD2211467FD005876A2 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
-		EF2B6DE5216F8CAA003B4D7E /* FilterLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterLogger.swift; sourceTree = "<group>"; };
+		EF2B6DE5216F8CAA003B4D7E /* FilteredLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilteredLogger.swift; sourceTree = "<group>"; };
 		EF2B6DE6216F8CAA003B4D7E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		EF2B6DE8216F8CAA003B4D7E /* WKWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKWebView.swift; sourceTree = "<group>"; };
 		EF2B6DE9216F8CAA003B4D7E /* WKUserScript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKUserScript.swift; sourceTree = "<group>"; };
@@ -141,7 +141,7 @@
 		EF2B6DE4216F8CAA003B4D7E /* Private */ = {
 			isa = PBXGroup;
 			children = (
-				EF2B6DE5216F8CAA003B4D7E /* FilterLogger.swift */,
+				EF2B6DE5216F8CAA003B4D7E /* FilteredLogger.swift */,
 				EF2B6DE6216F8CAA003B4D7E /* Message.swift */,
 				EF2B6DEB216F8CAA003B4D7E /* PageRegistry.swift */,
 				EF2B6DEA216F8CAA003B4D7E /* SFSafariApplicationHelper.swift */,
@@ -445,7 +445,7 @@
 				EF2B6DF7216F8CAA003B4D7E /* SafariExtensionBridge.swift in Sources */,
 				EF2B6DF3216F8CAA003B4D7E /* WKUserScript.swift in Sources */,
 				EF2B6DF8216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift in Sources */,
-				EF2B6DF0216F8CAA003B4D7E /* FilterLogger.swift in Sources */,
+				EF2B6DF0216F8CAA003B4D7E /* FilteredLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

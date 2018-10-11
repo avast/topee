@@ -18,7 +18,7 @@ import Foundation
  ...
  log([ "gender": "male", "name": "David" ], "Warning: females only")
  */
-public class FilterLogger {
+public class FilteredLogger {
     private var messageLogFilter: [String: NSRegularExpression]?
 
     public init(_ filterExpressions: [String: NSRegularExpression]? = nil) {
@@ -53,25 +53,9 @@ public class FilterLogger {
         return false
     }
 
-    public func log(_ context: [String: Any]?, _ message: String, _ args: CVarArg...) {
+    public func log(_ context: [String: Any]?, _ message: String) {
         if logAllowed(context) {
-            withVaList(args) {
-                NSLogv(message, $0)
-            }
-        }
-    }
-
-    public func log(_ context: [String: Any]?, _ message: String, _ args: CVaListPointer) {
-        if logAllowed(context) {
-            NSLogv(message, args)
-        }
-    }
-
-    public typealias LogFunc = ([String: Any]?, String, CVarArg...) -> Void
-    public static func create(_ filterExpressions: [String: NSRegularExpression]? = nil) -> LogFunc {
-        let logger = FilterLogger(filterExpressions)
-        return {
-            (p0: [String: Any]?, p1: String, p2: CVarArg...) in withVaList(p2) { val in logger.log(p0, p1, val) }
+            NSLog(message)
         }
     }
 }
