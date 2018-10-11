@@ -260,15 +260,15 @@
 		FD66CF7D2110515E003E0819 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				FD80BAF8211DAAFC00CCFB1E /* topee-iframe-resources.js */,
 				FDD5648F2114543600AF7D12 /* jasmine.css */,
+				FDAD63BD211C78C900DFF27E /* dialog.html */,
+				EFC86EC8211308C90049CD8B /* demo-background.js */,
+				FD32FABA2111DF6E00C69486 /* demo-content.js */,
 				FDD5648C211450B300AF7D12 /* jasmine.dist.js */,
 				FDD5648B211450B300AF7D12 /* test.js */,
 				FD66CF8421105A73003E0819 /* topee-content.js */,
-				EFC86EC8211308C90049CD8B /* demo-background.js */,
-				FD32FABA2111DF6E00C69486 /* demo-content.js */,
+				FD80BAF8211DAAFC00CCFB1E /* topee-iframe-resources.js */,
 				EF80A796210F2F55002C6F3F /* ToolbarItemIcon.pdf */,
-				FDAD63BD211C78C900DFF27E /* dialog.html */,
 			);
 			path = Resources;
 			sourceTree = "<group>";

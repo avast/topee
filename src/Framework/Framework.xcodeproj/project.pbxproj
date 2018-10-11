@@ -8,21 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		806E5C6221306E4300C369EB /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806E5C6121306E4300C369EB /* TestHelper.swift */; };
-		80AA2BAE2136B93D008014EF /* PageRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80AA2BAD2136B93D008014EF /* PageRegistry.swift */; };
 		80BEB8AA2111B68600DA4C7B /* topee-background.js in Resources */ = {isa = PBXBuildFile; fileRef = 80BEB8A92111B68600DA4C7B /* topee-background.js */; };
-		80C79F982125724200A06D24 /* SFSafariApplicationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80C79F972125724200A06D24 /* SFSafariApplicationHelper.swift */; };
+		EF2B6DF0216F8CAA003B4D7E /* FilterLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE5216F8CAA003B4D7E /* FilterLogger.swift */; };
+		EF2B6DF1216F8CAA003B4D7E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE6216F8CAA003B4D7E /* Message.swift */; };
+		EF2B6DF2216F8CAA003B4D7E /* WKWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE8216F8CAA003B4D7E /* WKWebView.swift */; };
+		EF2B6DF3216F8CAA003B4D7E /* WKUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE9216F8CAA003B4D7E /* WKUserScript.swift */; };
+		EF2B6DF4216F8CAA003B4D7E /* SFSafariApplicationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DEA216F8CAA003B4D7E /* SFSafariApplicationHelper.swift */; };
+		EF2B6DF5216F8CAA003B4D7E /* PageRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DEB216F8CAA003B4D7E /* PageRegistry.swift */; };
+		EF2B6DF6216F8CAA003B4D7E /* TopeeExtensionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DED216F8CAA003B4D7E /* TopeeExtensionManifest.swift */; };
+		EF2B6DF7216F8CAA003B4D7E /* SafariExtensionBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DEE216F8CAA003B4D7E /* SafariExtensionBridge.swift */; };
+		EF2B6DF8216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DEF216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift */; };
 		EF80A765210F2B68002C6F3F /* Topee.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF80A75B210F2B67002C6F3F /* Topee.framework */; };
 		EF80A76A210F2B68002C6F3F /* TopeeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A769210F2B68002C6F3F /* TopeeTests.swift */; };
 		EF80A76C210F2B68002C6F3F /* Topee.h in Headers */ = {isa = PBXBuildFile; fileRef = EF80A75E210F2B67002C6F3F /* Topee.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EFC86ECD21131A0B0049CD8B /* topee-background-end.js in Resources */ = {isa = PBXBuildFile; fileRef = EFC86ECC21131A0B0049CD8B /* topee-background-end.js */; };
 		EFC86ECF21133BB40049CD8B /* topee-content.js in Resources */ = {isa = PBXBuildFile; fileRef = EFC86ECE21133BB40049CD8B /* topee-content.js */; };
-		EFF799BA2110868F00646663 /* TopeeSafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */; };
-		EFF799BC2110963600646663 /* SafariExtensionBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BB2110963600646663 /* SafariExtensionBridge.swift */; };
-		EFF799BE2110966A00646663 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799BD2110966A00646663 /* Message.swift */; };
-		EFF799C32110ADBC00646663 /* WKUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799C22110ADBC00646663 /* WKUserScript.swift */; };
-		EFF799C52110ADDE00646663 /* WKWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFF799C42110ADDE00646663 /* WKWebView.swift */; };
 		FD4AD1CE2153E1F900E13EA0 /* run-at-document-end.sh in Resources */ = {isa = PBXBuildFile; fileRef = FD4AD1CC2153E1E400E13EA0 /* run-at-document-end.sh */; };
-		FD4FC48B2136EA210045FABE /* FilterLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4FC48A2136EA210045FABE /* FilterLogger.swift */; };
 		FDD7715921304F8500F6BC46 /* topee-iframe-resources.js in Resources */ = {isa = PBXBuildFile; fileRef = FDD7715821304F8500F6BC46 /* topee-iframe-resources.js */; };
 /* End PBXBuildFile section */
 
@@ -38,15 +39,22 @@
 
 /* Begin PBXFileReference section */
 		806E5C6121306E4300C369EB /* TestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestHelper.swift; sourceTree = "<group>"; };
-		80AA2BAD2136B93D008014EF /* PageRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageRegistry.swift; sourceTree = "<group>"; };
 		80BEB8A42111B3E600DA4C7B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
 		80BEB8A62111B58900DA4C7B /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = content.js; sourceTree = "<group>"; };
 		80BEB8A92111B68600DA4C7B /* topee-background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "topee-background.js"; path = "Build/topee-background.js"; sourceTree = SOURCE_ROOT; };
-		80C79F972125724200A06D24 /* SFSafariApplicationHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSafariApplicationHelper.swift; sourceTree = "<group>"; };
 		EF1A65C821186D390021E013 /* url-matcher.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "url-matcher.js"; sourceTree = "<group>"; };
 		EF1FACD0211467FD005876A2 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
 		EF1FACD1211467FD005876A2 /* tabs.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabs.js; sourceTree = "<group>"; };
 		EF1FACD2211467FD005876A2 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
+		EF2B6DE5216F8CAA003B4D7E /* FilterLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterLogger.swift; sourceTree = "<group>"; };
+		EF2B6DE6216F8CAA003B4D7E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		EF2B6DE8216F8CAA003B4D7E /* WKWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKWebView.swift; sourceTree = "<group>"; };
+		EF2B6DE9216F8CAA003B4D7E /* WKUserScript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKUserScript.swift; sourceTree = "<group>"; };
+		EF2B6DEA216F8CAA003B4D7E /* SFSafariApplicationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SFSafariApplicationHelper.swift; sourceTree = "<group>"; };
+		EF2B6DEB216F8CAA003B4D7E /* PageRegistry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PageRegistry.swift; sourceTree = "<group>"; };
+		EF2B6DED216F8CAA003B4D7E /* TopeeExtensionManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopeeExtensionManifest.swift; sourceTree = "<group>"; };
+		EF2B6DEE216F8CAA003B4D7E /* SafariExtensionBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariExtensionBridge.swift; sourceTree = "<group>"; };
+		EF2B6DEF216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopeeSafariExtensionHandler.swift; sourceTree = "<group>"; };
 		EF80A75B210F2B67002C6F3F /* Topee.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Topee.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A75E210F2B67002C6F3F /* Topee.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Topee.h; sourceTree = "<group>"; };
 		EF80A75F210F2B67002C6F3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -60,11 +68,6 @@
 		EF83A0C4211479D7002C7AF1 /* event-bus.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "event-bus.js"; sourceTree = "<group>"; };
 		EFC86ECC21131A0B0049CD8B /* topee-background-end.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "topee-background-end.js"; sourceTree = "<group>"; };
 		EFC86ECE21133BB40049CD8B /* topee-content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "topee-content.js"; path = "Build/topee-content.js"; sourceTree = SOURCE_ROOT; };
-		EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopeeSafariExtensionHandler.swift; sourceTree = "<group>"; };
-		EFF799BB2110963600646663 /* SafariExtensionBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariExtensionBridge.swift; sourceTree = "<group>"; };
-		EFF799BD2110966A00646663 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		EFF799C22110ADBC00646663 /* WKUserScript.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKUserScript.swift; sourceTree = "<group>"; };
-		EFF799C42110ADDE00646663 /* WKWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WKWebView.swift; sourceTree = "<group>"; };
 		EFF799C92110B0A100646663 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
 		EFF799CA2110B0A100646663 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
 		EFF799CD2110B0A600646663 /* tabInfo.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabInfo.js; sourceTree = "<group>"; };
@@ -76,7 +79,6 @@
 		FD34690421465A4500A86D27 /* tabs.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabs.js; sourceTree = "<group>"; };
 		FD34690521465A4500A86D27 /* extension.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = extension.js; sourceTree = "<group>"; };
 		FD4AD1CC2153E1E400E13EA0 /* run-at-document-end.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "run-at-document-end.sh"; sourceTree = "<group>"; };
-		FD4FC48A2136EA210045FABE /* FilterLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLogger.swift; sourceTree = "<group>"; };
 		FD80BAF6211DA1E600CCFB1E /* iframe-resources.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "iframe-resources.js"; path = "Sources/JavaScript/IframeResources/iframe-resources.js"; sourceTree = SOURCE_ROOT; };
 		FDD7715821304F8500F6BC46 /* topee-iframe-resources.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "topee-iframe-resources.js"; path = "../Build/topee-iframe-resources.js"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -134,6 +136,37 @@
 				EF1FACD2211467FD005876A2 /* index.js */,
 			);
 			path = chrome;
+			sourceTree = "<group>";
+		};
+		EF2B6DE4216F8CAA003B4D7E /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				EF2B6DE5216F8CAA003B4D7E /* FilterLogger.swift */,
+				EF2B6DE6216F8CAA003B4D7E /* Message.swift */,
+				EF2B6DEB216F8CAA003B4D7E /* PageRegistry.swift */,
+				EF2B6DEA216F8CAA003B4D7E /* SFSafariApplicationHelper.swift */,
+				EF2B6DE7216F8CAA003B4D7E /* Extensions */,
+			);
+			path = Private;
+			sourceTree = "<group>";
+		};
+		EF2B6DE7216F8CAA003B4D7E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				EF2B6DE8216F8CAA003B4D7E /* WKWebView.swift */,
+				EF2B6DE9216F8CAA003B4D7E /* WKUserScript.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		EF2B6DEC216F8CAA003B4D7E /* Public */ = {
+			isa = PBXGroup;
+			children = (
+				EF2B6DEE216F8CAA003B4D7E /* SafariExtensionBridge.swift */,
+				EF2B6DED216F8CAA003B4D7E /* TopeeExtensionManifest.swift */,
+				EF2B6DEF216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift */,
+			);
+			path = Public;
 			sourceTree = "<group>";
 		};
 		EF80A751210F2B67002C6F3F = {
@@ -213,15 +246,6 @@
 			path = Config;
 			sourceTree = "<group>";
 		};
-		EFF799C12110ADAB00646663 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				EFF799C22110ADBC00646663 /* WKUserScript.swift */,
-				EFF799C42110ADDE00646663 /* WKWebView.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
 		EFF799C82110B0A100646663 /* chrome */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,13 +269,8 @@
 		FD66CF7E211052AE003E0819 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
-				EFF799C12110ADAB00646663 /* Extensions */,
-				EFF799BD2110966A00646663 /* Message.swift */,
-				EFF799BB2110963600646663 /* SafariExtensionBridge.swift */,
-				EFF799B92110868F00646663 /* TopeeSafariExtensionHandler.swift */,
-				80C79F972125724200A06D24 /* SFSafariApplicationHelper.swift */,
-				80AA2BAD2136B93D008014EF /* PageRegistry.swift */,
-				FD4FC48A2136EA210045FABE /* FilterLogger.swift */,
+				EF2B6DE4216F8CAA003B4D7E /* Private */,
+				EF2B6DEC216F8CAA003B4D7E /* Public */,
 			);
 			path = Swift;
 			sourceTree = "<group>";
@@ -417,15 +436,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EFF799BE2110966A00646663 /* Message.swift in Sources */,
-				80C79F982125724200A06D24 /* SFSafariApplicationHelper.swift in Sources */,
+				EF2B6DF6216F8CAA003B4D7E /* TopeeExtensionManifest.swift in Sources */,
+				EF2B6DF5216F8CAA003B4D7E /* PageRegistry.swift in Sources */,
+				EF2B6DF1216F8CAA003B4D7E /* Message.swift in Sources */,
+				EF2B6DF4216F8CAA003B4D7E /* SFSafariApplicationHelper.swift in Sources */,
+				EF2B6DF2216F8CAA003B4D7E /* WKWebView.swift in Sources */,
 				806E5C6221306E4300C369EB /* TestHelper.swift in Sources */,
-				80AA2BAE2136B93D008014EF /* PageRegistry.swift in Sources */,
-				EFF799BC2110963600646663 /* SafariExtensionBridge.swift in Sources */,
-				EFF799C52110ADDE00646663 /* WKWebView.swift in Sources */,
-				EFF799C32110ADBC00646663 /* WKUserScript.swift in Sources */,
-				FD4FC48B2136EA210045FABE /* FilterLogger.swift in Sources */,
-				EFF799BA2110868F00646663 /* TopeeSafariExtensionHandler.swift in Sources */,
+				EF2B6DF7216F8CAA003B4D7E /* SafariExtensionBridge.swift in Sources */,
+				EF2B6DF3216F8CAA003B4D7E /* WKUserScript.swift in Sources */,
+				EF2B6DF8216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift in Sources */,
+				EF2B6DF0216F8CAA003B4D7E /* FilterLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

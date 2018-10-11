@@ -8,34 +8,6 @@ import WebKit
 
 // MARK: -
 
-public struct TopeeExtensionManifest: Equatable {
-    public let id: String
-    public let version: String
-    public let name: String
-
-    public init(_ infoDictionary: [String: Any]? = Bundle.main.infoDictionary) {
-        id = infoDictionary?["CFBundleIdentifier"] as? String ?? ""
-        version = infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-        name = infoDictionary?["CFBundleDisplayName"] as? String ?? ""
-    }
-
-    // use path like
-    //   Bundle(for: MyClass.self).path(forResource: "Info", ofType: "plist")
-    // for Resources directory or
-    //   Bundle.main.bundlePath + "/Contents/Info.plist" for main appex directory
-    public init(infoPath: String) {
-        self.init(NSDictionary(contentsOfFile: infoPath) as? [String: Any])
-    }
-
-    public init(name: String, version: String = "1.0.0", id: String = "com.avast.topee") {
-        self.id = id
-        self.version = version
-        self.name = name
-    }
-}
-
-// MARK: -
-
 public protocol SafariExtensionBridgeType {
     func setup(webViewURL: URL,
                manifest: TopeeExtensionManifest,
