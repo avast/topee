@@ -46,7 +46,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     private var manifest: TopeeExtensionManifest?
     private var webViewURL: URL = URL(string: "http://topee.local")!
-    private var log: FilterLogger.LogFunc = FilterLogger.create(nil)
+    private var logger: FilteredLogger?
 
     private var pageRegistry: SFSafariPageRegistry
     private var webView: WKWebView?
@@ -90,7 +90,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
         self.webViewURL = webViewURL
         self.manifest = manifest
-        self.log = FilterLogger.create(messageLogFilter)
+        self.logger = FilteredLogger(messageLogFilter)
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
@@ -150,7 +150,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             return
         }
 
-        log(userInfo, "#appex(<-content): message { name: %@, userInfo: %@ }", messageName, pp(userInfo ?? [:]))
+        logger?.log(userInfo, "#appex(<-content): message { name: \(messageName), userInfo: \(pp(userInfo ?? [:])) }")
         var payload = userInfo?["payload"] as? [String: Any]
 
         // Manages the registry of pages based on the type of message received
@@ -193,7 +193,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
 
         if message == .hello || message == .bye {
-            log(userInfo, "#appex(pageRegistry): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
+            logger?.log(userInfo, "#appex(pageRegistry): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
         }
     }
 
@@ -228,7 +228,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
 
     private func sendMessageToBackgroundScript(payload: [String: Any]?) {
-        log(payload, "#appex(->background): message { payload: %@ }", pp(payload ?? [:]))
+        logger?.log(payload, "#appex(->background): message { payload: \(pp(payload ?? [:])) }")
 
         do {
             sendMessageToBackgroundScript(payload: try String(data: JSONSerialization.data(withJSONObject: payload!), encoding: .utf8)!)
@@ -238,7 +238,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
 
     private func sendMessageToContentScript(page: SFSafariPage, withName: String, userInfo: [String: Any]? = nil) {
-        log(userInfo, "#appex(->content): page \(page.hashValue) message { name: %@, userInfo: %@ }", withName, pp(userInfo ?? [:]))
+        logger?.log(userInfo, "#appex(->content): page \(page.hashValue) message { name: \(withName), userInfo: \(pp(userInfo ?? [:])) }")
         page.dispatchMessageToScript(withName: withName, userInfo: userInfo)
     }
 
