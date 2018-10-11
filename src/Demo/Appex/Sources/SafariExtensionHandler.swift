@@ -6,5 +6,4 @@ import Foundation
 import SafariServices
 import Topee
 
-class SafariExtensionHandler: TopeeSafariExtensionHandler {
-}
+class SafariExtensionHandler: TopeeSafariExtensionHandler {}

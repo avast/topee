@@ -7,14 +7,14 @@ import SafariServices
 
 /**
  Workarounds for SFSafariApplication problems
- 
+
  For some reason SFSafariApplication getActiveWindow doesn't always return active window.
  E.g. if you schedule getActiveWindow to run periodically you will stop receiving active
  window after few seconds. Which is kind of unfortunate if you need to get active window
  ad-hoc (e.g. when background script needs to know it).
- 
+
  There is also similar problem with SFSafariWindow.getActiveTab.
-*/
+ */
 
 class SFSafariApplicationHelper {
     private var activeWindow: SFSafariWindow?
@@ -25,24 +25,24 @@ class SFSafariApplicationHelper {
     func toolbarItemClicked(in window: SFSafariWindow) {
         onWindowActivated(window: window)
     }
-    
+
     func toolbarItemNeedsUpdate(in window: SFSafariWindow) {
         window.getToolbarItem { [weak self] toolbar in
             self?.toolbarIcon.flatMap { toolbar?.setImage($0) }
-            self?.toolbarIconTitle.flatMap {toolbar?.setLabel($0) }
+            self?.toolbarIconTitle.flatMap { toolbar?.setLabel($0) }
         }
     }
-    
+
     func setToolbarIcon(_ icon: NSImage) {
         toolbarIcon = icon
         SFSafariApplication.setToolbarItemsNeedUpdate()
     }
-    
+
     func setToolbarIconTitle(_ title: String) {
         toolbarIconTitle = title
         SFSafariApplication.setToolbarItemsNeedUpdate()
     }
-    
+
     /**
      Set cached active window from outside
 
