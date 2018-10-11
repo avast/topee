@@ -13,6 +13,7 @@ enum Message {
             case request
         }
     }
+
     enum Background: String {
         case ready
         case setIcon

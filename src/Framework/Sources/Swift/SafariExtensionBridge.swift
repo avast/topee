@@ -7,25 +7,26 @@ import SafariServices
 import WebKit
 
 // MARK: -
+
 public struct TopeeExtensionManifest: Equatable {
     public let id: String
     public let version: String
     public let name: String
-    
-    public init(_ infoDictionary: [String:Any]? = Bundle.main.infoDictionary) {
+
+    public init(_ infoDictionary: [String: Any]? = Bundle.main.infoDictionary) {
         id = infoDictionary?["CFBundleIdentifier"] as? String ?? ""
         version = infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
         name = infoDictionary?["CFBundleDisplayName"] as? String ?? ""
     }
-    
+
     // use path like
     //   Bundle(for: MyClass.self).path(forResource: "Info", ofType: "plist")
     // for Resources directory or
     //   Bundle.main.bundlePath + "/Contents/Info.plist" for main appex directory
     public init(infoPath: String) {
-        self.init(NSDictionary(contentsOfFile: infoPath) as? [String:Any])
+        self.init(NSDictionary(contentsOfFile: infoPath) as? [String: Any])
     }
-    
+
     public init(name: String, version: String = "1.0.0", id: String = "com.avast.topee") {
         self.id = id
         self.version = version
@@ -36,27 +37,22 @@ public struct TopeeExtensionManifest: Equatable {
 // MARK: -
 
 public protocol SafariExtensionBridgeType {
-    func setup(
-        webViewURL: URL,
-        manifest: TopeeExtensionManifest,
-        messageLogFilter: [String:NSRegularExpression]?)
-    func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?)
+    func setup(webViewURL: URL,
+               manifest: TopeeExtensionManifest,
+               messageLogFilter: [String: NSRegularExpression]?)
+    func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
 }
 
 // Can't define default values in protocol so we need extension
 public extension SafariExtensionBridgeType {
-    func setup(
-        webViewURL: URL = URL(string: "http://topee.local")!,
-        manifest: TopeeExtensionManifest? = nil,
-        messageLogFilter: [String:NSRegularExpression]? = nil)
-    {
-        setup(
-            webViewURL: webViewURL,
-            manifest: manifest ?? TopeeExtensionManifest(),
-            messageLogFilter: messageLogFilter
-        )
+    func setup(webViewURL: URL = URL(string: "http://topee.local")!,
+               manifest: TopeeExtensionManifest? = nil,
+               messageLogFilter: [String: NSRegularExpression]? = nil) {
+        setup(webViewURL: webViewURL,
+              manifest: manifest ?? TopeeExtensionManifest(),
+              messageLogFilter: messageLogFilter)
     }
 }
 
@@ -73,7 +69,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     // MARK: - Public Members
 
     public static let shared = SafariExtensionBridge()
-    
+
     // MARK: - Private Members
 
     private var manifest: TopeeExtensionManifest?
@@ -89,34 +85,32 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var safariHelper: SFSafariApplicationHelper = SFSafariApplicationHelper()
 
     // MARK: - Initializers
-    
+
     override init() {
         pageRegistry = SFSafariPageRegistry(thread: Thread.main)
         super.init()
     }
-    
-    public func setup(
-        webViewURL: URL,
-        manifest: TopeeExtensionManifest,
-        messageLogFilter: [String: NSRegularExpression]?)
-    {
+
+    public func setup(webViewURL: URL,
+                      manifest: TopeeExtensionManifest,
+                      messageLogFilter: [String: NSRegularExpression]?) {
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
             if webViewURL != self.webViewURL {
                 fatalError("You can only specify one webViewURL")
             }
-            
+
             if manifest != self.manifest {
                 fatalError("You can only specify one manifest")
             }
-            
+
             return
         }
-        
+
         let backgroundScriptUrls: [URL] = backgroundScriptNames(from: Bundle.main.infoDictionary ?? [:])
             .compactMap {
                 let u: URL? = Bundle.main.url(forResource: $0, withExtension: "")
-                if (u == nil) {
+                if u == nil {
                     NSLog("Warning: \($0) not found")
                 }
                 return u
@@ -165,7 +159,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     let tabId = self.pageRegistry.pageToTabId(page!)
                     self.sendMessageToBackgroundScript(payload: [
                         "eventName": "toolbarItemClicked",
-                        "tab": [ "id": tabId ] ])
+                        "tab": [ "id": tabId ]
+                    ])
                 }
             }
         }
@@ -174,8 +169,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     public func toolbarItemNeedsUpdate(in window: SFSafariWindow) {
         safariHelper.toolbarItemNeedsUpdate(in: window)
     }
-    
-    public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String : Any]?) {
+
+    public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?) {
         assert(Thread.isMainThread)
 
         guard let message = Message.Content.Request(rawValue: messageName) else {
@@ -191,34 +186,30 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         case .hello:
             // Messages may come out of order, e.g. request is faster than hello here
             // so let's handle them in same way.
-            let tabId = pageRegistry.hello(
-                page: page,
-                tabId: userInfo?["tabId"] as? UInt64,
-                referrer: userInfo?["referrer"] as? String ?? "",
-                historyLength: userInfo?["historyLength"] as! Int64)
+            let tabId = pageRegistry.hello(page: page,
+                                           tabId: userInfo?["tabId"] as? UInt64,
+                                           referrer: userInfo?["referrer"] as? String ?? "",
+                                           historyLength: userInfo?["historyLength"] as! Int64)
             if userInfo?["tabId"] != nil && !(userInfo?["tabId"] is NSNull) {
                 assert(userInfo?["tabId"] as? UInt64 != nil)
                 assert(userInfo?["tabId"] as? UInt64 == tabId)
             }
             payload!["tabId"] = tabId
-            var tabIdInfo: [String:Any] = ["tabId" : tabId]
+            var tabIdInfo: [String: Any] = ["tabId": tabId]
             #if DEBUG
-            tabIdInfo["debug"] = ["log" : true]
+            tabIdInfo["debug"] = ["log": true]
             #endif
-            sendMessageToContentScript(
-                page: page,
-                withName: "forceTabId",
-                userInfo: tabIdInfo)
+            sendMessageToContentScript(page: page,
+                                       withName: "forceTabId",
+                                       userInfo: tabIdInfo)
         case .alive, .request:
             if let tabId = userInfo?["tabId"] as? UInt64 {
                 pageRegistry.touch(page: page, tabId: tabId)
             }
         case .bye:
-            pageRegistry.bye(
-                page: page,
-                url: userInfo?["url"] as? String ?? "",
-                historyLength: userInfo?["historyLength"] as! Int64
-            )
+            pageRegistry.bye(page: page,
+                             url: userInfo?["url"] as? String ?? "",
+                             historyLength: userInfo?["historyLength"] as! Int64)
             if let tabId = userInfo?["tabId"] as? UInt64 {
                 pageRegistry.touch(page: page, tabId: tabId)
             }
@@ -241,9 +232,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             messageQueue.append(payload)
             return
         }
-        
+
         func handler() {
-            self.webView!.evaluateJavaScript("topee.manageRequest(\(payload))"){ result, error in
+            self.webView!.evaluateJavaScript("topee.manageRequest(\(payload))") { result, error in
                 guard error == nil else {
                     NSLog("Received JS error: \(error! as NSError)")
                     return
@@ -253,7 +244,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 }
             }
         }
-        
+
         // Only dispatch to main thread if we aren't already in main.
         if Thread.isMainThread {
             handler()
@@ -268,15 +259,13 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         log(payload, "#appex(->background): message { payload: %@ }", pp(payload ?? [:]))
 
         do {
-            sendMessageToBackgroundScript(
-                payload: try String(data: JSONSerialization.data(withJSONObject: payload!), encoding: .utf8)!)
-        }
-        catch {
+            sendMessageToBackgroundScript(payload: try String(data: JSONSerialization.data(withJSONObject: payload!), encoding: .utf8)!)
+        } catch {
             fatalError("Failed to serialize payload for sendMessageToBackgroundScript")
         }
     }
-    
-    private func sendMessageToContentScript(page: SFSafariPage, withName: String, userInfo: [String : Any]? = nil) {
+
+    private func sendMessageToContentScript(page: SFSafariPage, withName: String, userInfo: [String: Any]? = nil) {
         log(userInfo, "#appex(->content): page \(page.hashValue) message { name: %@, userInfo: %@ }", withName, pp(userInfo ?? [:]))
         page.dispatchMessageToScript(withName: withName, userInfo: userInfo)
     }
@@ -319,61 +308,60 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 safariHelper.setToolbarIconTitle(title)
             case .setIcon:
                 if let path = bestIconSizePath(userInfo),
-                    let iconUrl = Bundle.main.url(forResource: path, withExtension: "")
-                {
+                    let iconUrl = Bundle.main.url(forResource: path, withExtension: "") {
                     safariHelper.setToolbarIcon(loadAllResolutions(iconUrl))
                 }
             }
         }
     }
-    
+
     private func loadAllResolutions(_ iconUrl: URL) -> NSImage {
         let icon = NSImage(byReferencing: iconUrl)
-        
+
         if icon.representations.count == 0 {
             return icon
         }
-        
-        let fextension = iconUrl.pathExtension;
-        let fname = iconUrl.lastPathComponent.dropLast(fextension.count + 1);
+
+        let fextension = iconUrl.pathExtension
+        let fname = iconUrl.lastPathComponent.dropLast(fextension.count + 1)
         let nonameUrl = iconUrl.deletingLastPathComponent()
-        
-        for scale in 2...4  {
+
+        for scale in 2...4 {
             let rep = NSImageRep(contentsOf: nonameUrl.appendingPathComponent(fname + "@" + String(scale) + "x." + fextension))
             if rep != nil {
                 rep!.size = icon.representations[0].size
                 icon.addRepresentation(rep!)
             }
         }
-        
+
         return icon
     }
-    
-    private func bestIconSizePath(_ userInfo: [String:Any]) -> String? {
-        guard let pathSpec = userInfo["path"] as? [String:Any] else { return nil }
+
+    private func bestIconSizePath(_ userInfo: [String: Any]) -> String? {
+        guard let pathSpec = userInfo["path"] as? [String: Any] else { return nil }
         let sizes = Array(pathSpec.keys)
         if sizes.isEmpty { return nil }
-        
-        if let iconMap = (Bundle.main.infoDictionary?["NSExtension"] as? [String:Any])?["TopeeSafariToolbarIcons"] as? [String:String] {
+
+        if let iconMap = (Bundle.main.infoDictionary?["NSExtension"] as? [String: Any])?["TopeeSafariToolbarIcons"] as? [String: String] {
             let pathValues = pathSpec.compactMap { $0.value as? String }
-            if let (_, value) = iconMap.first(where: { return pathValues.contains($0.key) }) {
+            if let (_, value) = iconMap.first(where: { pathValues.contains($0.key) }) {
                 return value
             }
         }
-        
+
         if sizes.contains("16") { return pathSpec["16"] as? String }
         if sizes.contains("19") { return pathSpec["19"] as? String }
         if sizes.contains("32") { return pathSpec["32"] as? String }
-        
-        return pathSpec[sizes.first!] as? String  // if 16, 19 and 32 px are missing, take anything else
+
+        return pathSpec[sizes.first!] as? String // if 16, 19 and 32 px are missing, take anything else
     }
-    
+
     private func backgroundScriptNames(from dict: [String: Any]) -> [String] {
         guard let extensionDictionary = dict["NSExtension"] as? [String: Any] else { return [] }
         guard let backgroundScripts = extensionDictionary["TopeeSafariBackgroundScript"] as? [[String: String]] else { return [] }
         return backgroundScripts.compactMap { $0["Script"] }
     }
-    
+
     private func buildManifestScript() -> String {
         return """
         chrome.runtime._manifest = {
@@ -391,7 +379,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private func readFiles(_ urls: [URL]) -> [String] {
         return urls.map { try! String(contentsOf: $0, encoding: .utf8) }
     }
-    
+
     private func readLocales() -> [String] {
         let localePaths = Bundle.main.paths(forResourcesOfType: "", inDirectory: "_locales")
         return localePaths
@@ -400,16 +388,16 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 let lang = (($0 as NSString).deletingLastPathComponent as NSString).lastPathComponent
                 let json = (try? String(contentsOfFile: $0, encoding: .utf8)) ?? ""
                 return json.isEmpty ? json :
-                    "(function () { chrome.i18n._locales['"+lang+"']=" + json + "; })();"
+                    "(function () { chrome.i18n._locales['" + lang + "']=" + json + "; })();"
             }
     }
-    
+
     /**
      Pretty print given object (these objects are for/from JavaScript so they should always be serializable).
      */
     private func pp(_ obj: Any) -> String {
         let str = try! JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)
-        
+
         return String(data: str, encoding: .utf8)!
     }
 }
