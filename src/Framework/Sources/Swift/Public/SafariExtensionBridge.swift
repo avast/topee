@@ -29,18 +29,16 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var webViewURL: URL = URL(string: "http://topee.local")!
     private var logger: TopeeLogger = DefaultLogger()
 
-    private var pageRegistry: SFSafariPageRegistry
+    private var safariHelper: SFSafariApplicationHelper = SFSafariApplicationHelper()
+    private var pageRegistry: SFSafariPageRegistry = SFSafariPageRegistry(thread: Thread.main)
     private var webView: WKWebView?
     private var isBackgroundReady: Bool = false
-    // Accumulates messages until the background scripts
-    // informs us that is ready
+    // Accumulates messages until the background scripts informs us that is ready
     private var messageQueue: [String] = []
-    private var safariHelper: SFSafariApplicationHelper = SFSafariApplicationHelper()
 
     // MARK: - Initializers
 
     override init() {
-        pageRegistry = SFSafariPageRegistry(thread: Thread.main)
         super.init()
     }
 
