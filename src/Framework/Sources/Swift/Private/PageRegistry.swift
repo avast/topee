@@ -11,6 +11,7 @@ class PageRegistry<Page: Equatable> {
     private var recentlyByedPages = [ByeRecord]()
     // 1 or 2 byes should be enough to match the subsequent hello
     private let maxByes = 16
+    var logger: TopeeLogger?
 
     private struct ByeRecord {
         let tabId: UInt64
@@ -99,7 +100,7 @@ class PageRegistry<Page: Equatable> {
         }
 
         guard let tabId = pageToTabId(page) else {
-            NSLog("Warning: Can't find tabId for given page")
+            logger?.debug("Warning: Can't find tabId for given page")
             return
         }
 
