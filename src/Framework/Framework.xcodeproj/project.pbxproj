@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		806E5C6221306E4300C369EB /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806E5C6121306E4300C369EB /* TestHelper.swift */; };
 		80BEB8AA2111B68600DA4C7B /* topee-background.js in Resources */ = {isa = PBXBuildFile; fileRef = 80BEB8A92111B68600DA4C7B /* topee-background.js */; };
-		EF2B6DF0216F8CAA003B4D7E /* FilteredLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE5216F8CAA003B4D7E /* FilteredLogger.swift */; };
 		EF2B6DF1216F8CAA003B4D7E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE6216F8CAA003B4D7E /* Message.swift */; };
 		EF2B6DF2216F8CAA003B4D7E /* WKWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE8216F8CAA003B4D7E /* WKWebView.swift */; };
 		EF2B6DF3216F8CAA003B4D7E /* WKUserScript.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE9216F8CAA003B4D7E /* WKUserScript.swift */; };
@@ -18,6 +17,8 @@
 		EF2B6DF6216F8CAA003B4D7E /* TopeeExtensionManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DED216F8CAA003B4D7E /* TopeeExtensionManifest.swift */; };
 		EF2B6DF7216F8CAA003B4D7E /* SafariExtensionBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DEE216F8CAA003B4D7E /* SafariExtensionBridge.swift */; };
 		EF2B6DF8216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DEF216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift */; };
+		EF2B6DFA216F911D003B4D7E /* TopeeLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DF9216F911D003B4D7E /* TopeeLogger.swift */; };
+		EF40FAC12170DBE10083F822 /* DefaultLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF40FAC02170DBE10083F822 /* DefaultLogger.swift */; };
 		EF80A765210F2B68002C6F3F /* Topee.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF80A75B210F2B67002C6F3F /* Topee.framework */; };
 		EF80A76A210F2B68002C6F3F /* TopeeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A769210F2B68002C6F3F /* TopeeTests.swift */; };
 		EF80A76C210F2B68002C6F3F /* Topee.h in Headers */ = {isa = PBXBuildFile; fileRef = EF80A75E210F2B67002C6F3F /* Topee.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -46,7 +47,6 @@
 		EF1FACD0211467FD005876A2 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
 		EF1FACD1211467FD005876A2 /* tabs.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabs.js; sourceTree = "<group>"; };
 		EF1FACD2211467FD005876A2 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
-		EF2B6DE5216F8CAA003B4D7E /* FilteredLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilteredLogger.swift; sourceTree = "<group>"; };
 		EF2B6DE6216F8CAA003B4D7E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		EF2B6DE8216F8CAA003B4D7E /* WKWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKWebView.swift; sourceTree = "<group>"; };
 		EF2B6DE9216F8CAA003B4D7E /* WKUserScript.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKUserScript.swift; sourceTree = "<group>"; };
@@ -55,6 +55,8 @@
 		EF2B6DED216F8CAA003B4D7E /* TopeeExtensionManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopeeExtensionManifest.swift; sourceTree = "<group>"; };
 		EF2B6DEE216F8CAA003B4D7E /* SafariExtensionBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SafariExtensionBridge.swift; sourceTree = "<group>"; };
 		EF2B6DEF216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopeeSafariExtensionHandler.swift; sourceTree = "<group>"; };
+		EF2B6DF9216F911D003B4D7E /* TopeeLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopeeLogger.swift; sourceTree = "<group>"; };
+		EF40FAC02170DBE10083F822 /* DefaultLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultLogger.swift; sourceTree = "<group>"; };
 		EF80A75B210F2B67002C6F3F /* Topee.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Topee.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A75E210F2B67002C6F3F /* Topee.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Topee.h; sourceTree = "<group>"; };
 		EF80A75F210F2B67002C6F3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -141,7 +143,7 @@
 		EF2B6DE4216F8CAA003B4D7E /* Private */ = {
 			isa = PBXGroup;
 			children = (
-				EF2B6DE5216F8CAA003B4D7E /* FilteredLogger.swift */,
+				EF40FAC02170DBE10083F822 /* DefaultLogger.swift */,
 				EF2B6DE6216F8CAA003B4D7E /* Message.swift */,
 				EF2B6DEB216F8CAA003B4D7E /* PageRegistry.swift */,
 				EF2B6DEA216F8CAA003B4D7E /* SFSafariApplicationHelper.swift */,
@@ -164,6 +166,7 @@
 			children = (
 				EF2B6DEE216F8CAA003B4D7E /* SafariExtensionBridge.swift */,
 				EF2B6DED216F8CAA003B4D7E /* TopeeExtensionManifest.swift */,
+				EF2B6DF9216F911D003B4D7E /* TopeeLogger.swift */,
 				EF2B6DEF216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift */,
 			);
 			path = Public;
@@ -438,14 +441,15 @@
 			files = (
 				EF2B6DF6216F8CAA003B4D7E /* TopeeExtensionManifest.swift in Sources */,
 				EF2B6DF5216F8CAA003B4D7E /* PageRegistry.swift in Sources */,
+				EF40FAC12170DBE10083F822 /* DefaultLogger.swift in Sources */,
 				EF2B6DF1216F8CAA003B4D7E /* Message.swift in Sources */,
 				EF2B6DF4216F8CAA003B4D7E /* SFSafariApplicationHelper.swift in Sources */,
+				EF2B6DFA216F911D003B4D7E /* TopeeLogger.swift in Sources */,
 				EF2B6DF2216F8CAA003B4D7E /* WKWebView.swift in Sources */,
 				806E5C6221306E4300C369EB /* TestHelper.swift in Sources */,
 				EF2B6DF7216F8CAA003B4D7E /* SafariExtensionBridge.swift in Sources */,
 				EF2B6DF3216F8CAA003B4D7E /* WKUserScript.swift in Sources */,
 				EF2B6DF8216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift in Sources */,
-				EF2B6DF0216F8CAA003B4D7E /* FilteredLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

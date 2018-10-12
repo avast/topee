@@ -9,9 +9,7 @@ import WebKit
 // MARK: -
 
 public protocol SafariExtensionBridgeType {
-    func setup(webViewURL: URL,
-               manifest: TopeeExtensionManifest,
-               messageLogFilter: [String: NSRegularExpression]?)
+    func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger: TopeeLogger)
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
@@ -19,12 +17,10 @@ public protocol SafariExtensionBridgeType {
 
 // Can't define default values in protocol so we need extension
 public extension SafariExtensionBridgeType {
-    func setup(webViewURL: URL = URL(string: "http://topee.local")!,
-               manifest: TopeeExtensionManifest? = nil,
-               messageLogFilter: [String: NSRegularExpression]? = nil) {
+    func setup(webViewURL: URL = URL(string: "http://topee.local")!, manifest: TopeeExtensionManifest? = nil) {
         setup(webViewURL: webViewURL,
               manifest: manifest ?? TopeeExtensionManifest(),
-              messageLogFilter: messageLogFilter)
+              logger: DefaultLogger())
     }
 }
 
@@ -46,7 +42,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     private var manifest: TopeeExtensionManifest?
     private var webViewURL: URL = URL(string: "http://topee.local")!
-    private var logger: FilteredLogger?
+    private var logger: TopeeLogger?
 
     private var pageRegistry: SFSafariPageRegistry
     private var webView: WKWebView?
@@ -63,34 +59,34 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         super.init()
     }
 
-    public func setup(webViewURL: URL,
-                      manifest: TopeeExtensionManifest,
-                      messageLogFilter: [String: NSRegularExpression]?) {
+    public func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger: TopeeLogger) {
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
             if webViewURL != self.webViewURL {
-                fatalError("You can only specify one webViewURL")
+                let message = "You can only specify one webViewURL"
+                logger.error(message)
+                fatalError(message)
             }
-
             if manifest != self.manifest {
-                fatalError("You can only specify one manifest")
+                let message = "You can only specify one manifest"
+                logger.error(message)
+                fatalError(message)
             }
 
             return
         }
 
+        self.webViewURL = webViewURL
+        self.manifest = manifest
+        self.logger = logger
+        self.pageRegistry.logger = logger
+
         let backgroundScriptUrls: [URL] = backgroundScriptNames(from: Bundle.main.infoDictionary ?? [:])
             .compactMap {
                 let u: URL? = Bundle.main.url(forResource: $0, withExtension: "")
-                if u == nil {
-                    NSLog("Warning: \($0) not found")
-                }
+                if u == nil { logger.error("Warning: \($0) not found") }
                 return u
             }
-
-        self.webViewURL = webViewURL
-        self.manifest = manifest
-        self.logger = FilteredLogger(messageLogFilter)
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
@@ -115,7 +111,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }()
         DispatchQueue.global().asyncAfter(deadline: .now() + 10) { [unowned self] in
             guard self.isBackgroundReady else {
-                NSLog("Backgrounds scripts are taking too long to load. Check files for possible errors")
+                logger.error("Backgrounds scripts are taking too long to load. Check files for possible errors")
                 return
             }
         }
@@ -146,11 +142,11 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         assert(Thread.isMainThread)
 
         guard let message = Message.Content.Request(rawValue: messageName) else {
-            NSLog("#appex(<-content) [ERROR]: unknown message { name: %@, userInfo: %@ }", messageName, pp(userInfo ?? [:]))
+            logger?.error("#appex(<-content) [ERROR]: unknown message { name: \(messageName) userInfo: \(pp(userInfo ?? [:])) }")
             return
         }
 
-        logger?.log(userInfo, "#appex(<-content): message { name: \(messageName), userInfo: \(pp(userInfo ?? [:])) }")
+        logger?.debug("#appex(<-content): message { name: \(messageName), userInfo: \(pp(userInfo ?? [:])) }")
         var payload = userInfo?["payload"] as? [String: Any]
 
         // Manages the registry of pages based on the type of message received
@@ -193,7 +189,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
 
         if message == .hello || message == .bye {
-            logger?.log(userInfo, "#appex(pageRegistry): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
+            logger?.debug("#appex(pageRegistry): pages: { count: \(self.pageRegistry.count), tabIds: \(self.pageRegistry.tabIds)}")
         }
     }
 
@@ -208,11 +204,11 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         func handler() {
             self.webView!.evaluateJavaScript("topee.manageRequest(\(payload))") { result, error in
                 guard error == nil else {
-                    NSLog("Received JS error: \(error! as NSError)")
+                    self.logger?.error("Received JS error: \(error! as NSError)")
                     return
                 }
                 if let result = result {
-                    NSLog("Received JS result: \(result)")
+                    self.logger?.debug("Received JS result: \(result)")
                 }
             }
         }
@@ -228,17 +224,19 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
 
     private func sendMessageToBackgroundScript(payload: [String: Any]?) {
-        logger?.log(payload, "#appex(->background): message { payload: \(pp(payload ?? [:])) }")
+        logger?.debug("#appex(->background): message { payload: \(pp(payload)) }")
 
         do {
             sendMessageToBackgroundScript(payload: try String(data: JSONSerialization.data(withJSONObject: payload!), encoding: .utf8)!)
         } catch {
-            fatalError("Failed to serialize payload for sendMessageToBackgroundScript")
+            let message = "Failed to serialize payload for sendMessageToBackgroundScript"
+            logger?.error(message)
+            fatalError(message)
         }
     }
 
     private func sendMessageToContentScript(page: SFSafariPage, withName: String, userInfo: [String: Any]? = nil) {
-        logger?.log(userInfo, "#appex(->content): page \(page.hashValue) message { name: \(withName), userInfo: \(pp(userInfo ?? [:])) }")
+        logger?.debug("#appex(->content): page \(page.hashValue) message { name: \(withName), userInfo: \(pp(userInfo ?? [:])) }")
         page.dispatchMessageToScript(withName: withName, userInfo: userInfo)
     }
 
@@ -250,8 +248,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         assert(Thread.isMainThread)
         if message.name != MessageHandler.log.rawValue {
-            // Ignore log messages (they are logged few lines below).
-            NSLog("#appex(<-background): { 'name': %@, 'body': %@ }", message.name, pp(message.body))
+            logger?.debug("#appex(<-background): { 'name': \(message.name), 'body': \(pp(message.body)) }")
         }
 
         guard let handler = MessageHandler(rawValue: message.name) else { return }
@@ -261,7 +258,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         case .log:
             guard let logLevel = userInfo["level"] as? String else { return }
             guard let message = userInfo["message"] as? String else { return }
-            NSLog("#appex(background) [\(logLevel)]: %@", message)
+            logger?.debug("#appex(background) [\(logLevel)]: \(message)")
         case .content:
             guard let tabId = userInfo["tabId"] as? UInt64 else { return }
             guard let eventName = userInfo["eventName"] as? String else { return }
