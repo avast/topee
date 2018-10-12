@@ -323,12 +323,18 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         """
     }
 
-    private func readFile(_ url: URL) -> String {
-        return try! String(contentsOf: url, encoding: .utf8)
+    private func readFiles(_ urls: [URL]) -> [String] {
+        return urls.map(readFile)
     }
 
-    private func readFiles(_ urls: [URL]) -> [String] {
-        return urls.map { try! String(contentsOf: $0, encoding: .utf8) }
+    private func readFile(_ url: URL) -> String {
+        do {
+            return try String(contentsOf: url, encoding: .utf8)
+        } catch {
+            let message = "Could not load file at: \(url)"
+            logger.error(message)
+            fatalError(message)
+        }
     }
 
     private func readLocales() -> [String] {
@@ -344,5 +350,15 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
 
     /// Pretty prints the given Javascript object
+    private func prettyPrintJSObject(_ obj: Any) -> String {
+        do {
+            // Since we are receiving objects for/from JavaScript they should always be serializable
+            let str = try JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)
+            return String(data: str, encoding: .utf8)!
+        } catch {
+            let message = "Could not serialize the given JS object"
+            logger.error(message)
+            fatalError(message)
+        }
     }
 }
