@@ -20,12 +20,21 @@ function registerTab({tabId, frameId, hasFocus, isVisible, url}) {
         lastFocusedTabId = tabId;
     }
 
-    browserTabs[tabId] = {
+    var tab = {
         id: tabId,
         url,
         hasFocus,
         isVisible
     };
+
+    if (browserTabs[tabId]) {
+        // TODO: implement diff of updated tab object or some kind of object observe or ES6 proxy at its best...
+        tabs.onUpdated._emit(tabId, {}, tab);
+    } else {
+        tabs.onCreated._emit(tab);
+    }
+
+    browserTabs[tabId] = tab;
 }
 
 eventEmitter.addListener('hello', registerTab);
@@ -113,9 +122,42 @@ tabs.sendMessage._emit = function (payload) {
     eventEmitter.emit('messageResponse', payload);
 };
 
-tabs.onUpdated = {
-    // TODO: Implementation
-    addListener: function () {}
+var listeners = {
+    onCreated: [],
+    onUpdated: [],
 };
+
+function addListener(type, callback) {
+    listeners[type].push(callback);
+    eventEmitter.addListener(`tab@${type}`, callback);
+}
+
+function removeListener(type, callback) {
+    listeners[type] = listeners[type].filter(function(item) {
+        if(callback === item) {
+            eventEmitter.removeListener(`tab@${type}`, callback);
+            return false;
+        }
+        return true;
+    });
+}
+
+tabs.onCreated = {
+    type: 'onCreated',
+    _emit: function() {
+        eventEmitter.emit.apply(eventEmitter, [`tab@${this.type}`].concat(Object.values(arguments)));
+    },
+    addListener: function(listener) {
+        addListener(this.type, listener);
+    },
+    removeListener: function(listener) {
+        removeListener(this.type, listener);
+    },
+    hasListener: function(listener) {
+        return listeners[this.type].includes(listener);
+    },
+}
+
+tabs.onUpdated = Object.assign({}, tabs.onCreated, { type: 'onUpdated' });
 
 module.exports = tabs;
