@@ -24,12 +24,6 @@ public extension SafariExtensionBridgeType {
     }
 }
 
-enum MessageHandler: String {
-    case content
-    case appex
-    case log
-}
-
 // MARK: -
 
 public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessageHandler {
