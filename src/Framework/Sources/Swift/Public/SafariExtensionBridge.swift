@@ -71,7 +71,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 let u: URL? = Bundle.main.url(forResource: $0, withExtension: "")
                 if u == nil { logger.error("Warning: \($0) not found") }
                 return u
-        }
+            }
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
