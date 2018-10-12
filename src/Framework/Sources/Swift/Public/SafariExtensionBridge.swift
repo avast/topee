@@ -42,6 +42,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         super.init()
     }
 
+    // MARK: - Public API
+
     public func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger injectedLogger: TopeeLogger?) {
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
@@ -69,7 +71,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 let u: URL? = Bundle.main.url(forResource: $0, withExtension: "")
                 if u == nil { logger.error("Warning: \($0) not found") }
                 return u
-            }
+        }
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
@@ -99,8 +101,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
         }
     }
-
-    // MARK: - Public API
 
     public func toolbarItemClicked(in window: SFSafariWindow) {
         safariHelper.toolbarItemClicked(in: window)
@@ -175,6 +175,48 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
     }
 
+    // MARK: - WKScriptMessageHandler
+
+    /// Handles messages from the brackground script(s).
+    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        assert(Thread.isMainThread)
+        if message.name != MessageHandler.log.rawValue {
+            logger.debug("#appex(<-background): { 'name': \(message.name), 'body': \(prettyPrintJSObject(message.body)) }")
+        }
+
+        guard let handler = MessageHandler(rawValue: message.name) else { return }
+        guard let userInfo = message.body as? [String: Any] else { return }
+
+        switch handler {
+        case .log:
+            guard let logLevel = userInfo["level"] as? String else { return }
+            guard let message = userInfo["message"] as? String else { return }
+            logger.debug("#appex(background) [\(logLevel)]: \(message)")
+        case .content:
+            guard let tabId = userInfo["tabId"] as? UInt64 else { return }
+            guard let eventName = userInfo["eventName"] as? String else { return }
+            guard let page = pageRegistry.tabIdToPage(tabId) else { return }
+            sendMessageToContentScript(page: page, withName: eventName, userInfo: userInfo)
+        case .appex:
+            guard let typeName = userInfo["type"] as? String else { return }
+            guard let type = Message.Background(rawValue: typeName) else { return }
+            switch type {
+            case .ready:
+                isBackgroundReady = true
+                messageQueue.forEach { sendMessageToBackgroundScript(payload: $0) }
+                messageQueue = []
+            case .setIconTitle:
+                guard let title = userInfo["title"] as? String else { return }
+                safariHelper.setToolbarIconTitle(title)
+            case .setIcon:
+                if let path = bestIconSizePath(userInfo),
+                    let iconUrl = Bundle.main.url(forResource: path, withExtension: "") {
+                    safariHelper.setToolbarIcon(loadAllResolutions(iconUrl))
+                }
+            }
+        }
+    }
+
     // MARK: - Private API
 
     private func sendMessageToBackgroundScript(payload: String) {
@@ -220,48 +262,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private func sendMessageToContentScript(page: SFSafariPage, withName: String, userInfo: [String: Any]? = nil) {
         logger.debug("#appex(->content): page \(page.hashValue) message { name: \(withName), userInfo: \(prettyPrintJSObject(userInfo ?? [:])) }")
         page.dispatchMessageToScript(withName: withName, userInfo: userInfo)
-    }
-
-    // MARK: - WKScriptMessageHandler
-
-    /// Handles messages from the brackground script(s).
-    public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        assert(Thread.isMainThread)
-        if message.name != MessageHandler.log.rawValue {
-            logger.debug("#appex(<-background): { 'name': \(message.name), 'body': \(prettyPrintJSObject(message.body)) }")
-        }
-
-        guard let handler = MessageHandler(rawValue: message.name) else { return }
-        guard let userInfo = message.body as? [String: Any] else { return }
-
-        switch handler {
-        case .log:
-            guard let logLevel = userInfo["level"] as? String else { return }
-            guard let message = userInfo["message"] as? String else { return }
-            logger.debug("#appex(background) [\(logLevel)]: \(message)")
-        case .content:
-            guard let tabId = userInfo["tabId"] as? UInt64 else { return }
-            guard let eventName = userInfo["eventName"] as? String else { return }
-            guard let page = pageRegistry.tabIdToPage(tabId) else { return }
-            sendMessageToContentScript(page: page, withName: eventName, userInfo: userInfo)
-        case .appex:
-            guard let typeName = userInfo["type"] as? String else { return }
-            guard let type = Message.Background(rawValue: typeName) else { return }
-            switch type {
-            case .ready:
-                isBackgroundReady = true
-                messageQueue.forEach { sendMessageToBackgroundScript(payload: $0) }
-                messageQueue = []
-            case .setIconTitle:
-                guard let title = userInfo["title"] as? String else { return }
-                safariHelper.setToolbarIconTitle(title)
-            case .setIcon:
-                if let path = bestIconSizePath(userInfo),
-                    let iconUrl = Bundle.main.url(forResource: path, withExtension: "") {
-                    safariHelper.setToolbarIcon(loadAllResolutions(iconUrl))
-                }
-            }
-        }
     }
 
     private func loadAllResolutions(_ iconUrl: URL) -> NSImage {
