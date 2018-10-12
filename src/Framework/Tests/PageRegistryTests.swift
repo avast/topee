@@ -5,7 +5,7 @@
 @testable import Topee
 import XCTest
 
-class TopeePageRegistryTests: XCTestCase {
+class PageRegistryTests: XCTestCase {
     private var registry: PageRegistry<TestPage>!
 
     override func setUp() {
