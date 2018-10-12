@@ -171,7 +171,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
         // Relays the messages to the background script
         if payload != nil {
-            sendMessageToBackgroundScript(payload: payload)
+            sendMessageToBackgroundScript(payload: payload!)
         }
 
         if message == .hello || message == .bye {
@@ -209,11 +209,11 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
     }
 
-    private func sendMessageToBackgroundScript(payload: [String: Any]?) {
-        logger?.debug("#appex(->background): message { payload: \(pp(payload)) }")
+    private func sendMessageToBackgroundScript(payload: [String: Any]) {
+        logger.debug("#appex(->background): message { payload: \(prettyPrintJSObject(payload)) }")
 
         do {
-            sendMessageToBackgroundScript(payload: try String(data: JSONSerialization.data(withJSONObject: payload!), encoding: .utf8)!)
+            sendMessageToBackgroundScript(payload: try String(data: JSONSerialization.data(withJSONObject: payload), encoding: .utf8)!)
         } catch {
             let message = "Failed to serialize payload for sendMessageToBackgroundScript"
             logger.error(message)
