@@ -17,10 +17,8 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
         self.setupBridge()
     }
 
-    // override to pass optional parameters to bridge.setup()
-    open func setupBridge() {
-        bridge.setup()
-    }
+    /// override to use custom perameters to setup the `bridge` via
+    open func setupBridge() {}
 
     // MARK: - SFSafariExtensionHandler
 
