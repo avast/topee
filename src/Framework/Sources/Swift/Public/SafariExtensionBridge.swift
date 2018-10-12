@@ -132,6 +132,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         safariHelper.toolbarItemNeedsUpdate(in: window)
     }
 
+    /// Handles messages from the content script(s).
     public func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?) {
         assert(Thread.isMainThread)
 
@@ -236,9 +237,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     // MARK: - WKScriptMessageHandler
 
-    /**
-     Handles messages from background script(s).
-     */
+    /// Handles messages from the brackground script(s).
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         assert(Thread.isMainThread)
         if message.name != MessageHandler.log.rawValue {
@@ -355,12 +354,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
     }
 
-    /**
-     Pretty print given object (these objects are for/from JavaScript so they should always be serializable).
-     */
-    private func pp(_ obj: Any) -> String {
-        let str = try! JSONSerialization.data(withJSONObject: obj, options: .prettyPrinted)
-
-        return String(data: str, encoding: .utf8)!
+    /// Pretty prints the given Javascript object
     }
 }
