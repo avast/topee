@@ -69,7 +69,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         let backgroundScriptUrls: [URL] = backgroundScriptNames(from: Bundle.main.infoDictionary ?? [:])
             .compactMap {
                 let u: URL? = Bundle.main.url(forResource: $0, withExtension: "")
-                if u == nil { logger.error("Warning: \($0) not found") }
+                if u == nil { logger.warning("Warning: \($0) not found") }
                 return u
             }
 
@@ -126,7 +126,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         assert(Thread.isMainThread)
 
         guard let message = Message.Content.Request(rawValue: messageName) else {
-            logger.error("#appex(<-content) [ERROR]: unknown message { name: \(messageName) userInfo: \(prettyPrintJSObject(userInfo ?? [:])) }")
+            logger.warning("#appex(<-content) unknown message { name: \(messageName) userInfo: \(prettyPrintJSObject(userInfo ?? [:])) }")
             return
         }
 
@@ -184,8 +184,14 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             logger.debug("#appex(<-background): { 'name': \(message.name), 'body': \(prettyPrintJSObject(message.body)) }")
         }
 
-        guard let handler = MessageHandler(rawValue: message.name) else { return }
-        guard let userInfo = message.body as? [String: Any] else { return }
+        guard let handler = MessageHandler(rawValue: message.name) else {
+            logger.warning("#appex(<-background): unknown message { name: \(message.name) userInfo: \(prettyPrintJSObject(message.body)) }")
+            return
+        }
+        guard let userInfo = message.body as? [String: Any] else {
+            logger.warning("#appex(<-background): unknown message payload type { name: \(message.name) userInfo: \(prettyPrintJSObject(message.body)) }")
+            return
+        }
 
         switch handler {
         case .log:
