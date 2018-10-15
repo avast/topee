@@ -12,7 +12,9 @@
     ],
     "tabs": [
       "get",
-      "sendMessage"
+      "sendMessage",
+      "onCreated",
+      "onUpdated"
     ],
     "i18n": [
       "getUILanguage"
