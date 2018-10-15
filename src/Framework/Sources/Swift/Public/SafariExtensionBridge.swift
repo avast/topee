@@ -6,8 +6,6 @@ import Foundation
 import SafariServices
 import WebKit
 
-// MARK: -
-
 public protocol SafariExtensionBridgeType {
     func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger: TopeeLogger?)
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?)
@@ -15,15 +13,26 @@ public protocol SafariExtensionBridgeType {
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
 }
 
-// MARK: -
+public extension SafariExtensionBridgeType {
+    /// Setup method with default parameters
+    func setup(webViewURL: URL = URL(string: "http://topee.local")!,
+               manifest: TopeeExtensionManifest = TopeeExtensionManifest(),
+               logger: TopeeLogger? = nil) {
+        setup(webViewURL: webViewURL, manifest: manifest, logger: logger)
+    }
+
+    /// Old setup method with default parameters. Here to avoid breaking changes.
+    /// Delete as part of changes for v2.0.0.
+    @available(*, deprecated, message: "Pleae use new 'setup' method that receives a logger instead")
+    func setup(webViewURL: URL = URL(string: "http://topee.local")!,
+               manifest: TopeeExtensionManifest? = nil,
+               messageLogFilter: [String: NSRegularExpression]? = nil) {
+        setup(webViewURL: webViewURL, manifest: manifest ?? TopeeExtensionManifest(), logger: nil)
+    }
+}
 
 public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessageHandler {
-
-    // MARK: - Public Members
-
     public static let shared = SafariExtensionBridge()
-
-    // MARK: - Private Members
 
     private var manifest: TopeeExtensionManifest = TopeeExtensionManifest()
     private var webViewURL: URL = URL(string: "http://topee.local")!
@@ -36,13 +45,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     // Accumulates messages until the background scripts informs us that is ready
     private var messageQueue: [String] = []
 
-    // MARK: - Initializers
-
     override init() {
         super.init()
     }
-
-    // MARK: - Public API
 
     public func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger injectedLogger: TopeeLogger?) {
         if webView != nil {
@@ -168,8 +173,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
     }
 
-    // MARK: - WKScriptMessageHandler
-
     /// Handles messages from the brackground script(s).
     public func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         assert(Thread.isMainThread)
@@ -215,8 +218,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
         }
     }
-
-    // MARK: - Private API
 
     private func sendMessageToBackgroundScript(payload: String) {
         if !isBackgroundReady {
