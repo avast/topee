@@ -22,15 +22,30 @@ browserAction.setIcon = function ({path, imageData, tabId}) {
 };
 
 browserAction.onClicked = {
+    listeners: [],
     addListener: function (fn) {
-        eventEmitter.addListener('toolbarItemClicked', function (event) {
+        var callback = function (event) {
             // Only call fn if popup isn't defined
             if (!state.popup.popup) {
                 // TODO: Also check tabId
                 tabs.get(event.tab.id, tab => fn(tab));
             }
+        };
+
+        browserAction.onClicked.listeners.push({fn: fn, callback: callback});
+
+        eventEmitter.addListener('toolbarItemClicked', callback);
+    },
+    removeListener: function(fn) {
+        browserAction.onClicked.listeners = browserAction.onClicked.listeners.filter(function(item) {
+            if(item.fn === fn) {
+                eventEmitter.removeListener('toolbarItemClicked', item.callback);
+                return false;
+            }
+
+            return true;
         });
-    }
+    },
 };
 
 module.exports = browserAction;
