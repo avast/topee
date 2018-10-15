@@ -66,13 +66,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         self.logger = injectedLogger ?? logger
         self.pageRegistry.logger = logger
 
-        let backgroundScriptUrls: [URL] = backgroundScriptNames(from: Bundle.main.infoDictionary ?? [:])
-            .compactMap {
-                let u: URL? = Bundle.main.url(forResource: $0, withExtension: "")
-                if u == nil { logger.warning("Warning: \($0) not found") }
-                return u
-            }
-
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
             let backgroundEndURL = Bundle(for: SafariExtensionBridge.self)
@@ -81,7 +74,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 .url(forResource: "topee-background", withExtension: "js")!
             let scripts = [readFile(backgroundURL), buildManifestScript()]
                 + readLocales()
-                + readFiles(backgroundScriptUrls)
+                + readFiles(backgroundScriptURLs())
                 + [readFile(backgroundEndURL)]
             let script = WKUserScript(scripts: scripts)
             let contentController: WKUserContentController = WKUserContentController()
@@ -311,10 +304,23 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         return pathSpec[sizes.first!] as? String // if 16, 19 and 32 px are missing, take anything else
     }
 
-    private func backgroundScriptNames(from dict: [String: Any]) -> [String] {
-        guard let extensionDictionary = dict["NSExtension"] as? [String: Any] else { return [] }
-        guard let backgroundScripts = extensionDictionary["TopeeSafariBackgroundScript"] as? [[String: String]] else { return [] }
-        return backgroundScripts.compactMap { $0["Script"] }
+    private func backgroundScriptURLs() -> [URL] {
+        let dict = Bundle.main.infoDictionary!
+        guard let extensionDictionary = dict["NSExtension"] as? [String: Any] else {
+            logger.error("'NSExtension' entry not found in plist")
+            return []
+        }
+        guard let backgroundScripts = extensionDictionary["TopeeSafariBackgroundScript"] as? [[String: String]] else {
+            logger.error("'TopeeSafariBackgroundScript' entry not found in plist")
+            return []
+        }
+        let scriptNames = backgroundScripts.compactMap { $0["Script"] }
+        let scriptURLs = scriptNames.compactMap { (path: String) -> URL? in
+            let url = Bundle.main.url(forResource: path, withExtension: "")
+            if url == nil { logger.warning("Warning: \(path) not found") }
+            return url
+        }
+        return scriptURLs
     }
 
     private func buildManifestScript() -> String {
