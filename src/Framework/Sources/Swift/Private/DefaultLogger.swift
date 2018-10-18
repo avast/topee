@@ -22,6 +22,8 @@ struct DefaultLogger: TopeeLogger {
     }
 
     private func log(_ msg: String) {
-        NSLog(msg)
+        // Since 'msg' can contain control characters – e.g: "google.com?search=this%20may%20crash"
+        // we need to provide a format string ("%@") as a first parameter to NSLog.
+        NSLog("%@", msg)
     }
 }
