@@ -1,5 +1,7 @@
-topee
+Topee
 =====
+Topee is a framework that runs Chrome extension code on Safari.
+
 While Google Chrome, Firefox and Edge share the same extension API, Safari extension are going in a different direction,
 requiring developers to use a different set of APIs and partly also Swift instea of JavaScript.
 
