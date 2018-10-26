@@ -141,6 +141,7 @@ function getTabState () {
         frameId: tabInfo.frameId,
         isVisible: !document.hidden,
         hasFocus: document.hasFocus(),
+        status: document.readyState === "complete" ? "complete" : "loading",
         url: window.location.href
     };
 }

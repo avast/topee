@@ -9,7 +9,7 @@ var tabs = {};
 var browserTabs = { /* id, url */ };
 var lastFocusedTabId = null;
 
-function registerTab({tabId, frameId, hasFocus, isVisible, url}) {
+function registerTab({tabId, frameId, hasFocus, isVisible, url, status}) {
     if (frameId !== 0) { return; } // TODO: Change to assert? Only top window should send these messages
 
     if (hasFocus) {
@@ -24,7 +24,8 @@ function registerTab({tabId, frameId, hasFocus, isVisible, url}) {
         id: tabId,
         url,
         hasFocus,
-        isVisible
+        isVisible,
+        status
     };
 
     if (browserTabs[tabId]) {
