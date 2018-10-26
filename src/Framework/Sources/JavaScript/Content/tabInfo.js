@@ -114,12 +114,9 @@ function sayHello() {
         historyLength: history.length,
         // Payload is passed to background page (and processed by tabs.js for example)
         payload: {
-            tabId: tabId,
-            frameId: tabInfo.frameId,
             eventName: 'hello',
-            isVisible: !document.hidden,
-            hasFocus: document.hasFocus(),
-            url: window.location.href
+            tabId: tabId,
+            ...getTabState()
         }
     });
 
@@ -132,14 +129,20 @@ function sayAlive() {
         tabId: storedTabId,
         // Payload is passed to background page (and processed by tabs.js for example)
         payload: {
-            tabId: storedTabId,
-            frameId: tabInfo.frameId,
             eventName: 'alive',
-            isVisible: !document.hidden,
-            hasFocus: document.hasFocus(),
-            url: window.location.href
+            tabId: storedTabId,
+            ...getTabState()
         }
     });
+}
+
+function getTabState () {
+    return {
+        frameId: tabInfo.frameId,
+        isVisible: !document.hidden,
+        hasFocus: document.hasFocus(),
+        url: window.location.href
+    };
 }
 
 function sayBye(event) {
