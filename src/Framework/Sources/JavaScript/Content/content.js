@@ -77,6 +77,14 @@ if (window === window.top) {
     tabInfo.tabId.then(() => {
         setInterval(() => tabInfo.sayAlive(), 5000);
 
+        document.addEventListener("DOMContentLoaded", function () {
+            tabInfo.sayAlive();
+        });
+
+        document.addEventListener("load", function () {
+            tabInfo.sayAlive();
+        });
+
         document.addEventListener("visibilitychange", function () {
             tabInfo.sayAlive();
         });

@@ -28,13 +28,32 @@ function registerTab({tabId, frameId, hasFocus, isVisible, url}) {
     };
 
     if (browserTabs[tabId]) {
-        // TODO: implement diff of updated tab object or some kind of object observe or ES6 proxy at its best...
-        tabs.onUpdated._emit(tabId, {}, tab);
+        const changeInfo = buildTabChangeInfo(browserTabs[tabId], tab);
+        if (Object.keys(changeInfo).length) {
+            tabs.onUpdated._emit(tabId, changeInfo, tab);
+        }
     } else {
         tabs.onCreated._emit(tab);
+        tabs.onUpdated._emit(tabId, {status: "loading"}, tab);
     }
 
     browserTabs[tabId] = tab;
+}
+
+function buildTabChangeInfo(before, after) {
+    // https://developer.chrome.com/extensions/tabs#event-onUpdated
+    var changeInfo = {};
+
+    if (before.url !== after.url) {
+        changeInfo.url = after.url;
+        changeInfo.status = "loading";
+    }
+
+    if (before.status !== after.status) {
+        changeInfo.status = after.status;
+    }
+
+    return changeInfo;
 }
 
 eventEmitter.addListener('hello', registerTab);

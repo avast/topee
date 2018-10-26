@@ -108,16 +108,17 @@ function sayHello() {
         assignedTabId => window.topee_log && console.debug(`topee.hello(tabId: ${tabId}, referrer: "${document.referrer}", historyLength: ${history.length}) @ ${window.location.href} -> ${assignedTabId}`));
 
     safari.extension.dispatchMessage('hello', {
+        // Info processed by Swift layer only
         tabId: tabId,
-        isVisible: !document.hidden,
-        hasFocus: document.hasFocus(),
         referrer: document.referrer,
         historyLength: history.length,
-        frameId: tabInfo.frameId,
+        // Payload is passed to background page (and processed by tabs.js for example)
         payload: {
             tabId: tabId,
             frameId: tabInfo.frameId,
             eventName: 'hello',
+            isVisible: !document.hidden,
+            hasFocus: document.hasFocus(),
             url: window.location.href
         }
     });
@@ -127,9 +128,17 @@ function sayHello() {
 
 function sayAlive() {
     safari.extension.dispatchMessage('alive', {
+        // Info processed by Swift layer only
         tabId: storedTabId,
-        isVisible: !document.hidden,
-        hasFocus: document.hasFocus()
+        // Payload is passed to background page (and processed by tabs.js for example)
+        payload: {
+            tabId: storedTabId,
+            frameId: tabInfo.frameId,
+            eventName: 'alive',
+            isVisible: !document.hidden,
+            hasFocus: document.hasFocus(),
+            url: window.location.href
+        }
     });
 }
 
