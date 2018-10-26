@@ -125,6 +125,7 @@ tabs.sendMessage._emit = function (payload) {
 var listeners = {
     onCreated: [],
     onUpdated: [],
+    onRemoved: [],
 };
 
 function addListener(type, callback) {
@@ -159,5 +160,6 @@ tabs.onCreated = {
 }
 
 tabs.onUpdated = Object.assign({}, tabs.onCreated, { type: 'onUpdated' });
+tabs.onRemoved = Object.assign({}, tabs.onCreated, { type: 'onRemoved' });
 
 module.exports = tabs;
