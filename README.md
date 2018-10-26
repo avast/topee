@@ -1,6 +1,9 @@
 topee
 =====
-Google Chrome Extension API for Safari 
+While Google Chrome, Firefox and Edge share the same extension API, Safari extension are going in a different direction,
+requiring developers to use a different set of APIs and partly also Swift instea of JavaScript.
+
+The Topee project provides the Google Chrome Extension API for Safari, allowing you to run a single codebase on all the browsers.
 
 Status: [API complete enough](http://htmlpreview.github.io/?https://github.com/avast/topee/blob/master/api.html#)
 for a [product](https://www.avast.com/passwords#mac).
