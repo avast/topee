@@ -41,14 +41,15 @@ safari.self.addEventListener("message", function (event) {
                 message: message
             });
         });
+
+        // It's a broadcast message so let's pass it to all children IFRAMEs
+        if (typeof event.message.frameId === 'undefined') {
+            iframesParent.broadcast(event.message);
+        }
         return;
     }
     if (event.name === 'request' && iframesParent.hasChild(event.message.frameId)) {
         iframesParent.forward(event.message.frameId, event.message);
-        return;
-    }
-    if (event.name === 'request' && typeof event.message.frameId === 'undefined') {
-        iframesParent.broadcast(event.message);
         return;
     }
 });
