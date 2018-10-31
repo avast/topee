@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		801C626F2189D8DD00177FC2 /* testIframe.html in Resources */ = {isa = PBXBuildFile; fileRef = 801C626E2189D8DC00177FC2 /* testIframe.html */; };
 		EF80A78A210F2F55002C6F3F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF80A789210F2F55002C6F3F /* Cocoa.framework */; };
 		EF80A78F210F2F55002C6F3F /* SafariExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A78E210F2F55002C6F3F /* SafariExtensionViewController.swift */; };
 		EF80A792210F2F55002C6F3F /* SafariExtensionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EF80A790210F2F55002C6F3F /* SafariExtensionViewController.xib */; };
@@ -60,6 +61,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		801C626E2189D8DC00177FC2 /* testIframe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = testIframe.html; sourceTree = "<group>"; };
 		EF80A726210F281D002C6F3F /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A736210F281F002C6F3F /* DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A787210F2F55002C6F3F /* Appex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Appex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -260,6 +262,7 @@
 		FD66CF7D2110515E003E0819 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				801C626E2189D8DC00177FC2 /* testIframe.html */,
 				FDD5648F2114543600AF7D12 /* jasmine.css */,
 				FDAD63BD211C78C900DFF27E /* dialog.html */,
 				EFC86EC8211308C90049CD8B /* demo-background.js */,
@@ -409,6 +412,7 @@
 				EF80A797210F2F55002C6F3F /* ToolbarItemIcon.pdf in Resources */,
 				EF80A792210F2F55002C6F3F /* SafariExtensionViewController.xib in Resources */,
 				FD32FABB2111DF6E00C69486 /* demo-content.js in Resources */,
+				801C626F2189D8DD00177FC2 /* testIframe.html in Resources */,
 				FD80BAF9211DAAFC00CCFB1E /* topee-iframe-resources.js in Resources */,
 				FDD5648E211450B300AF7D12 /* jasmine.dist.js in Resources */,
 			);

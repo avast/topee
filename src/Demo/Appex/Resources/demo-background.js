@@ -102,6 +102,13 @@ function shutdownListeners(listeners) {
 }
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.type === 'test.whoami') {
+        sendResponse({
+          tabId: sender.tab.id,
+          frameId: sender.frameId
+        });
+        return;
+    }
     if (message.type === 'test.setupListeners') {
         sendResponse(setupListeners(message.value));
         return;

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="topee-iframe-resources.js"></script>
+</head>
+<body>
+<h1>Topee</h1>
+<script>
+chrome.runtime.onMessage.addListener(function (msg) {
+    if (msg.type === 'testIframeTabBroadcast') {
+        window.top.postMessage({type: 'testIframeTabBroadcastReply'}, '*');
+    }
+});
+window.top.postMessage({type: 'testIframeLoaded'}, '*');
+</script>
+</body>
+</html>
+

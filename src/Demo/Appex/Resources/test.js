@@ -45,11 +45,11 @@ describe('jasmine setup', function () {
         response: 'testResponse'
       }
     }}, promise.callback()));
-    
+
     expect(Object.keys(resp).length).toBe(1);
 
     resp = await promise(chrome.runtime.sendMessage({ type: 'test.shutdownListeners', value: resp}, promise.callback()));
-    
+
     expect(resp).toBe(1);
   });
 
@@ -60,7 +60,7 @@ describe('jasmine setup', function () {
         response: 'testResponse'
       }
     }}, promise.callback()));
-    
+
     var resp = await promise(chrome.runtime.sendMessage({ type: 'testMessage'}, promise.callback()));
 
     expect(resp).toBe('testResponse');
@@ -103,6 +103,53 @@ describe('background', function () {
         }
       }
     });
+
+    it('is able to send broadcast message to all frames in specified tab', async function () {
+      var testIframeLoadedFuture = new Future();
+      var testIframeTabBroadcastReplyFuture = new Future();
+      var chromeBroadcastFuture = new Future();
+
+      chrome.runtime.onMessage.addListener(chromeMessageListener);
+      window.addEventListener('message', windowMessageListener);
+
+      function chromeMessageListener (request) {
+        if (request.type === 'testIframeTabBroadcast') {
+          chromeBroadcastFuture.complete(true);
+        }
+      }
+
+      function windowMessageListener (event) {
+        if (event.data.type === 'testIframeLoaded') {
+          testIframeLoadedFuture.complete(true);
+        }
+        if (event.data.type === 'testIframeTabBroadcastReply') {
+          testIframeTabBroadcastReplyFuture.complete(true);
+        }
+      }
+
+      var iframe = document.createElement('iframe');
+      iframe.src = chrome.runtime.getURL('testIframe.html');
+
+      document.body.appendChild(iframe);
+
+      await testIframeLoadedFuture.getValue();
+      var tabId = await getCurrentTabId();
+
+      chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
+        name: 'chrome.tabs.sendMessage',
+        arguments: [tabId, {type: 'testIframeTabBroadcast'}],
+        wantCallback: false
+      }});
+
+      var replies = await Promise.all([
+        testIframeTabBroadcastReplyFuture.getValue(),
+        chromeBroadcastFuture.getValue()]);
+      expect(replies).toEqual([true, true]);
+
+      window.removeEventListener('message', windowMessageListener);
+      document.body.removeChild(iframe);
+      chrome.runtime.onMessage.removeListener(chromeMessageListener);
+    });
   });
 });
 
@@ -143,10 +190,10 @@ describe('chrome.tabs', function () {
         arguments: {},
         wantCallback: true
       }}, promise.callback()));
-      
+
       var url = 'https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html?q=' + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString();
       openTab = window.open(url, 'README.md');
-      
+
       // addEventListener('load') does not trigger in this case
       await promise(setTimeout(promise.callback(), 300));
 
@@ -155,7 +202,7 @@ describe('chrome.tabs', function () {
         arguments: {},
         wantCallback: true
       }}, promise.callback()));
-          
+
       expect(result.find(tab => tab.url === url)).not.toBeNull();
       expect(result.length).toBe(initialTabs.length + 1);
     });
@@ -165,7 +212,7 @@ describe('chrome.tabs', function () {
 
       var url = 'https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html?q=' + (Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString();
       openTab = window.open(url, 'README.md');
-      
+
       // addEventListener('load') does not trigger in this case
       await promise(setTimeout(promise.callback(), 300));
 
@@ -188,9 +235,17 @@ describe('chrome.tabs', function () {
       initialTabs.forEach(t => console.log(t.id, t.url));
       console.log('after');
       result.forEach(t => console.log(t.id, t.url));
-        
+
       expect(result.find(tab => tab.url === url)).toBeUndefined();
       expect(result.length).toBe(initialTabs.length - 1);
     });
   });
 });
+
+function getCurrentTabId () {
+  var tabIdFuture = new Future();
+  chrome.runtime.sendMessage({type: 'test.whoami'}, ({tabId, frameId}) => {
+    tabIdFuture.complete(tabId);
+  });
+  return tabIdFuture.getValue();
+}
