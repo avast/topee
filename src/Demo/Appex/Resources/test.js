@@ -224,7 +224,9 @@ describe('chrome.tabs', function () {
 
       openTab.close();
       openTab = null;
-      
+
+      await promise(setTimeout(promise.callback(), 1000));
+
       result = await promise(chrome.runtime.sendMessage({ type: 'test.backgroundInvoke', value: {
         name: 'chrome.tabs.query',
         arguments: {},
