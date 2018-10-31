@@ -18,7 +18,9 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
     }
 
     /// override to use custom perameters to setup the `bridge` via
-    open func setupBridge() {}
+    open func setupBridge() {
+        bridge.setup()
+    }
 
     // MARK: - SFSafariExtensionHandler
 

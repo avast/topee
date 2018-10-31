@@ -20,15 +20,6 @@ public extension SafariExtensionBridgeType {
                logger: TopeeLogger? = nil) {
         setup(webViewURL: webViewURL, manifest: manifest, logger: logger)
     }
-
-    /// Old setup method with default parameters. Here to avoid breaking changes.
-    /// Delete as part of changes for v2.0.0.
-    @available(*, deprecated, message: "Pleae use new 'setup' method that receives a logger instead")
-    func setup(webViewURL: URL = URL(string: "http://topee.local")!,
-               manifest: TopeeExtensionManifest? = nil,
-               messageLogFilter: [String: NSRegularExpression]? = nil) {
-        setup(webViewURL: webViewURL, manifest: manifest ?? TopeeExtensionManifest(), logger: nil)
-    }
 }
 
 public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessageHandler {
