@@ -2,17 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -28,22 +17,24 @@
 	<key>CFBundlePackageType</key>
 	<string>XPC!</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.0</string>
+	<string>1.2.1</string>
 	<key>CFBundleVersion</key>
-	<string>293</string>
+	<string>294</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
 	<key>NSExtension</key>
 	<dict>
-		<key>SFSafariStyleSheet</key>
-		<array>
-			<dict>
-				<key>Style Sheet</key>
-				<string>jasmine.css</string>
-				<key>Allowed URL Patterns</key>
-				<string>*:///htmlpreview.github.io/*</string>
-			</dict>
-		</array>
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.Safari.extension</string>
 		<key>NSExtensionPrincipalClass</key>
@@ -75,11 +66,13 @@
 				<string>test.js</string>
 			</dict>
 		</array>
-		<key>TopeeSafariBackgroundScript</key>
+		<key>SFSafariStyleSheet</key>
 		<array>
 			<dict>
-				<key>Script</key>
-				<string>demo-background.js</string>
+				<key>Allowed URL Patterns</key>
+				<string>*:///htmlpreview.github.io/*</string>
+				<key>Style Sheet</key>
+				<string>jasmine.css</string>
 			</dict>
 		</array>
 		<key>SFSafariToolbarItem</key>
@@ -98,6 +91,13 @@
 			<key>Level</key>
 			<string>All</string>
 		</dict>
+		<key>TopeeSafariBackgroundScript</key>
+		<array>
+			<dict>
+				<key>Script</key>
+				<string>demo-background.js</string>
+			</dict>
+		</array>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2018 Avast. All rights reserved.</string>
