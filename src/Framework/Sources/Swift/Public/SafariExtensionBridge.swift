@@ -62,8 +62,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         self.logger = injectedLogger ?? logger
         self.pageRegistry.logger = logger
 
+
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
+            webConfiguration.applicationNameForUserAgent = "Topee/\(manifest.version)"
             let backgroundEndURL = Bundle(for: SafariExtensionBridge.self)
                 .url(forResource: "topee-background-end", withExtension: "js")!
             let backgroundURL = Bundle(for: SafariExtensionBridge.self)
