@@ -66,6 +66,10 @@ eventEmitter.addListener('bye', function (payload) {
     setTimeout(function () {
         if (browserTabs[payload.tabId]._deleted) {
             delete browserTabs[payload.tabId];
+
+            if (lastFocusedTabId === payload.tabId) {
+                lastFocusedTabId = null;
+            }
         }
     }, 700);  // content.js revokes bye if still alive 500ms later. adding 200 ms margin
 });
