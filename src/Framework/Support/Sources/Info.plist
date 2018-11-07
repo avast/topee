@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>FMWK</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.1</string>
+	<string>1.2.2</string>
 	<key>CFBundleVersion</key>
-	<string>294</string>
+	<string>300</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2018 Avast. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
