@@ -4,28 +4,33 @@
 
 import Foundation
 
-public struct TopeeExtensionManifest: Equatable {
+public class TopeeExtensionManifest: Equatable {
     public let name: String
     public let version: String
-    public let id: String
+    public let bundleId: String
 
-    /// For Resources directory use path like:
-    ///   Bundle(for: MyClass.self).path(forResource: "Info", ofType: "plist")
-    /// For main appex directory use path like:
-    ///   Bundle.main.bundlePath + "/Contents/Info.plist"
-    public init(infoPath: String) {
-        self.init(NSDictionary(contentsOfFile: infoPath) as? [String: Any])
+    /// Constructs a Manifest with the data of the provided bundle.
+    /// The provided bundle must contain an `Info.plist` file with
+    /// the 'CFBundleDisplayName', 'CFBundleShortVersionString' and
+    /// 'CFBundleIdentifier' keys in it. In case you want use the
+    /// values from the Topee framework you can pass:
+    /// `Bundle.for(TopeeExtensionManifest.self)`
+    public init(bundle: Bundle = .main) {
+        self.name = bundle.displayName ?? ""
+        self.version = bundle.shortVersionString ?? ""
+        self.bundleId = bundle.bundleId ?? ""
     }
 
-    public init(_ infoDictionary: [String: Any]? = Bundle.main.infoDictionary) {
-        name = infoDictionary?["CFBundleDisplayName"] as? String ?? ""
-        version = infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-        id = infoDictionary?["CFBundleIdentifier"] as? String ?? ""
-    }
-
-    public init(name: String, version: String = "1.0.0", id: String = "com.avast.topee") {
+    public init(name: String, version: String, bundleId: String) {
         self.name = name
         self.version = version
-        self.id = id
+        self.bundleId = bundleId
+    }
+
+    public static func == (lhs: TopeeExtensionManifest, rhs: TopeeExtensionManifest) -> Bool {
+        guard lhs.name == rhs.name else { return false }
+        guard lhs.version == rhs.version else { return false }
+        guard lhs.bundleId == rhs.bundleId else { return false }
+        return true
     }
 }

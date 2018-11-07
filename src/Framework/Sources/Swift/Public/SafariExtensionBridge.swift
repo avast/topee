@@ -320,7 +320,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         chrome.runtime._manifest = {
         "version": "\(manifest.version)",
         "name": "\(manifest.name)",
-        "id": "\(manifest.id)"
+        "id": "\(manifest.bundleId)"
         };
         """
     }
