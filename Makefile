@@ -26,6 +26,9 @@ bump-version:
 		-exec /usr/libexec/PlistBuddy -c "set CFBundleShortVersionString $(VERSION)" {} \;\
 		-exec /usr/libexec/PlistBuddy -c "set CFBundleVersion $(REVISION)" {} \;
 	@printf "success!\n"
+
+open:
+	open "$(WORKSPACE)"
 	
 clean:
 	rm -rf Carthage
