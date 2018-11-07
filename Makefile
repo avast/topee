@@ -2,6 +2,7 @@ BUILD_DIR = $(shell pwd)/build
 CONFIGURATION = Release
 PACKAGE = Topee.framework.zip
 SCHEME = Topee
+SRCROOT = src
 WORKSPACE = src/Topee.xcworkspace
 REVISION = $(shell git rev-list --count --no-merges HEAD)
 VERSION = $(shell /usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" src/Framework/Support/Sources/Info.plist)
@@ -20,10 +21,11 @@ package: build
 	(cd "$(BUILD_DIR)/$(CONFIGURATION)" && zip -yr "$(PACKAGE)" .)
 
 bump-version:
-	# You can provide your own version by doing: `make bump-version VERSION=1.2.3`
-	find src -type f -name "Info.plist"\
+	@printf "Bumping version to $(VERSION).$(REVISION)..."	
+	@find "$(SRCROOT)" -type f -name "Info.plist"\
 		-exec /usr/libexec/PlistBuddy -c "set CFBundleShortVersionString $(VERSION)" {} \;\
 		-exec /usr/libexec/PlistBuddy -c "set CFBundleVersion $(REVISION)" {} \;
+	@printf "success!\n"
 	
 clean:
 	rm -rf Carthage
