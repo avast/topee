@@ -28,6 +28,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var manifest: TopeeExtensionManifest = TopeeExtensionManifest()
     private var webViewURL: URL = URL(string: "http://topee.local")!
     private var logger: TopeeLogger = DefaultLogger()
+    private let topeeVersion = Bundle.current.shortVersionString!
 
     private var safariHelper: SFSafariApplicationHelper = SFSafariApplicationHelper()
     private var pageRegistry: SFSafariPageRegistry = SFSafariPageRegistry(thread: Thread.main)
@@ -80,6 +81,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             contentController.add(self, name: MessageHandler.log.rawValue)
             webConfiguration.userContentController = contentController
             let webView = WKWebView(frame: .zero, configuration: webConfiguration)
+            // We need to hard code the user agent string because we were unsuccessful at
+            // determinining the Safari version and the WebKit versions at runtime. Feel
+            // free to replace it if you find a way of retrieving these values.
+            webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.1 Safari/605.1.15 Topee/\(topeeVersion)"
             webView.loadHTMLString("<html><body></body></html>", baseURL: webViewURL)
             return webView
         }()
