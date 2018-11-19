@@ -20,6 +20,7 @@ format:
 package: build
 	(cd "$(BUILD_DIR)/$(CONFIGURATION)" && zip -yr "$(PACKAGE)" .)
 
+# Usage: make bump-version VERSION=X.Y.Z
 bump-version:
 	@printf "Bumping version to $(VERSION).$(REVISION)..."	
 	@find "$(SRCROOT)" -type f -name "Info.plist"\
@@ -29,7 +30,7 @@ bump-version:
 
 open:
 	open "$(WORKSPACE)"
-	
+
 clean:
 	rm -rf Carthage
 	rm -rf "$(BUILD_DIR)"
