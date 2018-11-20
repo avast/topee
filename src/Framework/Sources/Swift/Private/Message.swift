@@ -18,5 +18,6 @@ enum Message {
         case ready
         case setIcon
         case setIconTitle
+        case createTab
     }
 }

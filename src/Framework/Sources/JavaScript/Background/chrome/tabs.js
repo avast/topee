@@ -142,6 +142,28 @@ tabs.get = function(id, callback) {
     callback(browserTabs[id]);
 };
 
+tabs.create = function(createProperties, callback) {
+    window.webkit.messageHandlers.appex.postMessage({
+        type: 'createTab',
+        url: typeof createProperties.url === 'undefined' ? 'favorites://' : createProperties.url,
+        active: typeof createProperties.active === 'undefined' ? true : createProperties.active
+    });
+
+    if (callback) {
+        eventEmitter.addListener('hello', onTabCreated);
+        eventEmitter.addListener('alive', onTabCreated);        
+    }
+
+    function onTabCreated({tabId}) {
+        setTimeout(function () {
+            tabs.get(tabId, callback);
+        }, 0);
+
+        eventEmitter.removeListener('alive', onTabCreated);        
+        eventEmitter.removeListener('hello', onTabCreated);        
+    }
+}
+
 tabs.sendMessage._emit = function (payload) {
     eventEmitter.emit('messageResponse', payload);
 };

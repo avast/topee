@@ -148,6 +148,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     }, 200);
 });
 
+chrome.browserAction.onClicked.addListener(function () {
+    chrome.tabs.create({ url: 'about:blank'});
+});
+
 setTimeout(function () {
 	chrome.tabs.query({ url: 'http://localhost:8000/ifra*'}, function (tabs) {
 		tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, {type: 'query'} ));

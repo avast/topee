@@ -211,6 +211,13 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     let iconUrl = Bundle.main.url(forResource: path, withExtension: "") {
                     safariHelper.setToolbarIcon(loadAllResolutions(iconUrl))
                 }
+            case .createTab:
+                guard let tabUrlStr = userInfo["url"] as? String else { return }
+                guard let tabUrl = URL(string: tabUrlStr) else { return }
+                guard let tabActive = userInfo["active"] as? Bool else { return }
+                safariHelper.getActiveWindow(completionHandler: { window in
+                    window?.openTab(with: tabUrl, makeActiveIfPossible: tabActive)
+                })
             }
         }
     }
