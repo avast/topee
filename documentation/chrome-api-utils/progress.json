@@ -27,7 +27,8 @@
   "partly": {
     "tabs": [
       "query",
-      "create"
+      "create",
+      "onActivated"
     ],
     "i18n": [
       "getMessage"
