@@ -12,12 +12,14 @@ var lastFocusedTabId = null;
 function registerTab({tabId, frameId, hasFocus, isVisible, url, status}) {
     if (frameId !== 0) { return; } // TODO: Change to assert? Only top window should send these messages
 
+    var emitActivated = false;
     if (hasFocus) {
         if (lastFocusedTabId && lastFocusedTabId !== tabId) {
             browserTabs[lastFocusedTabId].hasFocus = false;
         }
 
         lastFocusedTabId = tabId;
+        emitActivated = true;
     }
 
     var tab = {
@@ -39,6 +41,10 @@ function registerTab({tabId, frameId, hasFocus, isVisible, url, status}) {
     }
 
     browserTabs[tabId] = tab;
+
+    if (emitActivated) {
+        tabs.onActivated._emit({ tabId: tabId });
+    }
 }
 
 function buildTabChangeInfo(before, after) {
@@ -172,6 +178,7 @@ var listeners = {
     onCreated: [],
     onUpdated: [],
     onRemoved: [],
+    onActivated: []
 };
 
 function addListener(type, callback) {
@@ -207,5 +214,6 @@ tabs.onCreated = {
 
 tabs.onUpdated = Object.assign({}, tabs.onCreated, { type: 'onUpdated' });
 tabs.onRemoved = Object.assign({}, tabs.onCreated, { type: 'onRemoved' });
+tabs.onActivated = Object.assign({}, tabs.onCreated, { type: 'onActivated' });
 
 module.exports = tabs;
