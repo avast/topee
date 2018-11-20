@@ -26,7 +26,8 @@
   },
   "partly": {
     "tabs": [
-      "query"
+      "query",
+      "create"
     ],
     "i18n": [
       "getMessage"
