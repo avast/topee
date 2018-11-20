@@ -18,6 +18,10 @@
     ],
     "i18n": [
       "getUILanguage"
+    ],
+    "windows": [
+      "WINDOW_ID_CURRENT",
+      "WINDOW_ID_NONE"
     ]
   },
   "partly": {
