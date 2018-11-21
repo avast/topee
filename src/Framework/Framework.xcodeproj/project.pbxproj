@@ -26,6 +26,9 @@
 		EF80A76C210F2B68002C6F3F /* Topee.h in Headers */ = {isa = PBXBuildFile; fileRef = EF80A75E210F2B67002C6F3F /* Topee.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EFC86ECD21131A0B0049CD8B /* topee-background-end.js in Resources */ = {isa = PBXBuildFile; fileRef = EFC86ECC21131A0B0049CD8B /* topee-background-end.js */; };
 		EFC86ECF21133BB40049CD8B /* topee-content.js in Resources */ = {isa = PBXBuildFile; fileRef = EFC86ECE21133BB40049CD8B /* topee-content.js */; };
+		EFEB89AF21A5565700264C8C /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEB89AE21A5565700264C8C /* ProcessInfo.swift */; };
+		EFEB89B121A5586200264C8C /* ProcessInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEB89B021A5586200264C8C /* ProcessInfoTests.swift */; };
+		EFEB89B321A55A5700264C8C /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFEB89B221A55A5700264C8C /* String.swift */; };
 		FD4AD1CE2153E1F900E13EA0 /* run-at-document-end.sh in Resources */ = {isa = PBXBuildFile; fileRef = FD4AD1CC2153E1E400E13EA0 /* run-at-document-end.sh */; };
 		FDD7715921304F8500F6BC46 /* topee-iframe-resources.js in Resources */ = {isa = PBXBuildFile; fileRef = FDD7715821304F8500F6BC46 /* topee-iframe-resources.js */; };
 /* End PBXBuildFile section */
@@ -74,6 +77,9 @@
 		EF83A0C4211479D7002C7AF1 /* event-bus.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "event-bus.js"; sourceTree = "<group>"; };
 		EFC86ECC21131A0B0049CD8B /* topee-background-end.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "topee-background-end.js"; sourceTree = "<group>"; };
 		EFC86ECE21133BB40049CD8B /* topee-content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "topee-content.js"; path = "Build/topee-content.js"; sourceTree = SOURCE_ROOT; };
+		EFEB89AE21A5565700264C8C /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
+		EFEB89B021A5586200264C8C /* ProcessInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfoTests.swift; sourceTree = "<group>"; };
+		EFEB89B221A55A5700264C8C /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		EFF799C92110B0A100646663 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
 		EFF799CA2110B0A100646663 /* index.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = index.js; sourceTree = "<group>"; };
 		EFF799CD2110B0A600646663 /* tabInfo.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabInfo.js; sourceTree = "<group>"; };
@@ -161,6 +167,8 @@
 			isa = PBXGroup;
 			children = (
 				EF26BBD82192DDA800C17448 /* Bundle.swift */,
+				EFEB89AE21A5565700264C8C /* ProcessInfo.swift */,
+				EFEB89B221A55A5700264C8C /* String.swift */,
 				EF2B6DE9216F8CAA003B4D7E /* WKUserScript.swift */,
 				EF2B6DE8216F8CAA003B4D7E /* WKWebView.swift */,
 			);
@@ -213,6 +221,7 @@
 			isa = PBXGroup;
 			children = (
 				EF80A769210F2B68002C6F3F /* PageRegistryTests.swift */,
+				EFEB89B021A5586200264C8C /* ProcessInfoTests.swift */,
 				806E5C6121306E4300C369EB /* TestHelper.swift */,
 			);
 			path = Tests;
@@ -448,6 +457,7 @@
 				EF2B6DF6216F8CAA003B4D7E /* TopeeExtensionManifest.swift in Sources */,
 				EF26BBD92192DDA800C17448 /* Bundle.swift in Sources */,
 				EF2B6DF5216F8CAA003B4D7E /* PageRegistry.swift in Sources */,
+				EFEB89AF21A5565700264C8C /* ProcessInfo.swift in Sources */,
 				EF40FAC12170DBE10083F822 /* DefaultLogger.swift in Sources */,
 				EF2B6DF1216F8CAA003B4D7E /* Message.swift in Sources */,
 				EF2B6DF4216F8CAA003B4D7E /* SFSafariApplicationHelper.swift in Sources */,
@@ -456,6 +466,7 @@
 				806E5C6221306E4300C369EB /* TestHelper.swift in Sources */,
 				EF2B6DF7216F8CAA003B4D7E /* SafariExtensionBridge.swift in Sources */,
 				EF2B6DF3216F8CAA003B4D7E /* WKUserScript.swift in Sources */,
+				EFEB89B321A55A5700264C8C /* String.swift in Sources */,
 				EF40FAC32170DDA80083F822 /* MessageHandler.swift in Sources */,
 				EF2B6DF8216F8CAA003B4D7E /* TopeeSafariExtensionHandler.swift in Sources */,
 			);
@@ -466,6 +477,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF80A76A210F2B68002C6F3F /* PageRegistryTests.swift in Sources */,
+				EFEB89B121A5586200264C8C /* ProcessInfoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

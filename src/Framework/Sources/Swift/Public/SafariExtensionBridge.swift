@@ -84,7 +84,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             // We need to hard code the user agent string because we were unsuccessful at
             // determinining the Safari version and the WebKit versions at runtime. Feel
             // free to replace it if you find a way of retrieving these values.
-            webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.1 Safari/605.1.15 Topee/\(topeeVersion)"
+            let osVersion = ProcessInfo.processInfo.operatingSystemVersionStringForUserAgent
+            webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X \(osVersion) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.1 Safari/605.1.15 Topee/\(topeeVersion)"
             webView.loadHTMLString("<html><body></body></html>", baseURL: webViewURL)
             return webView
         }()
