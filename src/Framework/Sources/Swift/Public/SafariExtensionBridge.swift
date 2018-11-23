@@ -95,9 +95,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             contentController.add(self, name: MessageHandler.log.rawValue)
             webConfiguration.userContentController = contentController
             let webView = WKWebView(frame: .zero, configuration: webConfiguration)
-            // We need to hard code the user agent string because we were unsuccessful at
-            // determinining the Safari version and the WebKit versions at runtime. Feel
-            // free to replace it if you find a way of retrieving these values.
             webView.customUserAgent = "\(userAgent) Topee/\(topeeVersion)"
             webView.loadHTMLString("<html><body></body></html>", baseURL: webViewURL)
             return webView
