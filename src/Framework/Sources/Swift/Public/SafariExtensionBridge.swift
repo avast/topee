@@ -62,12 +62,21 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         self.manifest = manifest
         self.logger = injectedLogger ?? logger
         self.pageRegistry.logger = logger
- 
-        let osVersion = ProcessInfo.processInfo.operatingSystemVersionStringForUserAgent
-        startBackgroundScript(userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X \(osVersion) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.1 Safari/605.1.15 Topee/\(topeeVersion)")
     }
     
+    private func ensureBackgroundScriptStarted(userAgent: String) {
+        assert(Thread.isMainThread)
+
+        if ((webView) != nil) {
+            return
+        }
+
+        startBackgroundScript(userAgent: userAgent)
+    }
+
     private func startBackgroundScript(userAgent: String) {
+        assert(Thread.isMainThread)
+
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
             let backgroundEndURL = Bundle(for: SafariExtensionBridge.self)
@@ -89,7 +98,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             // We need to hard code the user agent string because we were unsuccessful at
             // determinining the Safari version and the WebKit versions at runtime. Feel
             // free to replace it if you find a way of retrieving these values.
-            webView.customUserAgent = userAgent
+            webView.customUserAgent = "\(userAgent) Topee/\(topeeVersion)"
             webView.loadHTMLString("<html><body></body></html>", baseURL: webViewURL)
             return webView
         }()
@@ -135,6 +144,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         // Manages the registry of pages based on the type of message received
         switch message {
         case .hello:
+            let userAgent = userInfo?["userAgent"] as! String
+            ensureBackgroundScriptStarted(userAgent: userAgent)
+
             // Messages may come out of order, e.g. request is faster than hello here
             // so let's handle them in same way.
             let tabId = pageRegistry.hello(page: page,

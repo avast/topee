@@ -112,6 +112,7 @@ function sayHello() {
         tabId: tabId,
         referrer: document.referrer,
         historyLength: history.length,
+        userAgent: navigator.userAgent,
         // Payload is passed to background page (and processed by tabs.js for example)
         payload: {
             eventName: 'hello',
