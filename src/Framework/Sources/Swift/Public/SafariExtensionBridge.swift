@@ -62,7 +62,12 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         self.manifest = manifest
         self.logger = injectedLogger ?? logger
         self.pageRegistry.logger = logger
-
+ 
+        let osVersion = ProcessInfo.processInfo.operatingSystemVersionStringForUserAgent
+        startBackgroundScript(userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X \(osVersion) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.1 Safari/605.1.15 Topee/\(topeeVersion)")
+    }
+    
+    private func startBackgroundScript(userAgent: String) {
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
             let backgroundEndURL = Bundle(for: SafariExtensionBridge.self)
@@ -84,8 +89,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             // We need to hard code the user agent string because we were unsuccessful at
             // determinining the Safari version and the WebKit versions at runtime. Feel
             // free to replace it if you find a way of retrieving these values.
-            let osVersion = ProcessInfo.processInfo.operatingSystemVersionStringForUserAgent
-            webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X \(osVersion) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0.1 Safari/605.1.15 Topee/\(topeeVersion)"
+            webView.customUserAgent = userAgent
             webView.loadHTMLString("<html><body></body></html>", baseURL: webViewURL)
             return webView
         }()
