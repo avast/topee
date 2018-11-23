@@ -63,19 +63,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         self.logger = injectedLogger ?? logger
         self.pageRegistry.logger = logger
     }
-    
-    private func ensureBackgroundScriptStarted(userAgent: String) {
+
+    private func startBackgroundScriptIfNotRunning(userAgent: String) {
         assert(Thread.isMainThread)
-
-        if ((webView) != nil) {
-            return
-        }
-
-        startBackgroundScript(userAgent: userAgent)
-    }
-
-    private func startBackgroundScript(userAgent: String) {
-        assert(Thread.isMainThread)
+        guard webView == nil else { return }
 
         webView = { () -> WKWebView in
             let webConfiguration = WKWebViewConfiguration()
@@ -142,7 +133,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         switch message {
         case .hello:
             let userAgent = userInfo?["userAgent"] as! String
-            ensureBackgroundScriptStarted(userAgent: userAgent)
+            startBackgroundScriptIfNotRunning(userAgent: userAgent)
 
             // Messages may come out of order, e.g. request is faster than hello here
             // so let's handle them in same way.
