@@ -1,6 +1,6 @@
 'use strict';
 
-const commands = {};
+var commands = {};
 
 commands.onCommand = {
     addListener: function () {
