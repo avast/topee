@@ -66,7 +66,9 @@ if (typeof safari.self.addEventListener === 'undefined') {
     };
 
     safari.self.removeEventListener = function(type, callback) {
-        var i = pendingResponseListeners.findIndex(function (p) { return p.type === type && p.safariCallback === callback });
+        var i = pendingResponseListeners.findIndex(function (p) {
+            return p.type === type && p.safariCallback === callback;
+        });
         if (i != -1) {
             window.removeEventListener('message', pendingResponseListeners[i].decryptingCallback);
             pendingResponseListeners.splice(i, 1);
@@ -74,7 +76,7 @@ if (typeof safari.self.addEventListener === 'undefined') {
         else {
             window.topee_log && console.log('listener for', type, 'not found');
         }
-    }
+    };
 }
 
 window.addEventListener('message', function (event) {

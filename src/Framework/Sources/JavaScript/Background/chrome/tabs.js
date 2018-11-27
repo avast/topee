@@ -165,10 +165,10 @@ tabs.create = function(createProperties, callback) {
             tabs.get(tabId, callback);
         }, 0);
 
-        eventEmitter.removeListener('alive', onTabCreated);        
-        eventEmitter.removeListener('hello', onTabCreated);        
+        eventEmitter.removeListener('alive', onTabCreated);
+        eventEmitter.removeListener('hello', onTabCreated);
     }
-}
+};
 
 tabs.sendMessage._emit = function (payload) {
     eventEmitter.emit('messageResponse', payload);
@@ -210,7 +210,7 @@ tabs.onCreated = {
     hasListener: function(listener) {
         return listeners[this.type].includes(listener);
     },
-}
+};
 
 tabs.onUpdated = Object.assign({}, tabs.onCreated, { type: 'onUpdated' });
 tabs.onRemoved = Object.assign({}, tabs.onCreated, { type: 'onRemoved' });

@@ -9,4 +9,4 @@ function matchUrlPattern(pattern, url) {
 
 module.exports = {
 	match: matchUrlPattern
-}
+};
