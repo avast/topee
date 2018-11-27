@@ -28,7 +28,7 @@ browserAction.onClicked = {
             // Only call fn if popup isn't defined
             if (!state.popup.popup) {
                 // TODO: Also check tabId
-                tabs.get(event.tab.id, tab => fn(tab));
+                tabs.get(event.tab.id, fn);
             }
         };
 

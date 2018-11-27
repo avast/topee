@@ -120,12 +120,16 @@ tabs.query = function(queryInfo, callback) {
 
     // URL filtering
     if (queryInfo.url) {
-        tabs = tabs.filter(tab => urlMatcher.match(queryInfo.url, tab.url));
+        tabs = tabs.filter(function (tab) {
+            return urlMatcher.match(queryInfo.url, tab.url);
+        });
     }
 
     // Active tab (in last focussed window) filter
     if (queryInfo.active && queryInfo.lastFocusedWindow) {
-        callback(tabs.filter(tab => tab.id === lastFocusedTabId));
+        callback(tabs.filter(function (tab) {
+            return tab.id === lastFocusedTabId;
+        }));
     } else {
         callback(tabs);
     }

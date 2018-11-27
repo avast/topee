@@ -33,7 +33,8 @@ function importKey(jwkKey) {
 function exportKey(key) {
   return crypto.subtle.exportKey(
     "jwk",
-    key).then(jwkKey => jwkKey.k);
+    key
+  ).then(function (jwkKey) { return jwkKey.k; });
 }
 
 function encrypt(arrayBufferata, ui8aSalt, key) {

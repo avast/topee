@@ -1,6 +1,6 @@
 function uint8array2str(ua) {
   var chars = [];
-  ua.forEach(byte => chars.push(String.fromCharCode(byte)));
+  ua.forEach(function (byte) { chars.push(String.fromCharCode(byte)); });
   return chars.join('');
 }
 
@@ -13,16 +13,16 @@ function str2uint8array(s) {
 }
 
 function str2arrayBuffer(s) {
-  return str2uint8array(s).buffer; 
+  return str2uint8array(s).buffer;
 }
 
 
 function uint8array2base64(ua) {
-  return btoa(uint8array2str(ua)); 
+  return btoa(uint8array2str(ua));
 }
 
 function arrayBuffer2base64(ab) {
-  return btoa(arrayBuffer2str(ab)); 
+  return btoa(arrayBuffer2str(ab));
 }
 
 function base642uint8array(b64) {
@@ -36,13 +36,13 @@ function base642arrayBuffer(b64) {
 module.exports = {
   uint8array2str: uint8array2str,
   arrayBuffer2str: arrayBuffer2str,
-  
+
   str2uint8array: str2uint8array,
   str2arrayBuffer: str2arrayBuffer,
-  
+
   uint8array2base64: uint8array2base64,
   arrayBuffer2base64: arrayBuffer2base64,
-  
+
   base642uint8array: base642uint8array,
   base642arrayBuffer: base642arrayBuffer
 };
