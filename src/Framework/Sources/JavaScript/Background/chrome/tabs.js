@@ -31,7 +31,7 @@ function registerTab({tabId, frameId, hasFocus, isVisible, url, status}) {
     };
 
     if (browserTabs[tabId]) {
-        const changeInfo = buildTabChangeInfo(browserTabs[tabId], tab);
+        var changeInfo = buildTabChangeInfo(browserTabs[tabId], tab);
         if (Object.keys(changeInfo).length) {
             tabs.onUpdated._emit(tabId, changeInfo, tab);
         }
