@@ -1,0 +1,1 @@
+require('object.values').shim();

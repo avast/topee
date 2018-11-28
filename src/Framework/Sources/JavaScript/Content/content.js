@@ -10,6 +10,8 @@ if (!{
     return;
 }
 
+require('../Common/polyfills');
+
 var tabInfo = require('./tabInfo.js');
 
 if (typeof window.chrome === 'object') {
