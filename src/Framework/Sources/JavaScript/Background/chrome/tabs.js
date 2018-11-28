@@ -161,7 +161,7 @@ tabs.create = function(createProperties, callback) {
 
     if (callback) {
         eventEmitter.addListener('hello', onTabCreated);
-        eventEmitter.addListener('alive', onTabCreated);        
+        eventEmitter.addListener('alive', onTabCreated);
     }
 
     function onTabCreated({tabId}) {
@@ -203,7 +203,7 @@ function removeListener(type, callback) {
 tabs.onCreated = {
     type: 'onCreated',
     _emit: function() {
-        eventEmitter.emit.apply(eventEmitter, [`tab@${this.type}`].concat(Object.values(arguments)));
+        eventEmitter.emit.apply(eventEmitter, [`tab@${this.type}`].concat(Array.prototype.slice.call(arguments)));
     },
     addListener: function(listener) {
         addListener(this.type, listener);
