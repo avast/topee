@@ -114,11 +114,13 @@ function sayHello() {
         historyLength: history.length,
         userAgent: navigator.userAgent,
         // Payload is passed to background page (and processed by tabs.js for example)
-        payload: {
-            eventName: 'hello',
-            tabId: tabId,
-            ...getTabState()
-        }
+        payload: Object.assign(
+            {
+                eventName: 'hello',
+                tabId: tabId
+            },
+            getTabState()
+        )
     });
 
     window.isTabRegistered = true;
@@ -129,11 +131,13 @@ function sayAlive() {
         // Info processed by Swift layer only
         tabId: storedTabId,
         // Payload is passed to background page (and processed by tabs.js for example)
-        payload: {
-            eventName: 'alive',
-            tabId: storedTabId,
-            ...getTabState()
-        }
+        payload: Object.assign(
+            {
+                eventName: 'alive',
+                tabId: storedTabId
+            },
+            getTabState()
+        )
     });
 }
 
