@@ -12,6 +12,7 @@
     "webpack-cli": "^3.1.0"
   },
   "dependencies": {
-    "object.values": "^1.0.4"
+    "object.values": "^1.0.4",
+    "whatwg-fetch": "^3.0.0"
   }
 }
