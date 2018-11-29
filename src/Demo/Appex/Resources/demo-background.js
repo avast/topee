@@ -149,7 +149,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 });
 
 chrome.browserAction.onClicked.addListener(function () {
-    chrome.tabs.create({ url: 'about:blank'});
+    chrome.tabs.create({ url: 'https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html'});
 });
 
 setTimeout(function () {
