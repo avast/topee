@@ -221,7 +221,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 guard let tabUrl = URL(string: tabUrlStr) else { return }
                 guard let tabActive = userInfo["active"] as? Bool else { return }
                 safariHelper.getActiveWindow(completionHandler: { window in
-                    window?.openTab(with: tabUrl, makeActiveIfPossible: tabActive)
+                    window?.openTab(with: tabUrl, makeActiveIfPossible: tabActive, completionHandler: { _ in })
                 })
             }
         }
