@@ -1,105 +1,8 @@
 var bgPingCount = 0;
 
-var activeListeners = {};
-function setupListeners(listeners) {
-    var namespace;
-    var listenerIds = {};
-
-    for (var key in listeners) {
-        namespace = window;
-        var parts = key.split('.');
-        var funcName = parts.pop();
-        parts.forEach(p => {
-            if (typeof namespace[p] === 'undefined') {
-                console.error("'" + p + "'", 'is undefined (processing', key, ')');
-            }
-            namespace = namespace[p];
-        });
-
-        if (typeof namespace[funcName] === 'function' && funcName === 'addListener') {
-            listenerIds[key] = installListener(namespace, listeners[key]);
-        }
-        else {
-            console.error("'" + funcName + "'", 'is not a function (processing', key, ')');
-        }
-    }
-
-    return listenerIds;
-
-    function installListener(namespace, context) {
-        var id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-        activeListeners[id] = {
-            listener: function (message, sender, sendResponse) {
-                if (context.type === message.type) {
-//                    message.processed = true;
-                    sendResponse(context.response);
-                }
-            },
-            type: context.type,
-            namespace: namespace
-        };
-        namespace['addListener'](activeListeners[id].listener);
-        return id;
-    }
-}
-
-function invokeFunction(context, sender, sendResponse) {
-    var key = context.name;
-    namespace = window;
-    var parts = key.split('.');
-    var funcName = parts.pop();
-    parts.forEach(p => {
-        if (typeof namespace[p] === 'undefined') {
-            console.error("'" + p + "'", 'is undefined (processing', key, ')');
-        }
-        namespace = namespace[p];
-    });
-
-    if (typeof namespace[funcName] === 'function' && funcName === 'addListener') {
-        console.error('use test.setupListeners to setup a listener (processing', key, ')');
-    }
-    else if (typeof namespace[funcName] === 'function') {
-        var args = [];
-        if (context.arguments) {
-            if (Array.isArray(context.arguments)) {
-                args = context.arguments.slice();
-            }
-            else {
-                args = [ context.arguments ];
-            }
-        }
-        if (context.wantCallback) {
-            args.push(sendResponse);
-            if (context.wantReturnValue) {
-                console.error(key, ': wantCallback and wantReturnValue are mutually exclusive');
-            }
-        }
-        var rv = namespace[funcName].apply(namespace, args);
-        if (context.wantReturnValue) {
-            sendResponse(rv);
-        }
-    }
-    else {
-        console.error("'" + funcName + "'", 'is not a function (processing', key, ')');
-    }
-}
-
-function shutdownListeners(listeners) {
-    var count = 0;
-
-    for (var key in listeners) {
-        if (!activeListeners[listeners[key]]) {
-            console.error('listener', key, 'not found');
-            continue;
-        }
-        var listenerEntry = activeListeners[listeners[key]];
-        listenerEntry.namespace['removeListener'](listenerEntry.listener);
-        delete activeListeners[listeners[key]];
-        ++count;
-    }
-
-    return count;
-}
+/* for describe() + body() */
+var _tests = {};
+var _currentSuite = null;
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     if (message.type === 'test.whoami') {
@@ -109,28 +12,8 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         });
         return;
     }
-    if (message.type === 'test.setupListeners') {
-        sendResponse(setupListeners(message.value));
-        return;
-    }
-    if (message.type === 'test.backgroundInvoke') {
-        invokeFunction(message.value, sender, sendResponse);
-        return;
-    }
-    if (message.type === 'test.shutdownListeners') {
-        sendResponse(shutdownListeners(message.value));
-        return;
-    }
-    if (message.type === 'test.backgroundRequestResponse') {
-        chrome.tabs.sendMessage(sender.tab.id, {type: 'test.backgroundRequestResponse.request' }, {}, function (message) {
-            if (message === 'test.backgroundRequestResponse.response') {
-                // Let content script know that sendMessage callback has been called successfuly
-                chrome.tabs.sendMessage(sender.tab.id, {type: 'test.backgroundRequestResponse.success' }, {});
-            }
-        });
-    }
-    if (message.type && Object.values(activeListeners).some(l => l.type === message.type)) {
-        return;
+    if (message.type === 'runtest') {
+        return runtest(message.id, sender, sendResponse);
     }
 
     if (message.type === 'getDemoDlgBackground') {
@@ -139,13 +22,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             chrome.tabs.sendMessage(sender.tab.id, {type: 'changeDemoDlgBackground', value: Math.random() >= 0.5 ? 'lavender' : 'papayawhip' }, { frameId: sender.frameId });
         }, 3000);
     }
-    sendResponse("background pong #" + message.value);
 
-    setTimeout(function () {
-    	chrome.tabs.sendMessage(sender.tab.id, {type: 'ping', value: ++bgPingCount }, { frameId: sender.frameId }, function (response)  {
-    		console.log(response);
-    	})
-    }, 200);
+    if (message.type.indexOf('ping') != -1) {
+        sendResponse("background pong #" + message.value);
+
+        setTimeout(function () {
+            chrome.tabs.sendMessage(sender.tab.id, {type: 'ping', value: ++bgPingCount }, { frameId: sender.frameId }, function (response)  {
+                console.log(response);
+            })
+        }, 200);
+    }
 });
 
 chrome.browserAction.onClicked.addListener(function () {
@@ -157,3 +43,120 @@ setTimeout(function () {
 		tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, {type: 'query'} ));
 	});
 }, 10000);
+
+describe('jasmine setup', function () {
+    body('sets and shuts down listeners', function () {
+        chrome.runtime.onMessage.addListener(testResponse);
+        setTimeout(function () { chrome.runtime.onMessage.removeListener(testResponse); }, 2000);
+
+        function testResponse(message, sender, sendResponse) {
+            switch (message.type) {
+            case 'testMessage':
+                sendResponse('testResponse');
+                chrome.runtime.onMessage.removeListener(testResponse);
+                break;
+            }
+        }
+    });
+
+    body('installs listeners correctly', function () {
+        chrome.runtime.onMessage.addListener(testResponse);
+        setTimeout(function () { chrome.runtime.onMessage.removeListener(testResponse); }, 2000);
+
+        function testResponse(message, sender, sendResponse) {
+            switch (message.type) {
+            case 'testMessage':
+                sendResponse('testResponse');
+                chrome.runtime.onMessage.removeListener(testResponse);
+                break;
+            }
+        }
+    });
+
+    body('invokes a background script function', function () {
+        return new Promise(function (resolve) {
+            chrome.tabs.query({}, resolve);
+        });
+    });
+});
+
+describe('background chrome.runtime.sendMessage', function () {
+    body('is able to receive reply', function () {
+        chrome.runtime.onMessage.addListener(testListener);
+        setTimeout(function () { chrome.runtime.onMessage.removeListener(testListener); }, 2000);
+
+        function testListener(message, sender) {
+            if (message.type === 'test.backgroundRequestResponse') {
+                chrome.tabs.sendMessage(sender.tab.id, {type: 'test.backgroundRequestResponse.request' }, {}, function (message) {
+                    if (message === 'test.backgroundRequestResponse.response') {
+                        // Let content script know that sendMessage callback has been called successfuly
+                        chrome.tabs.sendMessage(sender.tab.id, {type: 'test.backgroundRequestResponse.success' }, {});
+                        chrome.runtime.onMessage.removeListener(testListener);
+                    }
+                });
+            }        
+        }
+    });
+
+    body('is able to send broadcast message to all frames in specified tab', function (sender) {
+        chrome.tabs.sendMessage(sender.tab.id, {type: 'testIframeTabBroadcast'});
+    });
+});
+
+describe('chrome.tabs.query', function () {
+    body('recognizes a new tab', function () {
+        chrome.runtime.onMessage.addListener(testListener);
+        setTimeout(function () { chrome.runtime.onMessage.removeListener(testListener); }, 2000);
+
+        function testListener(message, sender, sendResponse) {
+            if (message.type === 'test.query1') {
+                chrome.tabs.query({}, sendResponse);
+                return true;
+            }
+            if (message.type === 'test.query2') {
+                chrome.tabs.query({}, sendResponse);
+                chrome.runtime.onMessage.removeListener(testListener);
+                return true;
+            }
+        }
+    });
+
+    body('recognizes a tab being closed', function () {
+        chrome.runtime.onMessage.addListener(testListener);
+        setTimeout(function () { chrome.runtime.onMessage.removeListener(testListener); }, 2000);
+
+        function testListener(message, sender, sendResponse) {
+            if (message.type === 'test.query1') {
+                chrome.tabs.query({}, sendResponse);
+                return true;
+            }
+            if (message.type === 'test.query2') {
+                chrome.tabs.query({}, sendResponse);
+                chrome.runtime.onMessage.removeListener(testListener);
+                return true;
+            }
+        }
+    });
+});
+
+
+/* background bodies of tests defined in content test.js */
+function describe(name, describeBody) {
+    _tests[name] = {};
+    _currentSuite = _tests[name];
+    describeBody();
+}
+  
+function body(whatItDoes, testBody) {
+    _currentSuite[whatItDoes] = testBody;
+}
+  
+function runtest(id, sender, sendResponse) {
+    var res = _tests[id.suite][id.test](sender);
+    if (res && typeof res.then === 'function') {
+        res.then(sendResponse);
+        return true;
+    }
+    sendResponse(res);
+    return false;
+}
