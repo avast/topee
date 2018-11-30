@@ -68,6 +68,10 @@ eventEmitter.addListener('alive', registerTab);
 
 eventEmitter.addListener('bye', function (payload) {
     if (typeof payload.frameId !== 'undefined' && payload.frameId !== 0) { return; }
+    if (!browserTabs[payload.tabId]) {
+        console.log('closing an undetected tab', payload.tabId);
+        return;
+    }
     browserTabs[payload.tabId]._deleted = true;
     setTimeout(function () {
         if (browserTabs[payload.tabId]._deleted) {
