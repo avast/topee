@@ -10,6 +10,31 @@ function performOnBackground() {
     chrome.runtime.sendMessage({type: 'runtest', id: { suite: _currentSuite.description, test: _currentTest.description } }, resolve);
   });
 }
+function performInIframe(iframe) {
+  if (iframe instanceof HTMLIFrameElement) {
+    iframe = iframe.contentWindow;
+  }
+
+  var suite = _currentSuite.description;
+  var test = _currentTest.description;
+
+  return new Promise(function (resolve) {
+    window.addEventListener('message', responseListener);
+
+    iframe.postMessage({
+      type: 'iruntest',
+      suite: suite,
+      test: test
+    }, '*');
+
+    function responseListener(msg) {
+      if (msg.source === iframe && msg.data.type === 'itestresponse' && msg.data.suite === suite && msg.data.test === test) {
+        window.removeEventListener('message', responseListener);
+        resolve(msg.data.value);
+      }
+    }
+  });
+}
 
 
 function promise() {
@@ -50,6 +75,34 @@ function timeoutAfter(ms) {
   });
 }
 
+function createTestIframe() {
+  return new Promise(function (resolve, reject) {
+    var iframe = document.createElement('iframe');
+
+    window.addEventListener('message', windowMessageListener);
+    var t1sec = setTimeout(function () {
+      window.removeEventListener('message', windowMessageListener);
+      removeTestIframe(iframe);
+      reject('timeout');
+    }, 1000);
+
+    iframe.src = chrome.runtime.getURL('testIframe.html');
+    document.body.appendChild(iframe);
+
+    function windowMessageListener (event) {
+      if (event.data.type === 'testIframeLoaded') {
+        clearTimeout(t1sec);
+        window.removeEventListener('message', windowMessageListener);
+        resolve(iframe);
+      }
+    }
+  });
+}
+
+function removeTestIframe(iframe) {
+  document.body.removeChild(iframe);
+}
+
 describe('jasmine setup', function () {
   it('sets and shuts down listeners', async function () {
     await performOnBackground();
@@ -79,6 +132,20 @@ describe('jasmine setup', function () {
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBeGreaterThan(0);
   });
+
+  it('processes commands in iframes', async function () {
+    var iframe;
+    try {
+      iframe = await createTestIframe();
+    }
+    catch (ex) {
+      console.error(ex, 'Safari does this until #43230564@bugreport.apple.com is fixed');
+      return;
+    }
+    var result = await performInIframe(iframe);
+    expect(result).toBe('hello from iframe');
+    removeTestIframe(iframe);
+  })
 });
 
 describe('background chrome.runtime.sendMessage', function () {

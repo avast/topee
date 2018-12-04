@@ -6,11 +6,57 @@
 <body>
 <h1>Topee</h1>
 <script>
+/* for describe() + body() */
+var _tests = {};
+var _currentSuite = null;
+
 chrome.runtime.onMessage.addListener(function (msg) {
     if (msg.type === 'testIframeTabBroadcast') {
         window.top.postMessage({type: 'testIframeTabBroadcastReply'}, '*');
     }
 });
+
+window.addEventListener('message', function (msg) {
+    if (msg.data && msg.data.type === 'iruntest') {
+        runtest(msg, function (val) {
+            msg.source.postMessage({
+                type: 'itestresponse',
+                suite: msg.data.suite,
+                test: msg.data.test,
+                value: val
+            }, msg.origin);
+        });
+    }
+});
+
+describe('jasmine setup', function () {
+    body('processes commands in iframes', function () {
+        return Promise.resolve('hello from iframe');
+    });
+});
+
+/* background bodies of tests defined in content test.js */
+function describe(name, describeBody) {
+    _tests[name] = {};
+    _currentSuite = _tests[name];
+    describeBody();
+}
+  
+function body(whatItDoes, testBody) {
+    _currentSuite[whatItDoes] = testBody;
+}
+  
+function runtest(msg, sendResponse) {
+    var res = _tests[msg.data.suite][msg.data.test](msg);
+    if (res && typeof res.then === 'function') {
+        res.then(sendResponse);
+        return true;
+    }
+    sendResponse(res);
+    return false;
+}
+
+
 window.top.postMessage({type: 'testIframeLoaded'}, '*');
 </script>
 </body>
