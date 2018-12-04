@@ -75,12 +75,19 @@ function timeoutAfter(ms) {
   });
 }
 
+var thisTabIsBroken = false;
+
 function createTestIframe() {
+  if (thisTabIsBroken) {
+    return Promise.reject('timeout');
+  }
+
   return new Promise(function (resolve, reject) {
     var iframe = document.createElement('iframe');
 
     window.addEventListener('message', windowMessageListener);
     var t1sec = setTimeout(function () {
+      thisTabIsBroken = true;
       window.removeEventListener('message', windowMessageListener);
       removeTestIframe(iframe);
       reject('timeout');
