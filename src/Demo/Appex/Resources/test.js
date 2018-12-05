@@ -336,6 +336,31 @@ describe('iframe message', function () {
     expect(await fr).toBe('message received');
   });
 
+  it('is received by the iframe when targeted to an iframe', async function () {
+    if (skipTest) return;
+
+    var alsoGotTheMessage = false;
+
+    chrome.runtime.onMessage.addListener(onMessage);
+    performOnBackground();
+    var fr = performInIframe(iframe);
+
+
+    expect(await fr).toBe('message received');
+
+    // the message has already reached the iframe, but rather wait a bit more
+    await promise(setTimeout(promise.callback(), 100));
+
+    expect(alsoGotTheMessage).toBe(false);
+
+    function onMessage(msg) {
+      if (msg.type === 'messageresponse') {
+          chrome.runtime.onMessage.removeListener(onMessage);
+          alsoGotTheMessage = true;
+      }
+    }
+  });
+
   it('receives a response from the background script', async function () {
     if (skipTest) return;
 

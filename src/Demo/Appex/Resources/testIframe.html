@@ -61,6 +61,19 @@ describe('iframe message', function () {
         });
     });
 
+    body('is received by the iframe when targeted to an iframe', function () {
+        return new Promise(function (resolve) {
+            chrome.runtime.onMessage.addListener(onMessage);
+            chrome.runtime.sendMessage({ type: 'responsemessage' });
+            function onMessage(msg) {
+                if (msg.type === 'messageresponse') {
+                    chrome.runtime.onMessage.removeListener(onMessage);
+                    resolve('message received');
+                }
+            }
+        });
+    });
+
     body('receives a response from the background script', function () {
         return new Promise(function (resolve) {
             chrome.runtime.sendMessage({ type: 'responseful' }, resolve);
