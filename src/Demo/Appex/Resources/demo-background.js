@@ -155,6 +155,25 @@ describe('iframe message', function () {
     body('is received by the iframe when broadcasted to all frames', function (sender) {
         chrome.tabs.sendMessage(sender.tab.id, { type: 'responseless' });
     });
+
+    body('receives a response from the background script', function () {
+        chrome.runtime.onMessage.addListener(onMessage);
+        function onMessage(msg, sender, sendResponse) {
+            if (msg.type === 'responseful') {
+                chrome.runtime.onMessage.removeListener(onMessage);
+                setTimeout(function () {  // deferred sendResponse
+                    sendResponse('response received');
+                }, 20);
+                return true;
+            }
+        }    
+    });
+
+    body('response is received by the background script', function (sender) {
+        return new Promise(function (resolve) {
+            chrome.tabs.sendMessage(sender.tab.id, { type: 'responseful' }, resolve);
+        });        
+    });
 });
 
 

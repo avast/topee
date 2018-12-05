@@ -60,6 +60,25 @@ describe('iframe message', function () {
             }
         });
     });
+
+    body('receives a response from the background script', function () {
+        return new Promise(function (resolve) {
+            chrome.runtime.sendMessage({ type: 'responseful' }, resolve);
+        });        
+    });
+
+    body('response is received by the background script', function () {
+        chrome.runtime.onMessage.addListener(onMessage);
+        function onMessage(msg, sender, sendResponse) {
+            if (msg.type === 'responseful') {
+                chrome.runtime.onMessage.removeListener(onMessage);
+                setTimeout(function () {  // deferred sendResponse
+                    sendResponse('response received');
+                }, 20);
+                return true;
+            }
+        }    
+    });
 });
 
 /* background bodies of tests defined in content test.js */

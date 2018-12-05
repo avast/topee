@@ -335,6 +335,25 @@ describe('iframe message', function () {
 
     expect(await fr).toBe('message received');
   });
+
+  it('receives a response from the background script', async function () {
+    if (skipTest) return;
+
+    performOnBackground();
+    var fr = performInIframe(iframe);
+
+    expect(await fr).toBe('response received');
+  });
+
+  it('response is received by the background script', async function () {
+    if (skipTest) return;
+
+    performInIframe(iframe);
+    var bg = performOnBackground();
+
+    expect(await bg).toBe('response received');
+  });
+
 });
 
 function getCurrentTabId () {
