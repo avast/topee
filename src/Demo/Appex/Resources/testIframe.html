@@ -129,6 +129,39 @@ describe('iframe message', function () {
             resolve3();
         }
     });
+
+    body('does not leak callback listeners', async function () {
+        var realRandom = Math.random;
+        Math.random = function () { return 0.001; }  // supress the random number generator, so that the leaked listeners manifest
+
+        var message = {
+            type: 'callbackornot'
+        };
+        var responseCount = 0;
+        var resolveMsg;
+        var msgCalled = new Promise(function (resolve) { resolveMsg = resolve; });
+
+        chrome.runtime.sendMessage(message);
+
+        chrome.runtime.sendMessage(message, onResponse);
+
+        chrome.runtime.sendMessage(message);
+
+        await msgCalled;
+
+        await new Promise(function (resolve) { setTimeout(resolve, 300); });  // wait a bit more to make sure nothing more is coming
+
+        Math.random = realRandom;
+
+        return responseCount;
+
+        function onResponse() {
+            if (!responseCount) {
+                resolveMsg();
+            }
+            ++responseCount;
+        }
+    });
 });
 
 /* background bodies of tests defined in content test.js */

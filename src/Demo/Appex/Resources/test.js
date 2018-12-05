@@ -387,6 +387,15 @@ describe('iframe message', function () {
 
     expect(await fr).toBe(110);  // only detects up 9 wrong messages
   });
+
+  it('does not leak callback listeners', async function () {
+    if (skipTest) return;
+
+    performOnBackground();
+    var fr = performInIframe(iframe);
+
+    expect(await fr).toBe(1);
+  });
 });
 
 function getCurrentTabId () {

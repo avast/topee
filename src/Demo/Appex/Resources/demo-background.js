@@ -201,6 +201,20 @@ describe('iframe message', function () {
             chrome.tabs.sendMessage(sender.tab.id, { type: 'triggerresponse' }, { frameId: sender.frameId });
         }
     });
+
+    body('does not leak callback listeners', function () {
+        var callCount = 0;
+        chrome.runtime.onMessage.addListener(onMessage)
+
+        function onMessage(msg, sender, sendResponse) {
+            if (msg.type === 'callbackornot') {
+                sendResponse(1);
+                if (++callCount === 3) {
+                    chrome.runtime.onMessage.removeListener(onMessage);
+                }
+            }
+        }
+    });
 });
 
 

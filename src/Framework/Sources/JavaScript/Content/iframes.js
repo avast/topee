@@ -47,7 +47,7 @@ function install() {
                 .then(function (str) {
                     var message = JSON.parse(str);
 
-                    var messageId = message.value.payload.messageId;
+                    var messageId = event.data.messageId;
                     if (typeof messageId !== 'undefined') {
                         safari.self.addEventListener("message", listener);
                     }
@@ -61,7 +61,7 @@ function install() {
                                 .then(function (e) {
                                     event.source.postMessage({ type: 'topee_iframe_response', value: e}, event.origin);
                                 });
-                            safari.self.removeEventListener(listener);
+                            safari.self.removeEventListener("message", listener);
                         }
                     }
             });
