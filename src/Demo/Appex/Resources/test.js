@@ -296,6 +296,47 @@ describe('chrome.tabs.query', function () {
   });
 });
 
+describe('iframe message', function () {
+  var skipTest = false;
+  var iframe;
+
+  beforeEach(async function () {
+    try {
+      iframe = await createTestIframe();
+    }
+    catch (ex) {
+      iframe = null;
+      skipTest = true;
+      return;
+    }
+    skipTest = false;
+  });
+
+  afterEach(function () {
+    if (iframe) {
+      removeTestIframe(iframe);
+    }
+  });
+
+  it('is received by the background script', async function () {
+    if (skipTest) return;
+
+    var bg = performOnBackground();
+    performInIframe(iframe);
+
+    expect(await bg).toBe('message received');
+  });
+
+  it('is received by the iframe when broadcasted to all frames', async function () {
+    if (skipTest) return;
+
+    var fr = performInIframe(iframe);
+    performOnBackground();
+
+    expect(await fr).toBe('message received');
+  });
+});
+
 function getCurrentTabId () {
   var tabIdFuture = new Future();
   chrome.runtime.sendMessage({type: 'test.whoami'}, ({tabId, frameId}) => {

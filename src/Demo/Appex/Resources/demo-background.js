@@ -139,6 +139,25 @@ describe('chrome.tabs.query', function () {
     });
 });
 
+describe('iframe message', function () {
+    body('is received by the background script', function () {
+        return new Promise(function (resolve) {
+            chrome.runtime.onMessage.addListener(onMessage);
+            function onMessage(msg) {
+                if (msg.type === 'responseless') {
+                    chrome.runtime.onMessage.removeListener(onMessage);
+                    resolve('message received');
+                }
+            }
+        });
+    });
+
+    body('is received by the iframe when broadcasted to all frames', function (sender) {
+        chrome.tabs.sendMessage(sender.tab.id, { type: 'responseless' });
+    });
+});
+
+
 
 /* background bodies of tests defined in content test.js */
 function describe(name, describeBody) {
