@@ -187,6 +187,20 @@ describe('iframe message', function () {
             chrome.tabs.sendMessage(sender.tab.id, { type: 'responseful' }, resolve);
         });        
     });
+
+    body('receives only subscribed messages', async function () {
+        chrome.runtime.onMessage.addListener(onTrigger);
+
+        function onTrigger(msg, sender) {
+            if (msg.type !== 'trigger') {
+                return;
+            }
+
+            chrome.runtime.onMessage.removeListener(onTrigger);
+
+            chrome.tabs.sendMessage(sender.tab.id, { type: 'triggerresponse' }, { frameId: sender.frameId });
+        }
+    });
 });
 
 

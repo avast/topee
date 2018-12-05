@@ -379,6 +379,14 @@ describe('iframe message', function () {
     expect(await bg).toBe('response received');
   });
 
+  it('receives only subscribed messages', async function () {
+    if (skipTest) return;
+
+    performOnBackground();
+    var fr = performInIframe(iframe);
+
+    expect(await fr).toBe(110);  // only detects up 9 wrong messages
+  });
 });
 
 function getCurrentTabId () {

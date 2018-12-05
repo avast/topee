@@ -92,6 +92,43 @@ describe('iframe message', function () {
             }
         }    
     });
+
+    body('receives only subscribed messages', async function () {
+        var listenerCallsCount = 0;
+        var resolve2;
+        var resolve3;
+        var m2called = new Promise(function (resolve) { resolve2 = resolve; });
+        var m3called = new Promise(function (resolve) { resolve3 = resolve; });
+
+        chrome.runtime.onMessage.addListener(onMessage1);
+        chrome.runtime.onMessage.addListener(onMessage2);
+        chrome.runtime.onMessage.removeListener(onMessage1);
+        chrome.runtime.onMessage.addListener(onMessage3);
+
+        chrome.runtime.sendMessage({ type: 'trigger' });
+
+        await m2called;
+        await m3called;
+
+        await new Promise(function (resolve) { setTimeout(resolve, 200); });  // wait a bit more to make sure nothing more is coming
+
+        chrome.runtime.onMessage.removeListener(onMessage2);
+        chrome.runtime.onMessage.removeListener(onMessage3);
+
+        return listenerCallsCount;
+
+        function onMessage1() {
+            listenerCallsCount += 1;
+        }
+        function onMessage2() {
+            listenerCallsCount += 10;
+            resolve2();
+        }
+        function onMessage3() {
+            listenerCallsCount += 100;
+            resolve3();
+        }
+    });
 });
 
 /* background bodies of tests defined in content test.js */

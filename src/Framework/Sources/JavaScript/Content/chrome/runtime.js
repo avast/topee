@@ -22,9 +22,7 @@ runtime.sendMessage = function(message, callback) {
 
 runtime.onMessage = {
     addListener: function(callback) {
-        eventEmitter.addListener('message', function (message, sender, sendResponse) {
-            callback(message, sender, sendResponse);
-        });
+        eventEmitter.addListener('message', callback);
     },
     removeListener: function(callback) {
         eventEmitter.removeListener('message', callback);
