@@ -182,45 +182,37 @@ describe('background chrome.runtime.sendMessage', function () {
   });
 
   it('is able to send broadcast message to all frames in specified tab', async function () {
-    var testIframeLoadedFuture = new Future();
-    var testIframeTabBroadcastReplyFuture = new Future();
+    var iframe;
+    try {
+      iframe = await createTestIframe();
+    }
+    catch (ex) {
+      console.error(ex, 'Safari does this until #43230564@bugreport.apple.com is fixed');
+      return;
+    }
+
+    var iframeMessageReceived = performInIframe(iframe);
+
     var chromeBroadcastFuture = new Future();
 
     chrome.runtime.onMessage.addListener(chromeMessageListener);
-    window.addEventListener('message', windowMessageListener);
 
     function chromeMessageListener (request) {
       if (request.type === 'testIframeTabBroadcast') {
+        chrome.runtime.onMessage.removeListener(chromeMessageListener);
         chromeBroadcastFuture.complete(true);
       }
     }
 
-    function windowMessageListener (event) {
-      if (event.data.type === 'testIframeLoaded') {
-        testIframeLoadedFuture.complete(true);
-      }
-      if (event.data.type === 'testIframeTabBroadcastReply') {
-        testIframeTabBroadcastReplyFuture.complete(true);
-      }
-    }
-
-    var iframe = document.createElement('iframe');
-    iframe.src = chrome.runtime.getURL('testIframe.html');
-
-    document.body.appendChild(iframe);
-
-    await testIframeLoadedFuture.getValue();
-
     performOnBackground();
 
     var replies = await Promise.all([
-      testIframeTabBroadcastReplyFuture.getValue(),
+      iframeMessageReceived,
       chromeBroadcastFuture.getValue()]);
+
     expect(replies).toEqual([true, true]);
 
-    window.removeEventListener('message', windowMessageListener);
-    document.body.removeChild(iframe);
-    chrome.runtime.onMessage.removeListener(chromeMessageListener);
+    removeTestIframe(iframe);
   });
 });
 

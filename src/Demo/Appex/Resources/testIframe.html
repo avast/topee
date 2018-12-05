@@ -10,12 +10,6 @@
 var _tests = {};
 var _currentSuite = null;
 
-chrome.runtime.onMessage.addListener(function (msg) {
-    if (msg.type === 'testIframeTabBroadcast') {
-        window.top.postMessage({type: 'testIframeTabBroadcastReply'}, '*');
-    }
-});
-
 window.addEventListener('message', function (msg) {
     if (msg.data && msg.data.type === 'iruntest') {
         runtest(msg, function (val) {
@@ -32,6 +26,21 @@ window.addEventListener('message', function (msg) {
 describe('jasmine setup', function () {
     body('processes commands in iframes', function () {
         return Promise.resolve('hello from iframe');
+    });
+});
+
+describe('background chrome.runtime.sendMessage', function () {
+    body('is able to send broadcast message to all frames in specified tab', function () {
+        return new Promise(function (resolve) {
+            chrome.runtime.onMessage.addListener(onBroadcast);
+
+            function onBroadcast(msg) {
+                if (msg.type === 'testIframeTabBroadcast') {
+                    chrome.runtime.onMessage.removeListener(onBroadcast);
+                    resolve(true);
+                }
+            }
+        });
     });
 });
 
