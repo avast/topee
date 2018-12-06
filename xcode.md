@@ -1,7 +1,7 @@
 Xcode project setup
 ====
 
-The general project structure follows the regular [Apple guidlines(https://developer.apple.com/documentation/safariservices/safari_app_extensions).
+The general project structure follows the regular [Apple guidlines](https://developer.apple.com/documentation/safariservices/safari_app_extensions).
 The easiest way to consume Topee is via Carthage,
 possibly as well as the cross-browser extension scripts.
 The only thing that's needed is to override _TopeeSafariExtensionHandler.setupBridge(...)_,
