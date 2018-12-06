@@ -10,6 +10,8 @@ Open project (topee/Topee.xcworkspace).
 
 On the left, select Demo. Then, in the center, select General. Set your Team in the Signing section.
 
+![ellipses mark the important parts](xcode_settings.png)
+
 Command + Shift + K cleans the project (may be needed if you make changes in JavaScript).
 Command + B builds the project.
 Select Appex > My Mac on the very top of your Xcode window. Command + R runs the project.
