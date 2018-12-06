@@ -13,7 +13,9 @@ for a [product](https://www.avast.com/passwords#mac).
 Integration
 ====
 
-XCode Project
+If you are completely new to Xcode, read [basic setup](documentation/xcode_bootstrap.md) first.
+
+Xcode Project
 -------------
 
 - Add `github https://github.com/avast/topee ~> 0.0.0` to your Cartfile
