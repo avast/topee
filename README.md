@@ -18,7 +18,7 @@ If you are completely new to Xcode, read [basic setup](documentation/xcode_boots
 Xcode Project
 -------------
 
-- Add `github https://github.com/avast/topee ~> 0.0.0` to your Cartfile
+- Add `github "https://github.com/avast/topee" ~> 1.0.0` to your Cartfile
 - Link the `Topee` to your Appex target
 - Add a resource to your Appex pointing to `Carthage/Build/Mac/Topee.framework/Resources/topee-content.js`
 - Make sure the `topee-content.js` script is referenced in the plist of your appex under: `NSExtension / SFSafariContentScript` and appears as the first script in the array
