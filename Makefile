@@ -12,7 +12,8 @@ build:
 		-workspace "$(WORKSPACE)"\
 		-scheme "$(SCHEME)" clean build\
 		CONFIGURATION="$(CONFIGURATION)"\
-		BUILD_DIR="$(BUILD_DIR)"
+		BUILD_DIR="$(BUILD_DIR)"\
+		DEBUG_INFORMATION_FORMAT="dwarf-with-dsym"
 
 format:
 	swiftformat .
