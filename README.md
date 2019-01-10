@@ -10,10 +10,10 @@ The Topee project provides the Google Chrome Extension API for Safari, allowing 
 Status: [API complete enough](http://htmlpreview.github.io/?https://github.com/avast/topee/blob/master/api.html#)
 for a [product](https://www.avast.com/passwords#mac).
 
-Integration
-====
+First run
+=========
 
-If you are completely new to Xcode, read [basic setup](documentation/xcode_bootstrap.md) first.
+If you are completely new to Xcode, read [how to run the Demo application](documentation/xcode_bootstrap.md) first.
 
 Xcode Project
 -------------
