@@ -1,5 +1,5 @@
-Guide for Complete Xcode Beginners
-==================================
+How to Build and Run the Topee Demo Application
+===============================================
 
 If you do not have Apple Id, create one at developer.apple.com.
 Then, if you are a part of a team, someone needs to add you to the team at developer.apple.com.
