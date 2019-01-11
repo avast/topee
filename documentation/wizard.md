@@ -48,3 +48,43 @@ The Appex and Topee references
 Xcode has a Safari Extension target that shall be added to your project
 
 ![AppEx target](wizard/xcodeappex.png)
+
+There are multiple dependency managers available. This wizard uses [carthage](https://github.com/Carthage/Carthage).
+Start a command line in your project directory
+
+```bash
+echo "github \"https://github.com/avast/topee\" ~> 1.0.0" >> Cartfile
+carthage bootstrap
+```
+
+After this, Topee.framework is located in the Carthage/Build/Mac directory.
+Add it to the Embedded binaries list
+
+![Add Other...](wizard/addtopee1.png)
+![select Topee.framework](wizard/addtopee2.png)
+
+Then select the appex target and drag&drop Topee.framework its Linked Frameworks and Libraries list
+
+![Link with Appex](wizard/addtopee3.png)
+
+Your extension JavaScript
+-------------------------
+
+You can simply keep your JavaScript and other resources inside the project repository,
+add it as a git submodule or use Carthage to pull releases.
+
+However, you need to bundle them as resources within your package.
+You can see this already in the Topee Demo application
+
+![Copy Bundle Resources](wizard/copybundleresources.png)
+
+To keep your directory structure, it is easier to add a Run Script task to your Build Phases
+
+```bash
+rsync -rtv $PROJECT_DIR/../../chrome_extension/img/ $BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/img
+```
+
+Now it's time to edit your extension Info.plist as described in [xcode.md](xcode.md),
+extend `TopeeSafariExtensionHandler` and run your extension.
+When running it for the first time, go to Safari preferences and enable the extension.
+
