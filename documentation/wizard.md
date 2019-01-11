@@ -84,7 +84,7 @@ To keep your directory structure, it is easier to add a Run Script task to your 
 rsync -rtv $PROJECT_DIR/../../chrome_extension/img/ $BUILT_PRODUCTS_DIR/$UNLOCALIZED_RESOURCES_FOLDER_PATH/img
 ```
 
-Now it's time to edit your extension Info.plist as described in [xcode.md](xcode.md),
+Now it's time to edit your extension Info.plist as described in [xcode.md](../xcode.md),
 extend `TopeeSafariExtensionHandler` and run your extension.
 When running it for the first time, go to Safari preferences and enable the extension.
 
