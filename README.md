@@ -18,6 +18,8 @@ If you are completely new to Xcode, read [how to run the Demo application](docum
 Xcode Project
 -------------
 
+Detailed setup instruction with pictures are available at [wizard.md](documentation/wizard.md).
+
 - Add `github "https://github.com/avast/topee" ~> 1.0.0` to your Cartfile
 - Link the `Topee` to your Appex target
 - Add a resource to your Appex pointing to `Carthage/Build/Mac/Topee.framework/Resources/topee-content.js`
