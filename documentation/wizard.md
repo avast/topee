@@ -67,6 +67,10 @@ Then select the appex target and drag&drop Topee.framework its Linked Frameworks
 
 ![Link with Appex](wizard/addtopee3.png)
 
+Then switch to the extension target build phases, add a new Copy Files phase, in the phase, select the Frameworks destination and add Topee.framework to copy.
+
+While in Build settings, find Runpath Search Paths and add `@executable_path/../Frameworks`.
+
 Your extension JavaScript
 -------------------------
 
