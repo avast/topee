@@ -13,7 +13,7 @@ for a [product](https://www.avast.com/passwords#mac).
 First run
 =========
 
-If you are completely new to Xcode, read [how to run the Demo application](documentation/xcode_bootstrap.md) first.
+If you are completely new to Xcode, read [how to run the Demo application](documentation/xcode_bootstrap.md) first. Also, before you run the extension for the first time, make sure to build the containing application.
 
 Xcode Project
 -------------
