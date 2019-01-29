@@ -7,7 +7,7 @@ import SafariServices
 import WebKit
 
 public protocol SafariExtensionBridgeType {
-    func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger: TopeeLogger?)
+    func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger: TopeeLogger?, backgroudScriptDebugDelaySec: Int)
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
@@ -17,8 +17,9 @@ public extension SafariExtensionBridgeType {
     /// Setup method with default parameters
     func setup(webViewURL: URL = URL(string: "http://topee.local")!,
                manifest: TopeeExtensionManifest = TopeeExtensionManifest(),
-               logger: TopeeLogger? = nil) {
-        setup(webViewURL: webViewURL, manifest: manifest, logger: logger)
+               logger: TopeeLogger? = nil,
+               backgroudScriptDebugDelaySec: Int = 0) {
+        setup(webViewURL: webViewURL, manifest: manifest, logger: logger, backgroudScriptDebugDelaySec: backgroudScriptDebugDelaySec)
     }
 }
 
@@ -29,6 +30,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var webViewURL: URL = URL(string: "http://topee.local")!
     private var logger: TopeeLogger = DefaultLogger()
     private let topeeVersion = Bundle.current.shortVersionString!
+    private var backgroudScriptDebugDelaySec = 0
 
     private var safariHelper: SFSafariApplicationHelper = SFSafariApplicationHelper()
     private var pageRegistry: SFSafariPageRegistry = SFSafariPageRegistry(thread: Thread.main)
@@ -41,7 +43,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         super.init()
     }
 
-    public func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger injectedLogger: TopeeLogger?) {
+    public func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger injectedLogger: TopeeLogger?, backgroudScriptDebugDelaySec: Int = 0) {
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
             if webViewURL != self.webViewURL {
@@ -62,6 +64,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         self.manifest = manifest
         self.logger = injectedLogger ?? logger
         self.pageRegistry.logger = logger
+        self.backgroudScriptDebugDelaySec = backgroudScriptDebugDelaySec
+        if backgroudScriptDebugDelaySec > 0 {
+            startBackgroundScriptIfNotRunning(userAgent: "Topee")
+        }
     }
 
     private func startBackgroundScriptIfNotRunning(userAgent: String) {
@@ -80,7 +86,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 + [readFile(backgroundEndURL)]
             let script = WKUserScript(scripts: scripts)
             let contentController: WKUserContentController = WKUserContentController()
-            contentController.addUserScript(script)
+            if backgroudScriptDebugDelaySec <= 0 {
+                contentController.addUserScript(script)
+            }
             contentController.add(self, name: MessageHandler.content.rawValue)
             contentController.add(self, name: MessageHandler.appex.rawValue)
             contentController.add(self, name: MessageHandler.log.rawValue)
@@ -88,6 +96,15 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             let webView = WKWebView(frame: .zero, configuration: webConfiguration)
             webView.customUserAgent = "\(userAgent) Topee/\(topeeVersion)"
             webView.loadHTMLString("<html><body></body></html>", baseURL: webViewURL)
+            
+            if backgroudScriptDebugDelaySec > 0 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(backgroudScriptDebugDelaySec)) { [webView, script] in
+                    webView.evaluateJavaScript("console.log('injecting background script; chrome ==', typeof chrome)");
+                    webView.evaluateJavaScript(script.source)
+                    webView.evaluateJavaScript("console.log('background script injected; chrome ==', typeof chrome)");
+                }
+            }
+            
             return webView
         }()
         DispatchQueue.global().asyncAfter(deadline: .now() + 10) { [unowned self] in
@@ -133,7 +150,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         switch message {
         case .hello:
             let userAgent = userInfo?["userAgent"] as! String
-            startBackgroundScriptIfNotRunning(userAgent: userAgent)
+            if backgroudScriptDebugDelaySec <= 0 {
+                startBackgroundScriptIfNotRunning(userAgent: userAgent)
+            }
 
             // Messages may come out of order, e.g. request is faster than hello here
             // so let's handle them in same way.
