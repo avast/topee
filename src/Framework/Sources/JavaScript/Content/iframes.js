@@ -81,9 +81,13 @@ function sendMessage(frameId, message) {
 }
 
 function broadcastMessage(message) {
+    var children = childFrames.getAll();
+    if (children.length == 0) {
+        return;  // no recipients
+    }
     txtCrypto.readyPromise
         .then(() => txtCrypto.encrypt(JSON.stringify(message)))
-        .then(m => childFrames.getAll().forEach(win => win.postMessage({ type: 'topee_iframe_request', value: m }, '*')));  // '*' is ok, it's encrypted
+        .then(m => children.forEach(win => win.postMessage({ type: 'topee_iframe_request', value: m }, '*')));  // '*' is ok, it's encrypted
 }
 
 

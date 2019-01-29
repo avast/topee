@@ -139,6 +139,12 @@ describe('chrome.tabs.query', function () {
     });
 });
 
+describe('iframe broadcast', function () {
+    body('does not encrypt if there is no child iframe', function (sender) {
+        chrome.tabs.sendMessage(sender.tab.id, { type: 'broadcasted' });  // no frameId
+    });
+});
+
 describe('iframe message', function () {
     body('is received by the background script', function () {
         return new Promise(function (resolve) {

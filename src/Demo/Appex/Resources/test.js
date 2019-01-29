@@ -296,6 +296,30 @@ describe('chrome.tabs.query', function () {
   });
 });
 
+describe('iframe broadcast', function () {
+  it('does not encrypt if there is no child iframe', async function () {
+    spyOn(crypto.subtle, 'encrypt').and.callThrough();
+
+    var messageReceived = new Promise(function (resolve) {
+      chrome.runtime.onMessage.addListener(onMessage);
+      function onMessage(msg) {
+        if (msg.type === 'broadcasted') {
+          chrome.runtime.onMessage.removeListener(onMessage);
+          setTimeout(function () {
+            resolve('message received');
+          }, 0);
+        }
+      }
+    });
+
+    performOnBackground();
+
+    await messageReceived;
+
+    expect(crypto.subtle.encrypt).not.toHaveBeenCalled();
+  });
+});
+
 describe('iframe message', function () {
   var skipTest = false;
   var iframe;
