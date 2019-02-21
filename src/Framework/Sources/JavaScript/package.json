@@ -5,14 +5,14 @@
   "author": "",
   "license": "BSD",
   "devDependencies": {
-    "eslint": "^5.3.0",
-    "jasmine": "^3.1.0",
-    "node-webcrypto-ossl": "^1.0.37",
-    "webpack": "^4.16.3",
-    "webpack-cli": "^3.1.0"
+    "eslint": "^5.14.1",
+    "jasmine": "^3.3.1",
+    "node-webcrypto-ossl": "^1.0.42",
+    "webpack": "^4.29.5",
+    "webpack-cli": "^3.2.3"
   },
   "dependencies": {
-    "object.values": "^1.0.4",
+    "object.values": "^1.1.0",
     "whatwg-fetch": "^3.0.0"
   }
 }
