@@ -48,4 +48,8 @@ browserAction.onClicked = {
     },
 };
 
+browserAction.enable = function () {
+	console.warn('browserAction.enable is not implemented.');
+};
+
 module.exports = browserAction;
