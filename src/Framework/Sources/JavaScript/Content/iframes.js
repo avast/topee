@@ -38,7 +38,9 @@ function install() {
             txtCrypto.readyPromise
                 .then(() => txtCrypto.getKey())
                 .then(function (key) {
-                    event.source.postMessage({ type: 'topee_iframe_key', value: key}, event.origin);
+                    if (event.source) {
+                        event.source.postMessage({ type: 'topee_iframe_key', value: key}, event.origin);
+                    }
                 });
         }
 
@@ -59,7 +61,9 @@ function install() {
                         if (responseEvent.name === 'response' && responseEvent.message.messageId === messageId) {
                             txtCrypto.encrypt(JSON.stringify(responseEvent.message))
                                 .then(function (e) {
-                                    event.source.postMessage({ type: 'topee_iframe_response', value: e}, event.origin);
+                                    if (event.source) {
+                                        event.source.postMessage({ type: 'topee_iframe_response', value: e}, event.origin);
+                                    }
                                 });
                             safari.self.removeEventListener("message", listener);
                         }

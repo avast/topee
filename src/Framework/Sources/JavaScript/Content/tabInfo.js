@@ -39,7 +39,7 @@ function init() {
         // tabId responder
         window.addEventListener('message', function (msg) {
             if (msg.data && msg.data.type === tabInfo.Event.GET_TAB_ID) {
-                tabInfo.tabId.then(id => msg.source.postMessage({ type: tabInfo.Event.TAB_ID, detail: id, debug: topeeDebug }, msg.origin));
+                tabInfo.tabId.then(id => msg.source && msg.source.postMessage({ type: tabInfo.Event.TAB_ID, detail: id, debug: topeeDebug }, msg.origin));
             }
         });
     }
