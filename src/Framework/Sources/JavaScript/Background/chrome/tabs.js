@@ -114,8 +114,27 @@ tabs.sendMessage = function (tabId, message, options, responseCallback) {
     }
 };
 
+let unsupportedQueryWarning = [ 'pinned', 'audible', 'muted', 'highlighted', 'discarded', 'autoDiscardable', 'currentWindow', 'status', 'title', 'windowId', 'windowType', 'index' ]
+    .reduce(function (w, opt) {
+        w[opt] = function () {
+            console.error('chrome.tabs.query "' + opt + '" option is not supported');
+            delete unsupportedQueryWarning[opt];
+        };
+        return w;
+    }, {});
+unsupportedQueryWarning.active = function (opts) {
+    if (!opts.lastFocusedWindow) {
+        console.error('chrome.tabs.query "active" option is only valid in a conjunction with "lastFocusedWindow"');
+        delete unsupportedQueryWarning.active;
+    }
+};
+
 tabs.query = function(queryInfo, callback) {
-    // TODO: Validate supported queryInfo options
+    for (var opt in queryInfo) {
+        if (unsupportedQueryWarning[opt]) {
+            unsupportedQueryWarning[opt](queryInfo);
+        }
+    }
 
     var tabs = [];
     for (var tab in browserTabs) {
@@ -130,7 +149,7 @@ tabs.query = function(queryInfo, callback) {
     }
 
     // Active tab (in last focussed window) filter
-    if (queryInfo.active && queryInfo.lastFocusedWindow) {
+    if (queryInfo.active) {
         callback(tabs.filter(function (tab) {
             return tab.id === lastFocusedTabId;
         }));
