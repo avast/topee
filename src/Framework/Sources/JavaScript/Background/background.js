@@ -2,6 +2,7 @@
 //  Copyright © 2018 Avast. All rights reserved.
 //
 require('../Common/polyfills');
+require('./webkit-polyfill.js');
 
 var logging = require('./logging');
 logging.setup();
