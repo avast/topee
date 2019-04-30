@@ -1,0 +1,16 @@
+{
+  "name": "test_compat",
+  "version": "1.0.0",
+  "description": "test background script compatibility with old JS engines",
+  "main": "index.js",
+  "scripts": {
+    "build": "mkdir -p dist && cat jscoreglobal.js > dist/index.js && browserify --ignore encoding index.js >> dist/index.js",
+    "test": "/System/Library/Frameworks//JavaScriptCore.framework/Versions/A/Resources/jsc dist/index.js",
+    "docker": "docker run -v `pwd`/../..:/app node:6 node /app/tools/test_compat/index.js"
+  },
+  "dependencies": {
+    "browserify": "^16.2.3",
+    "node-fetch": "^2.4.1",
+    "xmlhttprequest": "^1.8.0"
+  }
+}

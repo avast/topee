@@ -21,3 +21,6 @@ node_modules
 
 documentation/chrome-api-utils/node_modules/
 documentation/chrome-api-utils/chromium/
+
+tools/test_compat/dist/
+tools/test_compat/tmp/
