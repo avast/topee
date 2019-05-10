@@ -76,8 +76,19 @@ if (window === window.top) {
         tabInfo.sayBye();
     });
 
+    var documentComplete = false;
+    once(document, 'readystatechange', function () {
+        if (document.readyState === 'complete') {
+            documentComplete = true;
+        }
+    });
+
     tabInfo.tabId.then(() => {
         setInterval(() => tabInfo.sayAlive(), 5000);
+
+        if (documentComplete) {
+            tabInfo.sayAlive();
+        }
 
         document.addEventListener("DOMContentLoaded", function () {
             tabInfo.sayAlive();
@@ -105,6 +116,16 @@ if (window === window.top) {
             scheduleMs = URL_POLL_HIDDEN;
         }
         visibilityPoll = setInterval(visibilityHello, scheduleMs);
+    });
+}
+
+function once(obj, event, callback) {
+    return new Promise(function (resolve) {
+        function onEvent() {
+            resolve(callback.apply(this, arguments));
+            obj.removeEventListener(event, onEvent);
+        }
+        obj.addEventListener(event, onEvent);
     });
 }
 
