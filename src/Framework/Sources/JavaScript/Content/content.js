@@ -94,7 +94,7 @@ if (window === window.top) {
             tabInfo.sayAlive();
         });
 
-        document.addEventListener("load", function () {
+        window.addEventListener("load", function () {
             tabInfo.sayAlive();
         });
 
