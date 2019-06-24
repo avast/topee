@@ -1,14 +1,22 @@
-Topee
-=====
-Topee is a framework that runs Chrome extension code on Safari.
+<img align="right" src="logo.png" width="300px"/>
+Are you a JavaScript developer?
+-------------------------------
+
+Write Swiftless Safari Extensions using Chrome API
+==================================================
+
+Topee provides Chrome Extension API. You can have the same codebase for all browsers.
+-------------------------------------------------------------------------------------
 
 While Google Chrome, Firefox and Edge share the same extension API, Safari extensions are going in a different direction,
 requiring developers to use a different set of APIs and partly also Swift instead of JavaScript.
 
 The Topee project provides the Google Chrome Extension API for Safari, allowing you to run a single codebase on all the browsers.
 
-Status: [API complete enough](http://htmlpreview.github.io/?https://github.com/avast/topee/blob/master/api.html#)
-for a [product](https://www.avast.com/passwords#mac).
+The API is [complete enough](http://htmlpreview.github.io/?https://github.com/avast/topee/blob/master/api.html#) to run in production, such as the extension delivered with [Avast Passwords for Mac](https://www.avast.com/passwords#mac).
+
+> Use [carthage](https://github.com/Carthage/Carthage) to [add it to your project](#xcode-project).
+
 
 First run
 =========
@@ -50,6 +58,9 @@ How it works
 To run Chrome-API-based extension, Topee creates an invisible WebView to run background scripts
 and `chrome` namespace implementations for background and content scripts, that provides [messaging](messaging.md)
 and other functionality.
+
+> Use [carthage](https://github.com/Carthage/Carthage) to [add it to your project](#xcode-project).
+
 
 Tests
 ====
