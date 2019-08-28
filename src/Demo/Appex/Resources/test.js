@@ -1,4 +1,4 @@
-if (window.location.href !== 'https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html') {
+if (!window.location.href.startsWith('https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html')) {
   throw 'invalid injection';  // this is injected anywhere despite the Info.plist settings
 }
 
@@ -293,6 +293,20 @@ describe('chrome.tabs.query', function () {
 
     expect(result.find(tab => tab.url === url)).toBeUndefined();
     expect(result.length).toBe(initialTabs.length - 1);
+  });
+});
+
+describe('chrome.tabs.update', function() {
+  it('navigates to a new url', async function () {
+    if (window.location.hash) {
+      window.location = '#';
+    }
+
+    await performOnBackground();
+
+    expect(window.location.hash).toBe('#chrome_tabs_update');
+    
+    window.location = '#';
   });
 });
 

@@ -159,6 +159,24 @@ tabs.query = function(queryInfo, callback) {
 
 };
 
+
+// this could be implement in SafariExtensionBridge.swift,
+// but SFSafariPage.getContainingTab only exists since 10.14 and Topee targets 10.11
+tabs.update = function(tabId, updateProperties, callback) {
+   if (!updateProperties.url) {
+       console.error('chrome.tabs.update only supports url parameter');
+   }
+   window.webkit.messageHandlers.content.postMessage({
+       eventName: 'tabUpdate',
+       tabId: tabId,
+       frameId: 0,
+       url: updateProperties.url
+   });
+   setTimeout(function () {
+       callback({ id: tabId, url: updateProperties.url });
+   }, 0); 
+};
+
 eventEmitter.addListener('tabs.query', function (message) {
     tabs.query(message.queryInfo, function (tabs) {
         window.webkit.messageHandlers.content.postMessage({

@@ -6964,7 +6964,7 @@ jasmineRequire.html = function(j$) {
 
   
 (function () {
-  if (window.location.href !== 'https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html') {
+  if (!window.location.href.startsWith('https://pamcdn.avast.com/pamcdn/extensions/install/mac/blank.html')) {
     return;  // this is injected anywhere despite the Info.plist settings
   }
 

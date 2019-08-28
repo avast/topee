@@ -139,6 +139,14 @@ describe('chrome.tabs.query', function () {
     });
 });
 
+describe('chrome.tabs.update', function() {
+    body('navigates to a new url', function (sender) {
+        return new Promise(function (resolve) {
+            chrome.tabs.update(sender.tab.id, { url: '#chrome_tabs_update' }, resolve);
+        });
+    });
+});  
+
 describe('iframe broadcast', function () {
     body('does not encrypt if there is no child iframe', function (sender) {
         chrome.tabs.sendMessage(sender.tab.id, { type: 'broadcasted' });  // no frameId

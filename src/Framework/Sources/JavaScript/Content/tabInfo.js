@@ -42,6 +42,12 @@ function init() {
                 tabInfo.tabId.then(id => msg.source && msg.source.postMessage({ type: tabInfo.Event.TAB_ID, detail: id, debug: topeeDebug }, msg.origin));
             }
         });
+
+        safari.self.addEventListener("message", function (event) {
+            if (event.name === 'tabUpdate' && event.message && event.message.url) {
+                window.location = event.message.url;
+            }        
+        });
     }
 
     if (!isNaN(storedTabId)) {
