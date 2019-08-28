@@ -27,6 +27,7 @@
   "partly": {
     "tabs": [
       "query",
+      "update",
       "create",
       "onActivated"
     ],
