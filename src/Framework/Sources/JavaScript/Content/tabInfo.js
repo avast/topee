@@ -14,6 +14,8 @@ var tabInfo = {
     isForThisFrame: isForThisFrame
 };
 
+var BACKGROUND_GETURL = 'extension-path:/';
+
 var setTabId;
 tabInfo.tabId = new Promise(function (resolve) {
     setTabId = resolve;
@@ -45,7 +47,11 @@ function init() {
 
         safari.self.addEventListener("message", function (event) {
             if (event.name === 'tabUpdate' && event.message && event.message.url) {
-                window.location = event.message.url;
+                var url = event.message.url;
+                if (event.message.url.startsWith(BACKGROUND_GETURL)) {
+                    url = chrome.runtime.getURL(url.substr(BACKGROUND_GETURL.length));
+                }
+                window.location = url;
             }        
         });
     }

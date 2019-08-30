@@ -4,7 +4,7 @@ var extension = {};
 
 // TODO: Implementation
 extension.getURL = function (path) {
-    return "extension-path/" + path;
+    return "extension-path:/" + path;
 };
 
 // TODO: Implementation

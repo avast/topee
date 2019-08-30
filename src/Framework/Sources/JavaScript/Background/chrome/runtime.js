@@ -30,4 +30,11 @@ runtime.getManifest = function () {
     return runtime._manifest;
 };
 
+// TODO: Implementation
+runtime.getURL = function (path) {
+    return 'extension-path:/' + path;
+};
+
+
+
 module.exports = runtime;
