@@ -508,6 +508,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EF80A77B210F2C37002C6F3F /* Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				DEVELOPMENT_TEAM = 6H4HRTU5E3;
 			};
 			name = Debug;
 		};
@@ -515,6 +517,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EF80A77C210F2C37002C6F3F /* Release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = 6H4HRTU5E3;
 			};
 			name = Release;
 		};
