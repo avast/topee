@@ -8,6 +8,7 @@ REVISION = $(shell git rev-list --count --no-merges HEAD)
 VERSION = $(shell /usr/libexec/PlistBuddy -c "Print CFBundleShortVersionString" src/Framework/Support/Sources/Info.plist)
 
 build:
+	which -s node || brew install node 
 	@xcodebuild\
 		-workspace "$(WORKSPACE)"\
 		-scheme "$(SCHEME)" clean build\
