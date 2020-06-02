@@ -305,7 +305,7 @@ describe('chrome.tabs.update', function() {
     await performOnBackground();
 
     expect(window.location.hash).toBe('#chrome_tabs_update');
-    
+
     window.location = '#';
   });
 });
@@ -332,6 +332,46 @@ describe('iframe broadcast', function () {
 
     expect(crypto.subtle.encrypt).not.toHaveBeenCalled();
   });
+});
+
+describe('chrome.storage.local', function() {
+    it('sets and reads single key:value', function (done) {
+        const key = randomString()
+        const value = randomString()
+        chrome.storage.local.set({ [key]: value })
+        chrome.storage.local.get(key, (result) => {
+            console.log('chrome.storage.local.get', { result })
+            expect(result[key]).toEqual(value)
+            done()
+        })
+    });
+
+    it('gets array of keys', function (done) {
+        const key1 = randomString()
+        const key2 = randomString()
+        const value1 = randomString()
+        const value2 = randomString()
+        chrome.storage.local.set({ [key1]: value1, [key2]: value2 })
+        chrome.storage.local.get([key1, key2], (result) => {
+            console.log('chrome.storage.local.get', { result })
+            expect(result[key1]).toEqual(value1)
+            expect(result[key2]).toEqual(value2)
+            done()
+        })
+    });
+
+    it('gets with default values if object passed', function (done) {
+        const key1 = randomString()
+        const key2 = randomString()
+        const value1 = randomString()
+        chrome.storage.local.set({ [key1]: value1 })
+        chrome.storage.local.get({ [key1]: 'defaultValue', [key2]: 'defaultValue' }, (result) => {
+            console.log('chrome.storage.local.get', { result })
+            expect(result[key1]).toEqual(value1) // because we just wrote it
+            expect(result[key2]).toEqual('defaultValue') // because it is empty in storage
+            done()
+        })
+    });
 });
 
 describe('iframe message', function () {
@@ -444,6 +484,10 @@ function getCurrentTabId () {
   return tabIdFuture.getValue();
 }
 
+function randomString() {
+    return 'x' + Math.random().toString()
+}
+
 /* fill _currentTest and _currentSuite, used for background execution */
 jasmine.getEnv().addReporter({
   jasmineDone: function () {},
@@ -453,4 +497,3 @@ jasmine.getEnv().addReporter({
   suiteDone: function () {},
   suiteStarted: function (desc) { _currentSuite = desc; }
 });
- 
