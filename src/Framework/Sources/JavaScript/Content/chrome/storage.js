@@ -35,5 +35,16 @@ var storage = {
 
 module.exports = {
     local: storage,
-    sync: storage
+    sync: storage,
+    managed: {
+        get() {
+            return new Promise(function (resolve) {
+                resolve({});
+            });
+        }
+    },
+    onChanged: {
+        addListener() {},
+        removeListener() {},
+    },
 };

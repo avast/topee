@@ -34,31 +34,13 @@ function manageRequest(payload) {
     }
 
     if (payload.eventName === 'storage.get') {
-        let keysToFetch = [];
-        let defaults = {};
-        if (Array.isArray(payload.message.keys)) {
-            keysToFetch = payload.message.keys;
-        } else if (typeof payload.message.keys === 'string') {
-            keysToFetch = [payload.message.keys];
-        } else if (typeof payload.message.keys === 'object') {
-            keysToFetch = Object.keys(payload.message.keys);
-            defaults = payload.message.keys;
-        } else {
-            throw new Error('invalid type of argument');
-        }
-        const result = {};
-        for (const key of keysToFetch) {
-            const inStorage = localStorage.getItem(key);
-            result[key] = inStorage ? JSON.decode(inStorage) : defaults[key] || null;
-        }
-        sendResponse(result);
+        chrome.storage.local.get(payload.message.keys, function (result) {
+            return sendResponse(result);
+        });
     }
 
     if (payload.eventName === 'storage.set') {
-        const items = payload.message.items;
-        for (const key of Object.keys(items)) {
-            localStorage.setItem(key, JSON.stringify(items[key]));
-        }
+        chrome.storage.local.set(payload.message.items);
         sendResponse();
     }
 
