@@ -1,8 +1,11 @@
 'use strict';
 
+// @todo maybe include extension name here?
+const STORAGE_KEY_PREFIX = '__topee_internal.';
+
 // not sure if our local storage is isolated, so better use key prefixing
 function keyName(key) {
-    return '__topee_internal.' + key;
+    return STORAGE_KEY_PREFIX + key;
 }
 
 var storage = {
@@ -22,7 +25,10 @@ var storage = {
             keysToFetch = Object.keys(keys);
             defaults = keys;
         } else if (typeof keys === 'function') {
-            keysToFetch = Object.keys(localStorage);
+            // @todo tests
+            keysToFetch = Object.keys(localStorage)
+                .filter(key => key.startsWith(STORAGE_KEY_PREFIX))
+                .map(key => key.replace(STORAGE_KEY_PREFIX, ''));
         } else {
             console.log('storage.get keys:', keys);
             throw new Error('storage.getinvalid type of argument: ' + typeof keys);
