@@ -1,5 +1,9 @@
 'use strict';
 
+const tabs = require('./tabs.js');
+const EventEmitter = require('events');
+const changeEmitter = new EventEmitter();
+
 function storage(storageArea) {
     const STORAGE_KEY_PREFIX = '__topee_internal.' + storageArea + '.';
     function keyName(key) {
@@ -46,15 +50,27 @@ function storage(storageArea) {
                 localStorage.setItem(keyName(key), JSON.stringify(items[key]));
                 changes[key] = { oldValue, newValue };
             }
-            for (const cb of onChangeListeners) {
-                // because only local is supported we can hardcode areaName = local
-                cb(changes, 'local');
-            }
+
+            changeEmitter.emit('storage', changes, storageArea);
+            tabs.query({}, function(tabs) {
+                tabs.forEach(function (tab) {
+                    window.webkit.messageHandlers.content.postMessage({
+                        tabId: tab.id,
+                        eventName: 'request',
+                        frameId: options.frameId,
+                        messageId: messageId,
+                        payload: {
+                            type: '__topee_storage',
+                            changes: changes,
+                            area: storageArea
+                        }
+                    });                
+                });
+            });
         }
     };
 }
 
-const onChangeListeners = [];
 
 module.exports = {
     local: storage('local'),
@@ -64,7 +80,10 @@ module.exports = {
     },
     onChanged: {
         addListener(callback) {
-            onChangeListeners.push(callback);
+            changeEmitter.on('storage', callback);
         },
-    },
+        removeListener(callback) {
+            changeEmitter.off('storage', callback);
+        }
+    }
 };

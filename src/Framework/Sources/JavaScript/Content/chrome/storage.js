@@ -2,6 +2,9 @@
 'use strict';
 
 const background = require('../background-bridge');
+const EventEmitter = require('events');
+const changeEmitter = new EventEmitter();
+const runtime = require('./runtime.js');
 
 function storage(storageArea) {
     return {
@@ -37,6 +40,12 @@ function storage(storageArea) {
     };
 }
 
+runtime.onMessage.addListener(function (message) {
+    if (message.type === '__topee_storage') {
+        changeEmitter.emit('storage', message.changes, message.area);
+    }
+});
+
 module.exports = {
     local: storage('local'),
     sync: storage('sync'),
@@ -45,19 +54,10 @@ module.exports = {
     },
     onChanged: {
         addListener(callback) {
-            var listenerId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-            background.dispatchRequest(
-                {
-                    eventName: 'storage.onChanged',
-                    listenerId,
-                }
-            );
-            safari.self.addEventListener('message', function (event) {
-                if (event.name !== 'response') console.log('safari event', event);
-                if (event.name === 'storage.onChanged' && event.message.listenerId === listenerId) {
-                    callback(event.message.payload);
-                }
-            });
+            changeEmitter.on('storage', callback);
         },
-    },
+        removeListener(callback) {
+            changeEmitter.off('storage', callback);
+        }
+    }
 };
