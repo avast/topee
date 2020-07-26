@@ -374,6 +374,27 @@ describe('chrome.storage.local', function() {
     });
 });
 
+describe('chrome.storage.onChanged', function() {
+    it('get old and new values for each changed key', function (done) {
+        const key = 'onchange-test-' + randomString()
+        const value = randomString()
+        chrome.storage.onChanged.addListener((changes, areaName) => {
+            // other tests will trigger this callback, so we need a protection
+            if (typeof changes[key] === 'undefined') {
+                // console.warn('discarded', { key, changes }, { value }, key in changes,  typeof changes[key] )
+                return
+            }
+            // LT uses areaName only in one place and i think we can skip it for now
+            // because we don't support sync and/or managed
+            // expect(areaName).toEqual('local')
+            expect(changes[key].oldValue).toEqual(null)
+            expect(changes[key].newValue).toEqual(value)
+            done()
+        })
+        chrome.storage.local.set({ [key]: value })
+    });
+});
+
 describe('iframe message', function () {
   var skipTest = false;
   var iframe;

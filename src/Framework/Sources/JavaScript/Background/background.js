@@ -39,6 +39,12 @@ function manageRequest(payload) {
         });
     }
 
+    if (payload.eventName === 'storage.onChanged') {
+        chrome.storage.onChanged.addListener(function (keys) {
+            return sendToTab(payload.tabId, 'storage.onChanged', payload.listenerId, keys);
+        });
+    }
+
     if (payload.eventName === 'storage.set') {
         chrome.storage.local.set(payload.message.items);
         sendResponse();
@@ -56,6 +62,17 @@ function manageRequest(payload) {
             payload: response
         });
     }
+}
+
+// can be reused for sendResponse function above,
+// but there is no benefits atm because it requires refactoring (messageId -> listenerId)
+function sendToTab(tabId, eventName, listenerId, payload) {
+    window.webkit.messageHandlers.content.postMessage({
+        tabId,
+        eventName,
+        listenerId,
+        payload
+    });
 }
 
 window.topee = {

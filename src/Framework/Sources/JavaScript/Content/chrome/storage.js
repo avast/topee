@@ -44,7 +44,20 @@ module.exports = {
         }
     },
     onChanged: {
-        addListener() {},
-        removeListener() {},
+        addListener(callback) {
+            var listenerId = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+            background.dispatchRequest(
+                {
+                    eventName: 'storage.onChanged',
+                    listenerId,
+                }
+            );
+            safari.self.addEventListener('message', function (event) {
+                if (event.name !== 'response') console.log('safari event', event);
+                if (event.name === 'storage.onChanged' && event.message.listenerId === listenerId) {
+                    callback(event.message.payload);
+                }
+            });
+        },
     },
 };
