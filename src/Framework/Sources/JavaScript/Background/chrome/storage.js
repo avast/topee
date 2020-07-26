@@ -55,12 +55,7 @@ module.exports = {
     local: storage,
     sync: storage,
     managed: {
-        get() {
-            return new Promise(function (resolve) {
-                resolve({});
-                // reject(new Error('managed store is not supported'));
-            });
-        }
+        get: storage.get
     },
     onChanged: {
         addListener(callback) {

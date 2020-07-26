@@ -37,11 +37,7 @@ module.exports = {
     local: storage,
     sync: storage,
     managed: {
-        get() {
-            return new Promise(function (resolve) {
-                resolve({});
-            });
-        }
+        get: storage.get
     },
     onChanged: {
         addListener(callback) {
