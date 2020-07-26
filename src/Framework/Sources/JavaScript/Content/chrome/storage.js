@@ -3,41 +3,45 @@
 
 const background = require('../background-bridge');
 
-var storage = {
-    /**
-     * @param keys (optional)
-     * @param cb function
-     */
-    get (keys, cb) {
-        const callback = cb || keys;
-        background.dispatchRequest(
-            {
-                eventName: 'storage.get',
-                message: {
-                    keys
+function storage(storageArea) {
+    return {
+        /**
+         * @param keys (optional)
+         * @param cb function
+         */
+        get (keys, cb) {
+            const callback = cb || keys;
+            background.dispatchRequest(
+                {
+                    eventName: 'storage.get',
+                    message: {
+                        area: storageArea,
+                        keys
+                    }
+                },
+                (resp) => callback(resp)
+            );
+        },
+        set(items) {
+            background.dispatchRequest(
+                {
+                    eventName: 'storage.set',
+                    message: {
+                        area: storageArea,
+                        items
+                    }
                 }
-            },
-            (resp) => callback(resp)
-        );
-    },
-    set(items) {
-        background.dispatchRequest(
-            {
-                eventName: 'storage.set',
-                message: {
-                    items
-                }
-            }
-            // (resp) => callback(resp)
-        );
-    }
-};
+                // (resp) => callback(resp)
+            );
+        }
+    };
+}
 
 module.exports = {
-    local: storage,
-    sync: storage,
+    local: storage('local'),
+    sync: storage('sync'),
     managed: {
-        get: storage.get
+        get: storage('managed').get
     },
     onChanged: {
         addListener(callback) {
