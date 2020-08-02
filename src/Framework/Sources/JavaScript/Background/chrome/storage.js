@@ -29,8 +29,12 @@ function storage(storageArea) {
             } else if (typeof keys === 'function') {
                 // @todo tests
                 keysToFetch = Object.keys(localStorage)
-                    .filter(key => key.startsWith(STORAGE_KEY_PREFIX))
-                    .map(key => key.replace(STORAGE_KEY_PREFIX, ''));
+                    .filter(function (key) {
+                        return key.startsWith(STORAGE_KEY_PREFIX);
+                    })
+                    .map(function (key) {
+                        return key.replace(STORAGE_KEY_PREFIX, '');
+                    });
             } else {
                 console.log('storage.get keys:', keys);
                 throw new Error('storage.getinvalid type of argument: ' + typeof keys);
