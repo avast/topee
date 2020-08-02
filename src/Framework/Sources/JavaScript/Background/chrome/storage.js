@@ -9,7 +9,7 @@ function storage(storageArea) {
     function keyName(key) {
         return STORAGE_KEY_PREFIX + key;
     }
-    
+
     return {
         /**
          * @param keys (optional)
@@ -61,14 +61,15 @@ function storage(storageArea) {
                     window.webkit.messageHandlers.content.postMessage({
                         tabId: tab.id,
                         eventName: 'request',
-                        frameId: options.frameId,
-                        messageId: messageId,
+                        // @todo are these realy needed
+                        // frameId: options.frameId,
+                        // messageId: messageId,
                         payload: {
                             type: '__topee_storage',
                             changes: changes,
                             area: storageArea
                         }
-                    });                
+                    });
                 });
             });
         }
