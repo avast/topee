@@ -13,15 +13,29 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
         }
         // URL.path etc. don't work on topee:
         let urlString = url.absoluteString
-        let index = urlString.index(urlString.startIndex, offsetBy: POPUP_PROTOCOL.count + "://".count)
+        let tld = urlSchemeTask.request.mainDocumentURL?.absoluteString
+        let index = tld != nil && tld != urlString && urlString.starts(with: tld!) ?
+            urlString.index(urlString.startIndex, offsetBy: tld!.count + 1)  // count slash in
+            : urlString.index(urlString.startIndex, offsetBy: POPUP_PROTOCOL.count + "://".count)
         let file = String(urlString[index..<urlString.endIndex])
         let path = (file as NSString).deletingPathExtension
         let ext = (file as NSString).pathExtension
+        
+        var d: Data
+        
+        do {
+            
+            d = try String(contentsOf: Bundle.main.url(forResource: file, withExtension: "")!, encoding: .utf8).data(using: .utf8)!
+        } catch {
+            urlSchemeTask.didFailWithError(URLError(URLError.fileDoesNotExist))
+            return
+        }
 
-        let d = "<html><body>Hello popup!</body></html>".data(using: .utf8)
-        let headers = URLResponse(url: url, mimeType: mimeType(ext), expectedContentLength: d!.count, textEncodingName: "utf8")
+        NSLog(urlString + " ---> " + file)
+        //let d = "<html><body>Hello popup!</body></html>".data(using: .utf8)
+        let headers = URLResponse(url: URL(string: POPUP_PROTOCOL + "://" + file)!, mimeType: mimeType(ext), expectedContentLength: d.count, textEncodingName: "utf8")
         urlSchemeTask.didReceive(headers)
-        urlSchemeTask.didReceive(d!)
+        urlSchemeTask.didReceive(d)
         urlSchemeTask.didFinish()
     }
     
@@ -67,7 +81,7 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
         let width = NSLayoutConstraint(item: webView!, attribute: .width, relatedBy: .equal, toItem: self.view, attribute: .width, multiplier: 1, constant: 0)
         self.view.addConstraints([height,width])
 
-        let u = URL(string: POPUP_PROTOCOL + "://index.html")
+        let u = URL(string: POPUP_PROTOCOL + "://dialog.html")
         //self.webView.load(d!, mimeType: "text/html", characterEncodingName: "utf8", baseURL: u!)
         webView.load(URLRequest(url: u!))
 
