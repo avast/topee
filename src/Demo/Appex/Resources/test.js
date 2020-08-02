@@ -342,7 +342,6 @@ for(const area of ['local', 'sync']) {
             const value = randomString()
             storageArea.set({ [key]: value })
             storageArea.get(key, (result) => {
-                console.log(`chrome.storage.${area}.get`, { result })
                 expect(result[key]).toEqual(value)
                 done()
             })
@@ -355,7 +354,6 @@ for(const area of ['local', 'sync']) {
             const value2 = randomString()
             storageArea.set({ [key1]: value1, [key2]: value2 })
             storageArea.get([key1, key2], (result) => {
-                console.log(`chrome.storage.${area}.get`, { result })
                 expect(result[key1]).toEqual(value1)
                 expect(result[key2]).toEqual(value2)
                 done()
@@ -368,9 +366,21 @@ for(const area of ['local', 'sync']) {
             const value1 = randomString()
             storageArea.set({ [key1]: value1 })
             storageArea.get({ [key1]: 'defaultValue', [key2]: 'defaultValue' }, (result) => {
-                console.log(`chrome.storage.${area}.get`, { result })
                 expect(result[key1]).toEqual(value1) // because we just wrote it
                 expect(result[key2]).toEqual('defaultValue') // because it is empty in storage
+                done()
+            })
+        });
+
+        it('gets all keys', function (done) {
+            const key = randomString()
+            const value = randomString()
+            storageArea.set({ [key]: value })
+            storageArea.get((result) => {
+                // key which we just set should be there
+                expect(result[key]).toEqual(value)
+                // there should be other keys
+                expect(Object.keys(result).length).toBeGreaterThan(1)
                 done()
             })
         });

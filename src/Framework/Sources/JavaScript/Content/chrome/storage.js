@@ -19,7 +19,7 @@ function storage(storageArea) {
                     eventName: 'storage.get',
                     message: {
                         area: storageArea,
-                        keys
+                        keys: cb ? keys : undefined
                     }
                 },
                 (resp) => callback(resp)

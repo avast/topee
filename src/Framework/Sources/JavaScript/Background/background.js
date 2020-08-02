@@ -34,9 +34,12 @@ function manageRequest(payload) {
     }
 
     if (payload.eventName === 'storage.get') {
-        chrome.storage.local.get(payload.message.keys, function (result) {
-            return sendResponse(result);
-        });
+        const keys = payload.message.keys;
+        if (keys) {
+            chrome.storage.local.get(keys, sendResponse);
+        } else {
+            chrome.storage.local.get(sendResponse);
+        }
     }
 
     if (payload.eventName === 'storage.onChanged') {

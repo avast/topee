@@ -27,7 +27,6 @@ function storage(storageArea) {
                 keysToFetch = Object.keys(keys);
                 defaults = keys;
             } else if (typeof keys === 'function') {
-                // @todo tests
                 keysToFetch = Object.keys(localStorage)
                     .filter(function (key) {
                         return key.startsWith(STORAGE_KEY_PREFIX);
