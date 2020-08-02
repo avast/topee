@@ -334,45 +334,48 @@ describe('iframe broadcast', function () {
   });
 });
 
-describe('chrome.storage.local', function() {
-    it('sets and reads single key:value', function (done) {
-        const key = randomString()
-        const value = randomString()
-        chrome.storage.local.set({ [key]: value })
-        chrome.storage.local.get(key, (result) => {
-            console.log('chrome.storage.local.get', { result })
-            expect(result[key]).toEqual(value)
-            done()
-        })
-    });
+for(const area of ['local', 'sync']) {
+    const storageArea = chrome.storage[area]
+    describe(`chrome.storage.${area}`, function() {
+        it('sets and reads single key:value', function (done) {
+            const key = randomString()
+            const value = randomString()
+            storageArea.set({ [key]: value })
+            storageArea.get(key, (result) => {
+                console.log(`chrome.storage.${area}.get`, { result })
+                expect(result[key]).toEqual(value)
+                done()
+            })
+        });
 
-    it('gets array of keys', function (done) {
-        const key1 = randomString()
-        const key2 = randomString()
-        const value1 = randomString()
-        const value2 = randomString()
-        chrome.storage.local.set({ [key1]: value1, [key2]: value2 })
-        chrome.storage.local.get([key1, key2], (result) => {
-            console.log('chrome.storage.local.get', { result })
-            expect(result[key1]).toEqual(value1)
-            expect(result[key2]).toEqual(value2)
-            done()
-        })
-    });
+        it('gets array of keys', function (done) {
+            const key1 = randomString()
+            const key2 = randomString()
+            const value1 = randomString()
+            const value2 = randomString()
+            storageArea.set({ [key1]: value1, [key2]: value2 })
+            storageArea.get([key1, key2], (result) => {
+                console.log(`chrome.storage.${area}.get`, { result })
+                expect(result[key1]).toEqual(value1)
+                expect(result[key2]).toEqual(value2)
+                done()
+            })
+        });
 
-    it('gets with default values if object passed', function (done) {
-        const key1 = randomString()
-        const key2 = randomString()
-        const value1 = randomString()
-        chrome.storage.local.set({ [key1]: value1 })
-        chrome.storage.local.get({ [key1]: 'defaultValue', [key2]: 'defaultValue' }, (result) => {
-            console.log('chrome.storage.local.get', { result })
-            expect(result[key1]).toEqual(value1) // because we just wrote it
-            expect(result[key2]).toEqual('defaultValue') // because it is empty in storage
-            done()
-        })
+        it('gets with default values if object passed', function (done) {
+            const key1 = randomString()
+            const key2 = randomString()
+            const value1 = randomString()
+            storageArea.set({ [key1]: value1 })
+            storageArea.get({ [key1]: 'defaultValue', [key2]: 'defaultValue' }, (result) => {
+                console.log(`chrome.storage.${area}.get`, { result })
+                expect(result[key1]).toEqual(value1) // because we just wrote it
+                expect(result[key2]).toEqual('defaultValue') // because it is empty in storage
+                done()
+            })
+        });
     });
-});
+}
 
 describe('chrome.storage.onChanged', function() {
     it('get old and new values for each changed key', function (done) {
@@ -386,7 +389,7 @@ describe('chrome.storage.onChanged', function() {
             }
             // LT uses areaName only in one place and i think we can skip it for now
             // because we don't support sync and/or managed
-            // expect(areaName).toEqual('local')
+            expect(areaName).toEqual('local')
             expect(changes[key].oldValue).toEqual(null)
             expect(changes[key].newValue).toEqual(value)
             done()
