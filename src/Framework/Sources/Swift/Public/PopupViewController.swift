@@ -1,7 +1,9 @@
 import SafariServices
 import WebKit
 
-class PopupViewController: SFSafariExtensionViewController, WKNavigationDelegate, WKURLSchemeHandler {
+let POPUP_PROTOCOL = "topee"
+
+class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
     
     // https://github.com/DiligentRobot/WKWebViewExample/blob/master/WKWebKitExample/ViewController%2BWKURLSchemeHandler.swift
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
@@ -9,8 +11,15 @@ class PopupViewController: SFSafariExtensionViewController, WKNavigationDelegate
             urlSchemeTask.didFailWithError(URLError(URLError.badURL))
             return
         }
+        // URL.path etc. don't work on topee:
+        let urlString = url.absoluteString
+        let index = urlString.index(urlString.startIndex, offsetBy: POPUP_PROTOCOL.count + "://".count)
+        let file = String(urlString[index..<urlString.endIndex])
+        let path = (file as NSString).deletingPathExtension
+        let ext = (file as NSString).pathExtension
+
         let d = "<html><body>Hello popup!</body></html>".data(using: .utf8)
-        let headers = URLResponse(url: url, mimeType: "text/html", expectedContentLength: 38, textEncodingName: "utf8")
+        let headers = URLResponse(url: url, mimeType: mimeType(ext), expectedContentLength: d!.count, textEncodingName: "utf8")
         urlSchemeTask.didReceive(headers)
         urlSchemeTask.didReceive(d!)
         urlSchemeTask.didFinish()
@@ -18,6 +27,25 @@ class PopupViewController: SFSafariExtensionViewController, WKNavigationDelegate
     
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
         // ignore
+    }
+    
+    func mimeType(_ ext: String) -> String {
+        switch ext.lowercased() {
+        case "html", "htm":
+            return "text/html"
+        case "png":
+            return "image/png"
+        case "jpg", "jpeg":
+            return "image/jpg"
+        case "gif":
+            return "image/gif"
+        case "js":
+            return "text/javascript"
+        case "css":
+            return "text/css"
+        default:
+            return "application/octet-stream"
+        }
     }
     
 
@@ -30,17 +58,16 @@ class PopupViewController: SFSafariExtensionViewController, WKNavigationDelegate
         NSLog("Expected PopupViewController instantiation")
         self.preferredContentSize = NSMakeSize(300, 450)
         let config = WKWebViewConfiguration()
-        config.setURLSchemeHandler(self, forURLScheme: "topee")
+        config.setURLSchemeHandler(self, forURLScheme: POPUP_PROTOCOL)
         webView = WKWebView(frame: .zero, configuration: config)
         self.view = webView
-        webView.navigationDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false;
 
         let height = NSLayoutConstraint(item: webView!, attribute: .height, relatedBy: .equal, toItem: self.view, attribute: .height, multiplier: 1, constant: 0)
         let width = NSLayoutConstraint(item: webView!, attribute: .width, relatedBy: .equal, toItem: self.view, attribute: .width, multiplier: 1, constant: 0)
         self.view.addConstraints([height,width])
 
-        let u = URL(string: "topee://index.html")
+        let u = URL(string: POPUP_PROTOCOL + "://index.html")
         //self.webView.load(d!, mimeType: "text/html", characterEncodingName: "utf8", baseURL: u!)
         webView.load(URLRequest(url: u!))
 
