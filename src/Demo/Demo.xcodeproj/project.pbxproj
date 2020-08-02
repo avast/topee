@@ -497,6 +497,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EFB69384211037BE00F402FC /* Debug.xcconfig */;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 			};
 			name = Debug;
 		};
@@ -504,6 +505,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EFB69385211037BE00F402FC /* Release.xcconfig */;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 			};
 			name = Release;
 		};
@@ -525,6 +527,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EF80A7A6210F3259002C6F3F /* Debug.xcconfig */;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 			};
 			name = Debug;
 		};
@@ -532,6 +535,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EF80A7A5210F3259002C6F3F /* Release.xcconfig */;
 			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 			};
 			name = Release;
 		};

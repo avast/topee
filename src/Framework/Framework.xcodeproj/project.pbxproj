@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		806E5C6221306E4300C369EB /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806E5C6121306E4300C369EB /* TestHelper.swift */; };
 		80BEB8AA2111B68600DA4C7B /* topee-background.js in Resources */ = {isa = PBXBuildFile; fileRef = 80BEB8A92111B68600DA4C7B /* topee-background.js */; };
+		A8FC5DD724D4541600E42776 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FC5DD624D4541600E42776 /* PopupViewController.swift */; };
 		EF26BBD92192DDA800C17448 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF26BBD82192DDA800C17448 /* Bundle.swift */; };
 		EF2B6DF1216F8CAA003B4D7E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE6216F8CAA003B4D7E /* Message.swift */; };
 		EF2B6DF2216F8CAA003B4D7E /* WKWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE8216F8CAA003B4D7E /* WKWebView.swift */; };
@@ -48,6 +49,7 @@
 		80BEB8A42111B3E600DA4C7B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
 		80BEB8A62111B58900DA4C7B /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = content.js; sourceTree = "<group>"; };
 		80BEB8A92111B68600DA4C7B /* topee-background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "topee-background.js"; path = "Build/topee-background.js"; sourceTree = SOURCE_ROOT; };
+		A8FC5DD624D4541600E42776 /* PopupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		EF1A65C821186D390021E013 /* url-matcher.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "url-matcher.js"; sourceTree = "<group>"; };
 		EF1FACD0211467FD005876A2 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
 		EF1FACD1211467FD005876A2 /* tabs.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = tabs.js; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 		EF2B6DEC216F8CAA003B4D7E /* Public */ = {
 			isa = PBXGroup;
 			children = (
+				A8FC5DD624D4541600E42776 /* PopupViewController.swift */,
 				EF2B6DEE216F8CAA003B4D7E /* SafariExtensionBridge.swift */,
 				EF2B6DED216F8CAA003B4D7E /* TopeeExtensionManifest.swift */,
 				EF2B6DF9216F911D003B4D7E /* TopeeLogger.swift */,
@@ -461,6 +464,7 @@
 				EF40FAC12170DBE10083F822 /* DefaultLogger.swift in Sources */,
 				EF2B6DF1216F8CAA003B4D7E /* Message.swift in Sources */,
 				EF2B6DF4216F8CAA003B4D7E /* SFSafariApplicationHelper.swift in Sources */,
+				A8FC5DD724D4541600E42776 /* PopupViewController.swift in Sources */,
 				EF2B6DFA216F911D003B4D7E /* TopeeLogger.swift in Sources */,
 				EF2B6DF2216F8CAA003B4D7E /* WKWebView.swift in Sources */,
 				806E5C6221306E4300C369EB /* TestHelper.swift in Sources */,
@@ -511,6 +515,7 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				DEVELOPMENT_TEAM = 6H4HRTU5E3;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 			};
 			name = Debug;
 		};
@@ -520,6 +525,7 @@
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				DEVELOPMENT_TEAM = 6H4HRTU5E3;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 			};
 			name = Release;
 		};

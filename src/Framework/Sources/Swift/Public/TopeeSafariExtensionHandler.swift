@@ -36,4 +36,9 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
     open override func toolbarItemClicked(in window: SFSafariWindow) {
         bridge.toolbarItemClicked(in: window)
     }
+
+    open override func popoverViewController() -> SFSafariExtensionViewController {
+        return PopupViewController()
+    }
+
 }
