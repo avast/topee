@@ -3,6 +3,19 @@ import WebKit
 
 let POPUP_PROTOCOL = "topee"
 
+class LeakAvoider : NSObject, WKScriptMessageHandler {
+    weak var delegate : WKScriptMessageHandler?
+    init(delegate:WKScriptMessageHandler) {
+        self.delegate = delegate
+        super.init()
+    }
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        self.delegate?.userContentController(
+            userContentController, didReceive: message)
+    }
+}
+
 class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
     
     public var bridge: SafariExtensionBridgeType { return SafariExtensionBridge.shared }
@@ -67,6 +80,8 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
 
     var webView : WKWebView!
     
+    public static let shared = PopupViewController()
+    
     
     // how to avoid WKWebView not being unloaded: https://stackoverflow.com/questions/26383031/wkwebview-causes-my-view-controller-to-leak/26383032#26383032
     
@@ -78,9 +93,9 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
             .url(forResource: "topee-popup", withExtension: "js")!
         let script = WKUserScript(scripts: [readFile(popupURL)])
 
-                let contentController: WKUserContentController = WKUserContentController()
+        let contentController: WKUserContentController = WKUserContentController()
         contentController.addUserScript(script)
-        contentController.add(bridge, name: MessageHandler.background.rawValue)
+        contentController.add(LeakAvoider(delegate: bridge), name: MessageHandler.background.rawValue)
 
         self.preferredContentSize = NSMakeSize(300, 450)
         let config = WKWebViewConfiguration()
@@ -93,12 +108,6 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
         let height = NSLayoutConstraint(item: webView!, attribute: .height, relatedBy: .equal, toItem: self.view, attribute: .height, multiplier: 1, constant: 0)
         let width = NSLayoutConstraint(item: webView!, attribute: .width, relatedBy: .equal, toItem: self.view, attribute: .width, multiplier: 1, constant: 0)
         self.view.addConstraints([height,width])
-
-        let u = URL(string: POPUP_PROTOCOL + "://popup.html")
-        //self.webView.load(d!, mimeType: "text/html", characterEncodingName: "utf8", baseURL: u!)
-        webView.load(URLRequest(url: u!))
-        
-        bridge.registerPopup(popup: webView)
 
 /*        let haveId = NSCondition()
         var u = ""
@@ -186,10 +195,17 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
         NSLog("Unexpected PopupViewController instantiation")
     }
     
-    override func dismissPopover() {
+    public func load(_ path: String) {
+        let u = URL(string: POPUP_PROTOCOL + "://" + path)
+        //self.webView.load(d!, mimeType: "text/html", characterEncodingName: "utf8", baseURL: u!)
+        webView.load(URLRequest(url: u!))
+        
+        bridge.registerPopup(popup: webView)
+    }
+    
+    override func viewDidDisappear() {
         bridge.unregisterPopup()
-        webView = nil
-        super.dismissPopover()
+        super.viewDidDisappear()
     }
 
     private func readFile(_ url: URL) -> String {

@@ -38,7 +38,8 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
     }
 
     open override func popoverViewController() -> SFSafariExtensionViewController {
-        return PopupViewController()
+        PopupViewController.shared.load("popup.html")
+        return PopupViewController.shared
     }
 
 }
