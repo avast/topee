@@ -4,7 +4,8 @@ module.exports = {
     entry: {
         'content': './Content/content.js',
         'background': './Background/background.js',
-        'iframe-resources': './IframeResources/iframe-resources.js'
+        'iframe-resources': './IframeResources/iframe-resources.js',
+        'popup': './Popup/popup.js'
     },
     mode: 'none',
     output: {

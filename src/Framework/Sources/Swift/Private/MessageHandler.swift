@@ -12,4 +12,8 @@ enum MessageHandler: String {
     case appex
     /// When the message is intended for the logger
     case log
+    /// Messages from popup to the background
+    case background
+    /// Replies to popup
+    case popup
 }

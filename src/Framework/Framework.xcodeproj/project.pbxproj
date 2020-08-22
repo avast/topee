@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		806E5C6221306E4300C369EB /* TestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 806E5C6121306E4300C369EB /* TestHelper.swift */; };
 		80BEB8AA2111B68600DA4C7B /* topee-background.js in Resources */ = {isa = PBXBuildFile; fileRef = 80BEB8A92111B68600DA4C7B /* topee-background.js */; };
+		A8BDBC5F24F1667B0074A848 /* topee-popup.js in Resources */ = {isa = PBXBuildFile; fileRef = A8BDBC5E24F1667B0074A848 /* topee-popup.js */; };
 		A8FC5DD724D4541600E42776 /* PopupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8FC5DD624D4541600E42776 /* PopupViewController.swift */; };
 		EF26BBD92192DDA800C17448 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF26BBD82192DDA800C17448 /* Bundle.swift */; };
 		EF2B6DF1216F8CAA003B4D7E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF2B6DE6216F8CAA003B4D7E /* Message.swift */; };
@@ -49,6 +50,7 @@
 		80BEB8A42111B3E600DA4C7B /* background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
 		80BEB8A62111B58900DA4C7B /* content.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = content.js; sourceTree = "<group>"; };
 		80BEB8A92111B68600DA4C7B /* topee-background.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "topee-background.js"; path = "Build/topee-background.js"; sourceTree = SOURCE_ROOT; };
+		A8BDBC5E24F1667B0074A848 /* topee-popup.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = "topee-popup.js"; path = "Build/topee-popup.js"; sourceTree = "<group>"; };
 		A8FC5DD624D4541600E42776 /* PopupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopupViewController.swift; sourceTree = "<group>"; };
 		EF1A65C821186D390021E013 /* url-matcher.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "url-matcher.js"; sourceTree = "<group>"; };
 		EF1FACD0211467FD005876A2 /* runtime.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = runtime.js; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 		EF80A751210F2B67002C6F3F = {
 			isa = PBXGroup;
 			children = (
+				A8BDBC5E24F1667B0074A848 /* topee-popup.js */,
 				FD4AD1CB2153E1E400E13EA0 /* Scripts */,
 				EF80A77A210F2C1E002C6F3F /* Config */,
 				EF80A75C210F2B67002C6F3F /* Products */,
@@ -418,6 +421,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8BDBC5F24F1667B0074A848 /* topee-popup.js in Resources */,
 				FD4AD1CE2153E1F900E13EA0 /* run-at-document-end.sh in Resources */,
 				FDD7715921304F8500F6BC46 /* topee-iframe-resources.js in Resources */,
 				EFC86ECF21133BB40049CD8B /* topee-content.js in Resources */,

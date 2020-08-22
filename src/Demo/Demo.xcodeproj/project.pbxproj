@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		801C626F2189D8DD00177FC2 /* testIframe.html in Resources */ = {isa = PBXBuildFile; fileRef = 801C626E2189D8DC00177FC2 /* testIframe.html */; };
+		A83629A224F162B9007FE393 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = A83629A124F162B9007FE393 /* popup.html */; };
 		EF80A78A210F2F55002C6F3F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF80A789210F2F55002C6F3F /* Cocoa.framework */; };
 		EF80A78F210F2F55002C6F3F /* SafariExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF80A78E210F2F55002C6F3F /* SafariExtensionViewController.swift */; };
 		EF80A792210F2F55002C6F3F /* SafariExtensionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EF80A790210F2F55002C6F3F /* SafariExtensionViewController.xib */; };
@@ -62,6 +63,7 @@
 
 /* Begin PBXFileReference section */
 		801C626E2189D8DC00177FC2 /* testIframe.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = testIframe.html; sourceTree = "<group>"; };
+		A83629A124F162B9007FE393 /* popup.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = popup.html; sourceTree = "<group>"; };
 		EF80A726210F281D002C6F3F /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A736210F281F002C6F3F /* DemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF80A787210F2F55002C6F3F /* Appex.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Appex.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -262,6 +264,7 @@
 		FD66CF7D2110515E003E0819 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A83629A124F162B9007FE393 /* popup.html */,
 				801C626E2189D8DC00177FC2 /* testIframe.html */,
 				FDD5648F2114543600AF7D12 /* jasmine.css */,
 				FDAD63BD211C78C900DFF27E /* dialog.html */,
@@ -405,6 +408,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FDAD63BE211C78C900DFF27E /* dialog.html in Resources */,
+				A83629A224F162B9007FE393 /* popup.html in Resources */,
 				FDD5648D211450B300AF7D12 /* test.js in Resources */,
 				FDD564902114543600AF7D12 /* jasmine.css in Resources */,
 				FD66CF8521105A73003E0819 /* topee-content.js in Resources */,

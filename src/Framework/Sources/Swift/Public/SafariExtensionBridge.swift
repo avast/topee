@@ -6,11 +6,14 @@ import Foundation
 import SafariServices
 import WebKit
 
-public protocol SafariExtensionBridgeType {
+public protocol SafariExtensionBridgeType: WKScriptMessageHandler {
     func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger: TopeeLogger?, backgroudScriptDebugDelaySec: Int)
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
+    func registerPopup(popup: WKWebView)
+    func unregisterPopup()
+    //func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage)
 }
 
 public extension SafariExtensionBridgeType {
@@ -38,6 +41,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var isBackgroundReady: Bool = false
     // Accumulates messages until the background scripts informs us that is ready
     private var messageQueue: [String] = []
+    
+    private var popup: WKWebView? = nil
 
     override init() {
         super.init()
@@ -92,6 +97,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             contentController.add(self, name: MessageHandler.content.rawValue)
             contentController.add(self, name: MessageHandler.appex.rawValue)
             contentController.add(self, name: MessageHandler.log.rawValue)
+            contentController.add(self, name: MessageHandler.popup.rawValue)
             webConfiguration.userContentController = contentController
             let webView = WKWebView(frame: .zero, configuration: webConfiguration)
             webView.customUserAgent = "\(userAgent) Topee/\(topeeVersion)"
@@ -114,6 +120,15 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
         }
     }
+
+    public func registerPopup(popup: WKWebView) {
+        self.popup = popup
+    }
+    
+    public func unregisterPopup() {
+        self.popup = nil
+    }
+
 
     public func toolbarItemClicked(in window: SFSafariWindow) {
         safariHelper.toolbarItemClicked(in: window)
@@ -243,6 +258,12 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                     window?.openTab(with: tabUrl, makeActiveIfPossible: tabActive, completionHandler: { _ in })
                 })
             }
+        case .background:
+            guard let message = userInfo["message"] as? [String: Any] else { return }
+            sendMessageToBackgroundScript(payload: message)
+        case .popup:
+            //guard let message = userInfo["body"] as? [String: Any] else { return }
+            sendMessageToPopupScript(payload: userInfo)
         }
     }
 
@@ -289,6 +310,37 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private func sendMessageToContentScript(page: SFSafariPage, withName: String, userInfo: [String: Any]? = nil) {
         logger.debug("#appex(->content): page \(page.hashValue) message { name: \(withName), userInfo: \(prettyPrintJSObject(userInfo ?? [:])) }")
         page.dispatchMessageToScript(withName: withName, userInfo: userInfo)
+    }
+
+    private func sendMessageToPopupScript(payload: [String: Any]) {
+        func handler() {
+            do {
+                let str = try String(data: JSONSerialization.data(withJSONObject: payload), encoding: .utf8)!
+                guard let activePopup = self.popup else { return }
+                activePopup.evaluateJavaScript("topee.manageRequest(\(str))") { result, error in
+                    guard error == nil else {
+                        self.logger.error("Received JS error: \(error! as NSError)")
+                        return
+                    }
+                    if let result = result {
+                        self.logger.debug("Received JS result: \(result)")
+                    }
+                }
+            } catch {
+                let message = "Failed to serialize payload for sendMessageToPopupScript"
+                logger.error(message)
+                fatalError(message)
+            }
+        }
+
+        // Only dispatch to main thread if we aren't already in main.
+        if Thread.isMainThread {
+            handler()
+        } else {
+            DispatchQueue.main.async {
+                handler()
+            }
+        }
     }
 
     private func loadAllResolutions(_ iconUrl: URL) -> NSImage {

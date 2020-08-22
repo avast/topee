@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<h1>Popup</h1>
+<script>
+chrome.runtime.sendMessage({ type: 'getDemoDlgBackground' }, function (color) {
+    document.body.style.backgroundColor = color;
+});
+</script>
+</body>
+</html>
