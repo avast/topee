@@ -102,15 +102,13 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             let webView = WKWebView(frame: .zero, configuration: webConfiguration)
             webView.customUserAgent = "\(userAgent) Topee/\(topeeVersion)"
             webView.loadHTMLString("<html><body></body></html>", baseURL: webViewURL)
-            
+
             if backgroudScriptDebugDelaySec > 0 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(backgroudScriptDebugDelaySec)) { [webView, script] in
-                    webView.evaluateJavaScript("console.log('injecting background script; chrome ==', typeof chrome)");
-                    webView.evaluateJavaScript(script.source)
-                    webView.evaluateJavaScript("console.log('background script injected; chrome ==', typeof chrome)");
+                    webView.loadHTMLString("<html><body><script>" + script.source + "</script></body></html>", baseURL: self.webViewURL)
                 }
             }
-            
+
             return webView
         }()
         DispatchQueue.global().asyncAfter(deadline: .now() + 10) { [unowned self] in
