@@ -4,7 +4,6 @@
 const background = require('../background-bridge');
 const EventEmitter = require('events');
 const changeEmitter = new EventEmitter();
-const runtime = require('./runtime.js');
 
 function storage(storageArea) {
     return {
@@ -40,11 +39,7 @@ function storage(storageArea) {
     };
 }
 
-runtime.onMessage.addListener(function (message) {
-    if (message.type === '__topee_storage') {
-        changeEmitter.emit('storage', message.changes, message.area);
-    }
-});
+var runtimeListenerAdded = false;
 
 module.exports = {
     local: storage('local'),
@@ -54,6 +49,14 @@ module.exports = {
     },
     onChanged: {
         addListener(callback) {
+            if (!runtimeListenerAdded) {
+                chrome.runtime.onMessage.addListener(function (message) {
+                    if (message.type === '__topee_storage') {
+                        changeEmitter.emit('storage', message.changes, message.area);
+                    }
+                });
+                runtimeListenerAdded = true;                
+            }
             changeEmitter.on('storage', callback);
         },
         removeListener(callback) {

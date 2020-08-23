@@ -7,6 +7,15 @@ runtime.sendMessage = function(message, callback) {
     }, callback);
 };
 
+runtime.onMessage = {
+    addListener: function () {},
+    removeListener: function () {}
+}
+
+runtime.getURL = function (path) {
+    return "topee://" + path.startsWith('/') ? path.substr(1) : path;
+};
+
 runtime.id = 'topee://';  // in sync with POPUP_PROTOCOL@PopupViewCOntroller.swift
 
 module.exports = runtime;
