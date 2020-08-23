@@ -7,4 +7,6 @@ runtime.sendMessage = function(message, callback) {
     }, callback);
 };
 
+runtime.id = 'topee://';  // in sync with POPUP_PROTOCOL@PopupViewCOntroller.swift
+
 module.exports = runtime;
