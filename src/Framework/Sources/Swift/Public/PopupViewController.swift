@@ -78,6 +78,8 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
             return "text/javascript"
         case "css":
             return "text/css"
+        case "woff2":
+            return "font/woff2"
         default:
             return "application/octet-stream"
         }
