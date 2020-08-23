@@ -3,17 +3,12 @@ import WebKit
 
 let POPUP_PROTOCOL = "topee"
 
-class LeakAvoider : NSObject, WKScriptMessageHandler {
-    weak var delegate : WKScriptMessageHandler?
-    init(delegate:WKScriptMessageHandler) {
-        self.delegate = delegate
-        super.init()
+func dirUp(_ path: String) -> String? {
+    let upperDir = path.split(separator: "/", maxSplits: 1)
+    if (upperDir.count <= 1) {
+        return nil
     }
-    func userContentController(_ userContentController: WKUserContentController,
-                               didReceive message: WKScriptMessage) {
-        self.delegate?.userContentController(
-            userContentController, didReceive: message)
-    }
+    return String(upperDir[1])
 }
 
 class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
@@ -39,8 +34,19 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
         var d: Data
         
         do {
-            
-            d = try String(contentsOf: Bundle.main.url(forResource: file, withExtension: "")!, encoding: .utf8).data(using: .utf8)!
+            var bundleUrl = Bundle.main.url(forResource: file, withExtension: "")
+            var bundlePath: String? = file
+            // the path mapping is rather broken with e.g. '..'
+            // if not found, rather look a dir up as well
+            while (bundleUrl == nil) {
+                bundlePath = dirUp(bundlePath!)
+                if (bundlePath == nil) {
+                    urlSchemeTask.didFailWithError(URLError(URLError.fileDoesNotExist))
+                    return
+                }
+                bundleUrl = Bundle.main.url(forResource: bundlePath, withExtension: "")
+            }
+            d = try String(contentsOf: bundleUrl!, encoding: .utf8).data(using: .utf8)!
         } catch {
             urlSchemeTask.didFailWithError(URLError(URLError.fileDoesNotExist))
             return
@@ -95,7 +101,7 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
 
         let contentController: WKUserContentController = WKUserContentController()
         contentController.addUserScript(script)
-        contentController.add(LeakAvoider(delegate: bridge), name: MessageHandler.background.rawValue)
+        contentController.add(bridge, name: MessageHandler.background.rawValue)
 
         self.preferredContentSize = NSMakeSize(360, 442)
         let config = WKWebViewConfiguration()
