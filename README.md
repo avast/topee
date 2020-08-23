@@ -53,7 +53,7 @@ topee-background.js should not be listed, but place it into the Appex resources.
 
 Injected iframes from web accessible resources need to reference topee-iframe-resources.js.
 
-Place browserAction icons into the Appex resources.
+Place browserAction icons into the Appex resources. browserAction [popup](documentation/popup.md) is currently in beta.
 
 How it works
 ====
