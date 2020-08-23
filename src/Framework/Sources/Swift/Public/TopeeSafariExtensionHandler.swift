@@ -38,7 +38,18 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
     }
 
     open override func popoverViewController() -> SFSafariExtensionViewController {
-        PopupViewController.shared.load("popup.html")
+        let dict = Bundle.main.infoDictionary!
+        guard let extensionDictionary = dict["NSExtension"] as? [String: Any] else {
+            return PopupViewController.shared
+        }
+        guard let browserAction = extensionDictionary["SFSafariToolbarItem"] as? [String: String] else {
+            return PopupViewController.shared
+        }
+        guard let popupPath = browserAction["PopoverPath"] as? String else {
+            return PopupViewController.shared
+        }
+
+        PopupViewController.shared.load(popupPath)
         return PopupViewController.shared
     }
 

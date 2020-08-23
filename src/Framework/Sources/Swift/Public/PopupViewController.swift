@@ -97,7 +97,7 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
         contentController.addUserScript(script)
         contentController.add(LeakAvoider(delegate: bridge), name: MessageHandler.background.rawValue)
 
-        self.preferredContentSize = NSMakeSize(300, 450)
+        self.preferredContentSize = NSMakeSize(360, 442)
         let config = WKWebViewConfiguration()
         config.setURLSchemeHandler(self, forURLScheme: POPUP_PROTOCOL)
         config.userContentController = contentController

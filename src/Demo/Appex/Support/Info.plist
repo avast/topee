@@ -77,6 +77,8 @@
 		</array>
 		<key>SFSafariToolbarItem</key>
 		<dict>
+			<key>PopoverPath</key>
+			<string>popup.html</string>
 			<key>Action</key>
 			<string>Popover</string>
 			<key>Identifier</key>
