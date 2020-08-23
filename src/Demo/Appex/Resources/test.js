@@ -305,7 +305,7 @@ describe('chrome.tabs.update', function() {
     await performOnBackground();
 
     expect(window.location.hash).toBe('#chrome_tabs_update');
-    
+
     window.location = '#';
   });
 });
@@ -332,6 +332,80 @@ describe('iframe broadcast', function () {
 
     expect(crypto.subtle.encrypt).not.toHaveBeenCalled();
   });
+});
+
+for(const area of ['local', 'sync']) {
+    const storageArea = chrome.storage[area]
+    describe(`chrome.storage.${area}`, function() {
+        it('sets and reads single key:value', function (done) {
+            const key = randomString()
+            const value = randomString()
+            storageArea.set({ [key]: value })
+            storageArea.get(key, (result) => {
+                expect(result[key]).toEqual(value)
+                done()
+            })
+        });
+
+        it('gets array of keys', function (done) {
+            const key1 = randomString()
+            const key2 = randomString()
+            const value1 = randomString()
+            const value2 = randomString()
+            storageArea.set({ [key1]: value1, [key2]: value2 })
+            storageArea.get([key1, key2], (result) => {
+                expect(result[key1]).toEqual(value1)
+                expect(result[key2]).toEqual(value2)
+                done()
+            })
+        });
+
+        it('gets with default values if object passed', function (done) {
+            const key1 = randomString()
+            const key2 = randomString()
+            const value1 = randomString()
+            storageArea.set({ [key1]: value1 })
+            storageArea.get({ [key1]: 'defaultValue', [key2]: 'defaultValue' }, (result) => {
+                expect(result[key1]).toEqual(value1) // because we just wrote it
+                expect(result[key2]).toEqual('defaultValue') // because it is empty in storage
+                done()
+            })
+        });
+
+        it('gets all keys', function (done) {
+            const key = randomString()
+            const value = randomString()
+            storageArea.set({ [key]: value })
+            storageArea.get((result) => {
+                // key which we just set should be there
+                expect(result[key]).toEqual(value)
+                // there should be other keys
+                expect(Object.keys(result).length).toBeGreaterThan(1)
+                done()
+            })
+        });
+    });
+}
+
+describe('chrome.storage.onChanged', function() {
+    it('get old and new values for each changed key', function (done) {
+        const key = 'onchange-test-' + randomString()
+        const value = randomString()
+        chrome.storage.onChanged.addListener((changes, areaName) => {
+            // other tests will trigger this callback, so we need a protection
+            if (typeof changes[key] === 'undefined') {
+                // console.warn('discarded', { key, changes }, { value }, key in changes,  typeof changes[key] )
+                return
+            }
+            // LT uses areaName only in one place and i think we can skip it for now
+            // because we don't support sync and/or managed
+            expect(areaName).toEqual('local')
+            expect(changes[key].oldValue).toEqual(null)
+            expect(changes[key].newValue).toEqual(value)
+            done()
+        })
+        chrome.storage.local.set({ [key]: value })
+    });
 });
 
 describe('iframe message', function () {
@@ -444,6 +518,10 @@ function getCurrentTabId () {
   return tabIdFuture.getValue();
 }
 
+function randomString() {
+    return 'x' + Math.random().toString()
+}
+
 /* fill _currentTest and _currentSuite, used for background execution */
 jasmine.getEnv().addReporter({
   jasmineDone: function () {},
@@ -453,4 +531,3 @@ jasmine.getEnv().addReporter({
   suiteDone: function () {},
   suiteStarted: function (desc) { _currentSuite = desc; }
 });
- 

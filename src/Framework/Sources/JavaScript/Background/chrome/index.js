@@ -8,5 +8,6 @@ module.exports = {
 	tabs: require('./tabs.js'),
 	webRequest: require('./web-request.js'),
 	webNavigation: require('./web-navigation.js'),
-	windows: require('./windows.js')
+    windows: require('./windows.js'),
+    storage: require('./storage.js'),
 };

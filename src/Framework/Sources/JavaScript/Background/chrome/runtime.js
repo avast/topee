@@ -35,6 +35,9 @@ runtime.getURL = function (path) {
     return 'extension-path:/' + path;
 };
 
-
+runtime.onInstalled = {
+    // TODO: Implementation
+    addListener () {},
+};
 
 module.exports = runtime;

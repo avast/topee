@@ -445,7 +445,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "make -C \"$SRCROOT/Sources/JavaScript\" test build\n";
+			shellScript = "export NVM_DIR=\"$HOME/.nvm\"\n[ -s \"/usr/local/opt/nvm/nvm.sh\" ] && . \"/usr/local/opt/nvm/nvm.sh\"  \n\nmake -C \"$SRCROOT/Sources/JavaScript\" test build\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
