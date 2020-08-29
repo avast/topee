@@ -46,10 +46,11 @@ function manageRequest(payload) {
 
     if (payload.eventName === 'storage.get') {
         const keys = payload.message.keys;
+        const area = payload.message.area;
         if (keys) {
-            chrome.storage.local.get(keys, sendResponse);
+            chrome.storage[area].get(keys, sendResponse);
         } else {
-            chrome.storage.local.get(sendResponse);
+            chrome.storage[area].get(sendResponse);
         }
     }
 
@@ -60,16 +61,16 @@ function manageRequest(payload) {
     }
 
     if (payload.eventName === 'storage.set') {
-        chrome.storage.local.set(payload.message.items);
+        chrome.storage[payload.message.area].set(payload.message.items);
         sendResponse();
     }
 
     if (payload.eventName === 'storage.remove') {
-        chrome.storage.local.remove(payload.message.keys, sendResponse);
+        chrome.storage[payload.message.area].remove(payload.message.keys, sendResponse);
     }
 
     if (payload.eventName === 'storage.clear') {
-        chrome.storage.local.clear(sendResponse);
+        chrome.storage[payload.message.area].clear(sendResponse);
     }
 
     if (serviceEvents.includes(payload.eventName)) {

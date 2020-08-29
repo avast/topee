@@ -334,7 +334,8 @@ describe('iframe broadcast', function () {
   });
 });
 
-for(const area of ['local', 'sync']) {
+const STORAGE_AREAS = ['local', 'sync']
+for(const area of STORAGE_AREAS) {
     const storageArea = chrome.storage[area]
     describe(`chrome.storage.${area}`, function() {
         it('sets and reads single key:value', function (done) {
@@ -444,6 +445,28 @@ for(const area of ['local', 'sync']) {
                 })
             })
         });
+
+        it('read/writes to correct storage area (regression test)', function (done) {
+            const anotherArea = STORAGE_AREAS.filter(s => s !== area)[0]
+            const key = randomString()
+            const originalValue = randomString()
+            const overridenValue = randomString()
+            // just in case. to prevent false-positives
+            expect(originalValue).not.toEqual(overridenValue)
+            // write to main area first, then write same key to another area
+            // if all writes go to same area then second command will be overwritten
+            // so if it's not - then we are good
+            storageArea.set({ [key]: originalValue })
+            chrome.storage[anotherArea].set({ [key]: overridenValue })
+            storageArea.get(key, (result) => {
+                expect(result[key]).toEqual(originalValue)
+                // just in case check another area
+                chrome.storage[anotherArea].get(key, (result) => {
+                    expect(result[key]).toEqual(overridenValue)
+                    done()
+                });
+            })
+        })
     });
 }
 
