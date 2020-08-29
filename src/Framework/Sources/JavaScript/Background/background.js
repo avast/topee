@@ -24,7 +24,7 @@ function manageRequest(payload) {
             }, sendResponse);
             return;
         }
-    
+
         chrome.tabs.get(payload.tabId, function (tab) {
             if (!tab) {  // should not happen
                 tab = { id: payload.tabId };
@@ -64,6 +64,14 @@ function manageRequest(payload) {
         sendResponse();
     }
 
+    if (payload.eventName === 'storage.remove') {
+        chrome.storage.local.remove(payload.message.keys, sendResponse);
+    }
+
+    if (payload.eventName === 'storage.clear') {
+        chrome.storage.local.clear(sendResponse);
+    }
+
     if (serviceEvents.includes(payload.eventName)) {
         eventEmitter.emit(payload.eventName, payload);
     }
@@ -75,7 +83,7 @@ function manageRequest(payload) {
                 messageId: payload.messageId,
                 payload: response
             });
-            return;    
+            return;
         }
 
         window.webkit.messageHandlers.content.postMessage({

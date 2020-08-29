@@ -10,6 +10,35 @@ function storage(storageArea) {
         return STORAGE_KEY_PREFIX + key;
     }
 
+    function getAllKeys() {
+        return Object.keys(localStorage)
+            .filter(function (key) {
+                return key.startsWith(STORAGE_KEY_PREFIX);
+            })
+            .map(function (key) {
+                return key.replace(STORAGE_KEY_PREFIX, '');
+            });
+    }
+
+    /**
+     * @param {string|string[]} keys
+     * @param {function} [callbackFunc]
+     */
+    function remove (keys, callbackFunc) {
+        let keysToRemove;
+        if (typeof keys === 'string') {
+            keysToRemove = [keys];
+        } else if (Array.isArray(keys)) {
+            keysToRemove = keys;
+        } else {
+            throw new Error('Invalid "keys" argument type');
+        }
+        for (const key of keysToRemove) {
+            localStorage.removeItem(keyName(key));
+        }
+        callbackFunc && callbackFunc();
+    }
+
     return {
         /**
          * @param keys (optional)
@@ -27,13 +56,7 @@ function storage(storageArea) {
                 keysToFetch = Object.keys(keys);
                 defaults = keys;
             } else if (typeof keys === 'function') {
-                keysToFetch = Object.keys(localStorage)
-                    .filter(function (key) {
-                        return key.startsWith(STORAGE_KEY_PREFIX);
-                    })
-                    .map(function (key) {
-                        return key.replace(STORAGE_KEY_PREFIX, '');
-                    });
+                keysToFetch = getAllKeys();
             } else {
                 console.log('storage.get keys:', keys);
                 throw new Error('storage.getinvalid type of argument: ' + typeof keys);
@@ -71,7 +94,14 @@ function storage(storageArea) {
                     });
                 });
             });
-        }
+        },
+        remove,
+        /**
+         * @param {function} callbackFunc
+         */
+        clear (callbackFunc) {
+            remove(getAllKeys(), callbackFunc);
+        },
     };
 }
 

@@ -384,6 +384,66 @@ for(const area of ['local', 'sync']) {
                 done()
             })
         });
+
+        it('removes multiple keys i.e. storage.remove([key1,key2,key3])', function (done) {
+            const key1 = randomString()
+            const key2 = randomString()
+            const value = randomString()
+            storageArea.set({ [key1]: value, [key2]: value })
+            storageArea.get((result) => {
+                // keys which we just set should be there
+                expect(result[key1]).toEqual(value)
+                expect(result[key2]).toEqual(value)
+                // now remove and check again
+                storageArea.remove([key1, key2], () => {
+                    storageArea.get((result) => {
+                        // key which we set should not be there
+                        expect(result[key1]).toEqual(undefined)
+                        expect(result[key2]).toEqual(undefined)
+                        done()
+                    })
+                })
+            })
+        });
+
+        it('removes one key i.e. storage.remove(key1)', function (done) {
+            const key = randomString()
+            const value = randomString()
+            storageArea.set({ [key]: value })
+            storageArea.get((result) => {
+                // key which we just set should be there
+                expect(result[key]).toEqual(value)
+                // now remove and check again
+                console.log('before storageArea.remove')
+                console.log(typeof key)
+                storageArea.remove(key, () => {
+                  console.log('after storageArea.remove')
+                    storageArea.get((result) => {
+                        // key which we set should not be there
+                        expect(result[key]).toEqual(undefined)
+                        done()
+                    })
+                })
+            })
+        });
+
+        it('cleares all keys i.e. storage.clear()', function (done) {
+            const key = randomString()
+            const value = randomString()
+            storageArea.set({ [key]: value })
+            storageArea.get((result) => {
+                // key which we just set should be there
+                expect(result[key]).toEqual(value)
+                // now remove and check again
+                storageArea.clear(() => {
+                    storageArea.get((result) => {
+                        // storage should be empty
+                        expect(Object.keys(result).length).toEqual(0)
+                        done()
+                    })
+                })
+            })
+        });
     });
 }
 
