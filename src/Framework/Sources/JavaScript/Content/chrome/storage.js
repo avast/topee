@@ -35,7 +35,30 @@ function storage(storageArea) {
                 }
                 // (resp) => callback(resp)
             );
-        }
+        },
+        remove(keys, callback) {
+            background.dispatchRequest(
+                {
+                    eventName: 'storage.remove',
+                    message: {
+                        area: storageArea,
+                        keys
+                    }
+                },
+                () => callback()
+            );
+        },
+        clear(callback) {
+            background.dispatchRequest(
+                {
+                    eventName: 'storage.clear',
+                    message: {
+                        area: storageArea,
+                    }
+                },
+                () => callback()
+            );
+        },
     };
 }
 
@@ -55,7 +78,7 @@ module.exports = {
                         changeEmitter.emit('storage', message.changes, message.area);
                     }
                 });
-                runtimeListenerAdded = true;                
+                runtimeListenerAdded = true;
             }
             changeEmitter.on('storage', callback);
         },

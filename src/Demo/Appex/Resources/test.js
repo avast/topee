@@ -334,7 +334,8 @@ describe('iframe broadcast', function () {
   });
 });
 
-for(const area of ['local', 'sync']) {
+const STORAGE_AREAS = ['local', 'sync']
+for(const area of STORAGE_AREAS) {
     const storageArea = chrome.storage[area]
     describe(`chrome.storage.${area}`, function() {
         it('sets and reads single key:value', function (done) {
@@ -384,6 +385,88 @@ for(const area of ['local', 'sync']) {
                 done()
             })
         });
+
+        it('removes multiple keys i.e. storage.remove([key1,key2,key3])', function (done) {
+            const key1 = randomString()
+            const key2 = randomString()
+            const value = randomString()
+            storageArea.set({ [key1]: value, [key2]: value })
+            storageArea.get((result) => {
+                // keys which we just set should be there
+                expect(result[key1]).toEqual(value)
+                expect(result[key2]).toEqual(value)
+                // now remove and check again
+                storageArea.remove([key1, key2], () => {
+                    storageArea.get((result) => {
+                        // key which we set should not be there
+                        expect(result[key1]).toEqual(undefined)
+                        expect(result[key2]).toEqual(undefined)
+                        done()
+                    })
+                })
+            })
+        });
+
+        it('removes one key i.e. storage.remove(key1)', function (done) {
+            const key = randomString()
+            const value = randomString()
+            storageArea.set({ [key]: value })
+            storageArea.get((result) => {
+                // key which we just set should be there
+                expect(result[key]).toEqual(value)
+                // now remove and check again
+                console.log('before storageArea.remove')
+                console.log(typeof key)
+                storageArea.remove(key, () => {
+                  console.log('after storageArea.remove')
+                    storageArea.get((result) => {
+                        // key which we set should not be there
+                        expect(result[key]).toEqual(undefined)
+                        done()
+                    })
+                })
+            })
+        });
+
+        it('cleares all keys i.e. storage.clear()', function (done) {
+            const key = randomString()
+            const value = randomString()
+            storageArea.set({ [key]: value })
+            storageArea.get((result) => {
+                // key which we just set should be there
+                expect(result[key]).toEqual(value)
+                // now remove and check again
+                storageArea.clear(() => {
+                    storageArea.get((result) => {
+                        // storage should be empty
+                        expect(Object.keys(result).length).toEqual(0)
+                        done()
+                    })
+                })
+            })
+        });
+
+        it('read/writes to correct storage area (regression test)', function (done) {
+            const anotherArea = STORAGE_AREAS.filter(s => s !== area)[0]
+            const key = randomString()
+            const originalValue = randomString()
+            const overridenValue = randomString()
+            // just in case. to prevent false-positives
+            expect(originalValue).not.toEqual(overridenValue)
+            // write to main area first, then write same key to another area
+            // if all writes go to same area then second command will be overwritten
+            // so if it's not - then we are good
+            storageArea.set({ [key]: originalValue })
+            chrome.storage[anotherArea].set({ [key]: overridenValue })
+            storageArea.get(key, (result) => {
+                expect(result[key]).toEqual(originalValue)
+                // just in case check another area
+                chrome.storage[anotherArea].get(key, (result) => {
+                    expect(result[key]).toEqual(overridenValue)
+                    done()
+                });
+            })
+        })
     });
 }
 
