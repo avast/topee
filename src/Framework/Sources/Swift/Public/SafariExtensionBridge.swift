@@ -26,6 +26,13 @@ public extension SafariExtensionBridgeType {
     }
 }
 
+extension NSRegularExpression {
+    func matches(_ string: String) -> Bool {
+        let range = NSRange(location: 0, length: string.count)
+        return firstMatch(in: string, options: [], range: range) != nil
+    }
+}
+
 public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScriptMessageHandler {
     public static let shared = SafariExtensionBridge()
 
@@ -43,6 +50,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var messageQueue: [String] = []
     
     private var popup: WKWebView? = nil
+    
+    private var localeCache: String = ""
 
     override init() {
         super.init()
@@ -85,8 +94,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 .url(forResource: "topee-background-end", withExtension: "js")!
             let backgroundURL = Bundle(for: SafariExtensionBridge.self)
                 .url(forResource: "topee-background", withExtension: "js")!
+            let bgLocale = "(function () { chrome.i18n._locale=" + readLocales() + "; })();"
+
             let scripts = [readFile(backgroundURL), buildManifestScript()]
-                + readLocales()
+                + [bgLocale]
                 + readFiles(backgroundScriptURLs())
                 + [readFile(backgroundEndURL)]
             let script = WKUserScript(scripts: scripts)
@@ -182,6 +193,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             #if DEBUG
             tabIdInfo["debug"] = ["log": true]
             #endif
+            tabIdInfo["locale"] = readLocales()
             sendMessageToContentScript(page: page, withName: "forceTabId", userInfo: tabIdInfo)
         case .alive, .request:
             if let tabId = userInfo?["tabId"] as? UInt64 {
@@ -425,16 +437,54 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
     }
 
-    private func readLocales() -> [String] {
-        let localePaths = Bundle.main.paths(forResourcesOfType: "", inDirectory: "_locales")
-        return localePaths
-            .map { $0 + "/messages.json" }
-            .map {
-                let lang = (($0 as NSString).deletingLastPathComponent as NSString).lastPathComponent
-                let json = (try? String(contentsOfFile: $0, encoding: .utf8)) ?? ""
-                return json.isEmpty ? json :
-                    "(function () { chrome.i18n._locales['" + lang + "']=" + json + "; })();"
+    private func readLocales() -> String {
+        if localeCache.count > 0 {
+            return localeCache
+        }
+        
+        let langCode = NSLocale.current.languageCode ?? "en"
+        let langRegion = NSLocale.current.regionCode?.uppercased()
+
+        do {
+            let fullRE = try NSRegularExpression(pattern: (langRegion == nil ? langCode : langCode + "_" + langRegion!) + "$")
+            let langRE = try NSRegularExpression(pattern: langCode + "$")
+            let langAnyRE = try NSRegularExpression(pattern: langCode + "[_a-zA-Z]+$")
+            let enRE = try NSRegularExpression(pattern: "en$")
+            
+            
+            let localePaths = Bundle.main.paths(forResourcesOfType: "", inDirectory: "_locales")
+            var messagesPath: String? = nil
+            
+            if localePaths.count == 0 {
+                // no messages found
+                localeCache = "{}"
+                return localeCache
             }
+            
+            repeat {
+                messagesPath = localePaths.first(where: { l in return fullRE.matches(l) })
+                if messagesPath != nil { break }
+                
+                messagesPath = localePaths.first(where: { l in return langRE.matches(l) })
+                if messagesPath != nil { break }
+
+                messagesPath = localePaths.first(where: { l in return langAnyRE.matches(l) })
+                if messagesPath != nil { break }
+
+                messagesPath = localePaths.first(where: { l in return enRE.matches(l) })
+                if messagesPath != nil { break }
+
+                messagesPath = localePaths[0]
+            } while false
+            
+            localeCache = try String(contentsOfFile: messagesPath!, encoding: .utf8)
+        }
+        catch {
+            logger.error("Cannot load " + langCode + (langRegion != nil ? "_" + langRegion! : "") + " locales")
+            localeCache = "{}"
+        }
+        
+        return localeCache
     }
 
     /// Pretty prints the given Javascript object

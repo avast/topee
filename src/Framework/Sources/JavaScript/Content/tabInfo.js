@@ -1,6 +1,8 @@
 // create / get tab id
 'use strict';
 
+const chrome = require("./chrome");
+
 var tabInfo = {
     Event: {
         GET_TAB_ID: 'topee.tabInfo.getTabId',
@@ -41,7 +43,12 @@ function init() {
         // tabId responder
         window.addEventListener('message', function (msg) {
             if (msg.data && msg.data.type === tabInfo.Event.GET_TAB_ID) {
-                tabInfo.tabId.then(id => msg.source && msg.source.postMessage({ type: tabInfo.Event.TAB_ID, detail: id, debug: topeeDebug }, msg.origin));
+                tabInfo.tabId.then(id => msg.source && msg.source.postMessage({
+                    type: tabInfo.Event.TAB_ID,
+                    detail: id,
+                    debug: topeeDebug,
+                    locale: chrome.i18n._locale
+                }, msg.origin));
             }
         });
 
@@ -65,6 +72,15 @@ function init() {
         // should arrive as a response to sayHello
         safari.self.addEventListener("message", function (event) {
             if (event.name === 'forceTabId' && event.message && typeof event.message.tabId === 'number') {
+                if (event.message.locale) {
+                    try {
+                        chrome.i18n._locale = JSON.parse(event.message.locale);
+                    }
+                    catch (ex) {
+                        console.error('Cannot parse locale:', ex);
+                    }
+                }
+
                 storedTabId = event.message.tabId;
                 sessionStorage.setItem('topee_tabId', storedTabId);
 
@@ -82,6 +98,8 @@ function init() {
         var poller;
         window.addEventListener('message', function (msg) {
             if (msg.data && msg.data.type === tabInfo.Event.TAB_ID && typeof msg.data.detail === 'number') {
+                chrome.i18n._locale = msg.data.locale;
+
                 storedTabId = msg.data.detail;
 
                 publishDebug(msg.data.debug);
