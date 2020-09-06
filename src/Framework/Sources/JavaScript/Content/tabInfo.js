@@ -1,8 +1,6 @@
 // create / get tab id
 'use strict';
 
-const chrome = require("./chrome");
-
 var tabInfo = {
     Event: {
         GET_TAB_ID: 'topee.tabInfo.getTabId',
@@ -75,6 +73,7 @@ function init() {
                 if (event.message.locale) {
                     try {
                         chrome.i18n._locale = JSON.parse(event.message.locale);
+                        sessionStorage.setItem('topee_locale', event.message.locale);
                     }
                     catch (ex) {
                         console.error('Cannot parse locale:', ex);
@@ -99,6 +98,7 @@ function init() {
         window.addEventListener('message', function (msg) {
             if (msg.data && msg.data.type === tabInfo.Event.TAB_ID && typeof msg.data.detail === 'number') {
                 chrome.i18n._locale = msg.data.locale;
+                sessionStorage.setItem('topee_locale', JSON.stringify(event.message.locale));
 
                 storedTabId = msg.data.detail;
 

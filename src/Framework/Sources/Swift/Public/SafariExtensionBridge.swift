@@ -477,7 +477,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 messagesPath = localePaths[0]
             } while false
             
-            localeCache = try String(contentsOfFile: messagesPath!, encoding: .utf8)
+            localeCache = try String(contentsOfFile: messagesPath! + "/messages.json", encoding: .utf8)
         }
         catch {
             logger.error("Cannot load " + langCode + (langRegion != nil ? "_" + langRegion! : "") + " locales")
