@@ -97,8 +97,10 @@ function init() {
         var poller;
         window.addEventListener('message', function (msg) {
             if (msg.data && msg.data.type === tabInfo.Event.TAB_ID && typeof msg.data.detail === 'number') {
-                chrome.i18n._locale = msg.data.locale;
-                sessionStorage.setItem('topee_locale', JSON.stringify(event.message.locale));
+                if (msg.data.locale) {
+                    chrome.i18n._locale = msg.data.locale;
+                    sessionStorage.setItem('topee_locale', JSON.stringify(msg.data.locale));
+                }
 
                 storedTabId = msg.data.detail;
 
