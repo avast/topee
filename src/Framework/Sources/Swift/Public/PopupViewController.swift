@@ -99,7 +99,8 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
         
         let popupURL = Bundle(for: SafariExtensionBridge.self)
             .url(forResource: "topee-popup", withExtension: "js")!
-        let script = WKUserScript(scripts: [readFile(popupURL)])
+        let bgLocale = "(function () { chrome.i18n._locale=" + bridge.readLocales() + "; })();"
+        let script = WKUserScript(scripts: [readFile(popupURL), bgLocale])
 
         let contentController: WKUserContentController = WKUserContentController()
         contentController.addUserScript(script)

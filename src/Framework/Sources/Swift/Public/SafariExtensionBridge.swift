@@ -13,7 +13,7 @@ public protocol SafariExtensionBridgeType: WKScriptMessageHandler {
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
     func registerPopup(popup: WKWebView)
     func unregisterPopup()
-    //func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage)
+    func readLocales() -> String
 }
 
 public extension SafariExtensionBridgeType {
@@ -277,6 +277,56 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
     }
 
+    public func readLocales() -> String {
+        if localeCache.count > 0 {
+            return localeCache
+        }
+        
+        let langCode = NSLocale.current.languageCode ?? "en"
+        let langRegion = NSLocale.current.regionCode?.uppercased()
+
+        do {
+            let fullRE = try NSRegularExpression(pattern: (langRegion == nil ? langCode : langCode + "_" + langRegion!) + "$")
+            let langRE = try NSRegularExpression(pattern: langCode + "$")
+            let langAnyRE = try NSRegularExpression(pattern: langCode + "[_a-zA-Z]+$")
+            let enRE = try NSRegularExpression(pattern: "en$")
+            
+            
+            let localePaths = Bundle.main.paths(forResourcesOfType: "", inDirectory: "_locales")
+            var messagesPath: String? = nil
+            
+            if localePaths.count == 0 {
+                // no messages found
+                localeCache = "{}"
+                return localeCache
+            }
+            
+            repeat {
+                messagesPath = localePaths.first(where: { l in return fullRE.matches(l) })
+                if messagesPath != nil { break }
+                
+                messagesPath = localePaths.first(where: { l in return langRE.matches(l) })
+                if messagesPath != nil { break }
+
+                messagesPath = localePaths.first(where: { l in return langAnyRE.matches(l) })
+                if messagesPath != nil { break }
+
+                messagesPath = localePaths.first(where: { l in return enRE.matches(l) })
+                if messagesPath != nil { break }
+
+                messagesPath = localePaths[0]
+            } while false
+            
+            localeCache = try String(contentsOfFile: messagesPath! + "/messages.json", encoding: .utf8)
+        }
+        catch {
+            logger.error("Cannot load " + langCode + (langRegion != nil ? "_" + langRegion! : "") + " locales")
+            localeCache = "{}"
+        }
+        
+        return localeCache
+    }
+
     private func sendMessageToBackgroundScript(payload: String) {
         if !isBackgroundReady {
             messageQueue.append(payload)
@@ -435,56 +485,6 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             logger.error(message)
             fatalError(message)
         }
-    }
-
-    private func readLocales() -> String {
-        if localeCache.count > 0 {
-            return localeCache
-        }
-        
-        let langCode = NSLocale.current.languageCode ?? "en"
-        let langRegion = NSLocale.current.regionCode?.uppercased()
-
-        do {
-            let fullRE = try NSRegularExpression(pattern: (langRegion == nil ? langCode : langCode + "_" + langRegion!) + "$")
-            let langRE = try NSRegularExpression(pattern: langCode + "$")
-            let langAnyRE = try NSRegularExpression(pattern: langCode + "[_a-zA-Z]+$")
-            let enRE = try NSRegularExpression(pattern: "en$")
-            
-            
-            let localePaths = Bundle.main.paths(forResourcesOfType: "", inDirectory: "_locales")
-            var messagesPath: String? = nil
-            
-            if localePaths.count == 0 {
-                // no messages found
-                localeCache = "{}"
-                return localeCache
-            }
-            
-            repeat {
-                messagesPath = localePaths.first(where: { l in return fullRE.matches(l) })
-                if messagesPath != nil { break }
-                
-                messagesPath = localePaths.first(where: { l in return langRE.matches(l) })
-                if messagesPath != nil { break }
-
-                messagesPath = localePaths.first(where: { l in return langAnyRE.matches(l) })
-                if messagesPath != nil { break }
-
-                messagesPath = localePaths.first(where: { l in return enRE.matches(l) })
-                if messagesPath != nil { break }
-
-                messagesPath = localePaths[0]
-            } while false
-            
-            localeCache = try String(contentsOfFile: messagesPath! + "/messages.json", encoding: .utf8)
-        }
-        catch {
-            logger.error("Cannot load " + langCode + (langRegion != nil ? "_" + langRegion! : "") + " locales")
-            localeCache = "{}"
-        }
-        
-        return localeCache
     }
 
     /// Pretty prints the given Javascript object
