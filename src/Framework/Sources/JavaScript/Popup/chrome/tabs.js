@@ -7,4 +7,12 @@ tabs.query = function(queryInfo, callback) {
     }, callback);
 };
 
+tabs.executeScript = function() {
+    console.log('chrome.tabs.executeScript is not supported');
+    var cb = arguments.length > 0 ? arguments[arguments.length - 1] : null;
+    if (typeof cb === 'function') {
+        cb();
+    }
+};
+
 module.exports = tabs;
