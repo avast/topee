@@ -35,9 +35,40 @@ runtime.getURL = function (path) {
     return 'extension-path:/' + path;
 };
 
+var VERSION_INFO = '__topee_extension_version';
+
+// you get the installed / updated notification basically once once per a run
 runtime.onInstalled = {
-    // TODO: Implementation
-    addListener () {},
+    addListener (listener) {
+        // just to be safe, if the caller didn't expect the callback synchronously
+        setTimeout(function () {
+            if (!runtime._manifest) {
+                return;
+            }
+
+            var currentVersion = runtime._manifest.version;
+            if (!currentVersion) {
+                return;
+            }
+
+            var storedVersion = localStorage.getItem(VERSION_INFO);
+
+            localStorage.setItem(VERSION_INFO, currentVersion);
+
+            if (!storedVersion) {
+                listener({
+                    reason: 'install'
+                });
+            }
+            else if (currentVersion !== storedVersion) {
+                listener({
+                    reason: 'update',
+                    previousVersion: storedVersion
+                });
+            }
+        }, 0);
+    },
+    removeListener: function () {}
 };
 
 module.exports = runtime;
