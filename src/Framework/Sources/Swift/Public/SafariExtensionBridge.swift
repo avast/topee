@@ -129,6 +129,23 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
         }
     }
+    
+    private func injectExtensionId() {
+        // this is expected to run in the main thread
+        SFSafariExtension.getBaseURI { baseUrl in
+            if baseUrl != nil {
+                DispatchQueue.main.async {
+                    self.webView!.evaluateJavaScript("chrome.runtime.id='\(baseUrl!)'.substr('\(baseUrl!)'.indexOf('://')+3)") { result, error in
+                        guard error == nil else {
+                            self.logger.error("Received JS error: \(error! as NSError)")
+                            return
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 
     public func registerPopup(popup: WKWebView) {
         self.popup = popup
@@ -250,6 +267,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             switch type {
             case .ready:
                 isBackgroundReady = true
+                injectExtensionId()
                 messageQueue.forEach { sendMessageToBackgroundScript(payload: $0) }
                 messageQueue = []
             case .setIconTitle:

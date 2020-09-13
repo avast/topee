@@ -30,9 +30,13 @@ runtime.getManifest = function () {
     return runtime._manifest;
 };
 
-// TODO: Implementation
+runtime.id = '';
+
 runtime.getURL = function (path) {
-    return 'extension-path:/' + path;
+    if (path[0] === '/') {
+        path = path.substr(1);
+    }
+    return 'safari-extension://' + runtime.id + path;
 };
 
 var VERSION_INFO = '__topee_extension_version';
