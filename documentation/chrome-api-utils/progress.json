@@ -8,9 +8,11 @@
     "runtime": [
       "getManifest",
       "sendMessage",
+      "onInstalled",
       "onMessage"
     ],
     "tabs": [
+      "create",
       "get",
       "sendMessage",
       "onCreated",
@@ -29,7 +31,6 @@
     "tabs": [
       "query",
       "update",
-      "create",
       "onActivated"
     ]
   },
