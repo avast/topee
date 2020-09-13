@@ -16,9 +16,9 @@ public class TopeeExtensionManifest: Equatable {
     /// values from the Topee framework you can pass:
     /// `Bundle.for(TopeeExtensionManifest.self)`
     public init(bundle: Bundle = .main) {
-        self.name = bundle.displayName ?? ""
-        self.version = bundle.shortVersionString ?? ""
-        self.bundleId = bundle.bundleId ?? ""
+        self.name = bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String ?? bundle.object(forInfoDictionaryKey: "CFBundleExecutable") as? String ?? ""
+        self.version = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""
+        self.bundleId = bundle.object(forInfoDictionaryKey: "CFBundleIdentifier") as? String ?? ""
     }
 
     public init(name: String, version: String, bundleId: String) {
