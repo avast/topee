@@ -66,7 +66,20 @@ class SFSafariApplicationHelper {
      completionHandler if no active window is found.
      */
     func getActiveWindow(completionHandler: @escaping (SFSafariWindow?) -> Void) {
-        // TODO: Try to get current window or fallback to cached activeWindow after some timeout
+        if (activeWindow == nil) {
+            let task = DispatchWorkItem { completionHandler(nil) }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: task)
+            
+            func timeoutCompletionHandler(_ window: SFSafariWindow?) {
+                task.cancel()
+                completionHandler(window)
+            }
+            
+            SFSafariApplication.getActiveWindow(completionHandler: timeoutCompletionHandler)
+            return
+        }
+        
         completionHandler(activeWindow)
     }
 
