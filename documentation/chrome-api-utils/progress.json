@@ -17,6 +17,7 @@
       "onUpdated"
     ],
     "i18n": [
+      "getMessage",
       "getUILanguage"
     ],
     "windows": [
@@ -30,9 +31,6 @@
       "update",
       "create",
       "onActivated"
-    ],
-    "i18n": [
-      "getMessage"
     ]
   },
   "bugs": {
