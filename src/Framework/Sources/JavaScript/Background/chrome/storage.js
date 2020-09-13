@@ -79,13 +79,19 @@ function storage(storageArea) {
 
             changeEmitter.emit('storage', changes, storageArea);
             tabs.query({}, function(tabs) {
+                window.webkit.messageHandlers.popup.postMessage({
+                    eventName: 'request',
+                    payload: {
+                        type: '__topee_storage',
+                        changes: changes,
+                        area: storageArea
+                    }
+                });
+
                 tabs.forEach(function (tab) {
                     window.webkit.messageHandlers.content.postMessage({
                         tabId: tab.id,
                         eventName: 'request',
-                        // @todo are these realy needed
-                        // frameId: options.frameId,
-                        // messageId: messageId,
                         payload: {
                             type: '__topee_storage',
                             changes: changes,

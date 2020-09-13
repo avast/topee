@@ -179,6 +179,15 @@ tabs.update = function(tabId, updateProperties, callback) {
 
 eventEmitter.addListener('tabs.query', function (message) {
     tabs.query(message.queryInfo, function (tabs) {
+        if (message.tabId === 'popup') {
+            window.webkit.messageHandlers.popup.postMessage({
+                eventName: 'response',
+                messageId: message.messageId,
+                payload: tabs
+            });
+            return;
+        }
+        
         window.webkit.messageHandlers.content.postMessage({
             eventName: 'response',
             tabId: message.tabId,

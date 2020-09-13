@@ -1,9 +1,9 @@
 var tabs = {};
 
-tabs.query = function(message, callback) {
+tabs.query = function(queryInfo, callback) {
     window.topee.dispatchRequest(0, {
         eventName: 'tabs.query',
-        message: message
+        queryInfo: queryInfo
     }, callback);
 };
 
