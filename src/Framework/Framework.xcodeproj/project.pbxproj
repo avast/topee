@@ -518,7 +518,7 @@
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				DEVELOPMENT_TEAM = 6H4HRTU5E3;
+				DEVELOPMENT_TEAM = 5696C7SX37;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 			};
 			name = Debug;
@@ -528,7 +528,7 @@
 			baseConfigurationReference = EF80A77C210F2C37002C6F3F /* Release.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				DEVELOPMENT_TEAM = 6H4HRTU5E3;
+				DEVELOPMENT_TEAM = 5696C7SX37;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 			};
 			name = Release;
