@@ -120,6 +120,13 @@ class PageRegistry<Page: Equatable> {
         assert(Thread.current == thread)
         return pages[tabId]
     }
+    
+    public func tabIdToTab(tabId: UInt64, completionHandler: @escaping (SFSafariTab) -> Void) {
+        assert(Thread.current == thread)
+        if pages[tabId] != nil && pages[tabId] is SFSafariPage {
+            (pages[tabId]! as! SFSafariPage).getContainingTab(completionHandler: completionHandler)
+        }
+    }
 }
 
 typealias SFSafariPageRegistry = PageRegistry<SFSafariPage>

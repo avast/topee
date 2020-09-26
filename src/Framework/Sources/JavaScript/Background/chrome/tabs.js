@@ -224,6 +224,16 @@ tabs.create = function(createProperties, callback) {
     }
 };
 
+tabs.remove = function(id, callback) {
+    window.webkit.messageHandlers.appex.postMessage({
+        type: 'removeTab',
+        tabId: id
+    });
+    if (callback) {
+        setTimeout(callback, 0);
+    }
+};
+
 tabs.sendMessage._emit = function (payload) {
     eventEmitter.emit('messageResponse', payload);
 };

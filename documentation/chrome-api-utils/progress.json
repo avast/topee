@@ -13,6 +13,7 @@
     ],
     "tabs": [
       "create",
+      "remove",
       "get",
       "sendMessage",
       "onCreated",

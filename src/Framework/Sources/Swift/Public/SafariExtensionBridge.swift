@@ -285,6 +285,11 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 safariHelper.getActiveWindow(completionHandler: { window in
                     window?.openTab(with: tabUrl, makeActiveIfPossible: tabActive, completionHandler: { _ in })
                 })
+            case .removeTab:
+                guard let tabId = userInfo["tabId"] as? UInt64 else { return }
+                pageRegistry.tabIdToTab(tabId: tabId, completionHandler: { tab in
+                    tab.close()
+                })
             }
         case .background:
             guard let message = userInfo["message"] as? [String: Any] else { return }
