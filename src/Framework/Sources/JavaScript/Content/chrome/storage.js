@@ -24,7 +24,10 @@ function storage(storageArea) {
                 (resp) => callback(resp)
             );
         },
-        set(items) {
+        set(items,callback) {
+            if (callback) {
+                chrome.storage.onChanged.addListener(notify);
+            }
             background.dispatchRequest(
                 {
                     eventName: 'storage.set',
@@ -33,8 +36,11 @@ function storage(storageArea) {
                         items
                     }
                 }
-                // (resp) => callback(resp)
             );
+            function notify() {
+                callback();
+                chrome.storage.onChanged.removeListener(notify);
+            }
         },
         remove(keys, callback) {
             background.dispatchRequest(
