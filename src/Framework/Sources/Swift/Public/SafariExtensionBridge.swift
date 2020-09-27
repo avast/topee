@@ -290,6 +290,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 pageRegistry.tabIdToTab(tabId: tabId, completionHandler: { tab in
                     tab.close()
                 })
+            case .createWindow:
+                guard let url = userInfo["url"] as? String else { return }
+                guard let windowUrl = URL(string: url) else { return }
+                SFSafariApplication.openWindow(with: windowUrl, completionHandler: { win in })
             }
         case .background:
             guard let message = userInfo["message"] as? [String: Any] else { return }

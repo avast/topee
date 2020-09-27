@@ -20,5 +20,6 @@ enum Message {
         case setIconTitle
         case createTab
         case removeTab
+        case createWindow
     }
 }
