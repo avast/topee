@@ -80,6 +80,15 @@ function init() {
                     }
                 }
 
+                if (event.message.manifest_version) {
+                    chrome.runtime._manifest.version = event.message.manifest_version;
+                    sessionStorage.setItem('topee_manifest_version', event.message.manifest_version);
+                }
+                if (event.message.manifest_name) {
+                    chrome.runtime._manifest.name= event.message.manifest_name;
+                    sessionStorage.setItem('topee_manifest_name', event.message.manifest_name);
+                }
+
                 storedTabId = event.message.tabId;
                 sessionStorage.setItem('topee_tabId', storedTabId);
 
@@ -101,6 +110,16 @@ function init() {
                     chrome.i18n._locale = msg.data.locale;
                     sessionStorage.setItem('topee_locale', JSON.stringify(msg.data.locale));
                 }
+
+                if (msg.data.manifest_version) {
+                    chrome.runtime._manifest.version = msg.data.manifest_version;
+                    sessionStorage.setItem('topee_manifest_version', msg.data.manifest_version);
+                }
+                if (msg.data.manifest_name) {
+                    chrome.runtime._manifest.name= msg.data.manifest_name;
+                    sessionStorage.setItem('topee_manifest_name', msg.data.manifest_name);
+                }
+                
 
                 storedTabId = msg.data.detail;
 

@@ -5,13 +5,23 @@ var tabInfo = require('../tabInfo.js');
 var iframesParent = require('../iframes.js');
 var background = require('../background-bridge.js');
 
-var runtime = {};
+var runtime = { _manifest: {} };
 
 var eventEmitter = new EventEmitter();
 
 // We are adding quite a few listeners so let's increase listeners limit. Otherwise we get following warning:
 // (node) warning: possible EventEmitter memory leak detected. 11 listeners added. Use emitter.setMaxListeners() to increase limit.
 eventEmitter.setMaxListeners(1024);
+
+
+var version = sessionStorage.getItem('topee_manifest_version');
+if (version) {
+    runtime._manifest.version = version;
+}
+var name = sessionStorage.getItem('topee_manifest_name');
+if (name) {
+    runtime._manifest.name = name;
+}
 
 runtime.sendMessage = function(message, callback) {
     background.dispatchRequest({
@@ -27,6 +37,10 @@ runtime.onMessage = {
     removeListener: function(callback) {
         eventEmitter.removeListener('message', callback);
     }
+};
+
+runtime.getManifest = function () {
+    return runtime._manifest;
 };
 
 safari.self.addEventListener("message", function (event) {

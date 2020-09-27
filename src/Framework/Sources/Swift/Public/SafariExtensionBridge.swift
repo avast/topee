@@ -211,6 +211,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             tabIdInfo["debug"] = ["log": true]
             #endif
             tabIdInfo["locale"] = readLocales()
+            tabIdInfo["manifest_version"] = manifest.version
+            tabIdInfo["manifest_name"] = manifest.name
             sendMessageToContentScript(page: page, withName: "forceTabId", userInfo: tabIdInfo)
         case .alive, .request:
             if let tabId = userInfo?["tabId"] as? UInt64 {
