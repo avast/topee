@@ -311,7 +311,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             return localeCache
         }
         
-        let langCode = NSLocale.current.languageCode ?? "en"
+        let langCode = NSLocale.preferredLanguages[0].components(separatedBy: "-")[0]
         let langRegion = NSLocale.current.regionCode?.uppercased()
 
         do {
