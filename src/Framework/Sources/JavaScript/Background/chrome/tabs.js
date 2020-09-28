@@ -129,7 +129,8 @@ unsupportedQueryWarning.active = function (opts) {
     }
 };
 
-tabs.query = function(queryInfo, callback) {
+
+function query(queryInfo, callback) {
     for (var opt in queryInfo) {
         if (unsupportedQueryWarning[opt]) {
             unsupportedQueryWarning[opt](queryInfo);
@@ -150,15 +151,22 @@ tabs.query = function(queryInfo, callback) {
 
     // Active tab (in last focussed window) filter
     if (queryInfo.active) {
-        callback(tabs.filter(function (tab) {
+        tabs = tabs.filter(function (tab) {
             return tab.id === lastFocusedTabId;
-        }));
-    } else {
-        callback(tabs);
+        });
     }
 
-};
+    callback(tabs);
+}
 
+// when chrome.tabs.query is called before the background script finishes loading,
+// query would propagate faster than hello and return nothing
+tabs.query = function(queryInfo, callback) {
+    setTimeout(function () {
+        query(queryInfo, callback);
+        tabs.query = query;
+    }, 0);
+};
 
 // this could be implement in SafariExtensionBridge.swift,
 // but SFSafariPage.getContainingTab only exists since 10.14 and Topee targets 10.11
