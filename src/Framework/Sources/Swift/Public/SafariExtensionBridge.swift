@@ -184,7 +184,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             return
         }
 
-        logger.debug("#appex(<-content): message { name: \(messageName), userInfo: \(prettyPrintJSObject(userInfo ?? [:])) }")
+        if messageName != "alive" {
+          logger.debug("#appex(<-content): message { name: \(messageName), userInfo: \(prettyPrintJSObject(userInfo ?? [:])) }")
+        }
         var payload = userInfo?["payload"] as? [String: Any]
 
         // Manages the registry of pages based on the type of message received
@@ -385,7 +387,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     }
 
     private func sendMessageToBackgroundScript(payload: [String: Any]) {
-        logger.debug("#appex(->background): message { payload: \(prettyPrintJSObject(payload)) }")
+        if payload["eventName"] == nil || payload["eventName"] as? String == nil || payload["eventName"] as! String != "alive" {
+          logger.debug("#appex(->background): message { payload: \(prettyPrintJSObject(payload)) }")
+        }
 
         do {
             sendMessageToBackgroundScript(payload: try String(data: JSONSerialization.data(withJSONObject: payload), encoding: .utf8)!)
