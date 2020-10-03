@@ -15,4 +15,16 @@ tabs.executeScript = function() {
     }
 };
 
+// TODO: implement
+tabs.sendMessage = function(tabId, message, options, responseCallback) {
+    if (typeof options === 'function') {
+        responseCallback = options;
+        options = {};
+    }
+
+    if (responseCallback) {
+        setTimeout(function () { responseCallback(null); }, 0);
+    }
+};
+
 module.exports = tabs;
