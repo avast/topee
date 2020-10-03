@@ -71,6 +71,9 @@ runtime.getURL = function (path) {
         // Sometimes this happens (on first page load after XCode build & run)
         throw new Error('safari.extension.baseURI didn\'t return usable value');
     }
+    if (path[0] === '/') {
+        path = path.substr(1);
+    }
 
     return safari.extension.baseURI + path;
 };

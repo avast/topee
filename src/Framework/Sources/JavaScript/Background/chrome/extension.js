@@ -2,9 +2,8 @@
 
 var extension = {};
 
-// TODO: Implementation
 extension.getURL = function (path) {
-    return "extension-path:/" + path;
+    return chrome.runtime.getURL(path);
 };
 
 // TODO: Implementation
