@@ -41,20 +41,29 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
             while (bundleUrl == nil) {
                 bundlePath = dirUp(bundlePath!)
                 if (bundlePath == nil) {
+                    NSLog("Cannot load " + file)
                     urlSchemeTask.didFailWithError(URLError(URLError.fileDoesNotExist))
                     return
                 }
                 bundleUrl = Bundle.main.url(forResource: bundlePath, withExtension: "")
             }
-            d = try String(contentsOf: bundleUrl!, encoding: .utf8).data(using: .utf8)!
+            d = try Data(contentsOf: bundleUrl!)
         } catch {
+            NSLog("Cannot load " + file + " \(error)")
             urlSchemeTask.didFailWithError(URLError(URLError.fileDoesNotExist))
             return
         }
 
-        NSLog(urlString + " ---> " + file)
-        //let d = "<html><body>Hello popup!</body></html>".data(using: .utf8)
-        let headers = URLResponse(url: URL(string: POPUP_PROTOCOL + "://" + file)!, mimeType: mimeType(ext), expectedContentLength: d.count, textEncodingName: "utf8")
+        var binary = true
+        switch ext.lowercased() {
+        case "html", "htm", "js", "css":
+            binary = false
+            break
+        default:
+            break
+        }
+
+        let headers = URLResponse(url: URL(string: POPUP_PROTOCOL + "://" + file)!, mimeType: mimeType(ext), expectedContentLength: d.count, textEncodingName: binary ? nil : "utf8")
         urlSchemeTask.didReceive(headers)
         urlSchemeTask.didReceive(d)
         urlSchemeTask.didFinish()
@@ -80,6 +89,8 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
             return "text/css"
         case "woff2":
             return "font/woff2"
+        case "svg":
+            return "image/svg+xml"
         default:
             return "application/octet-stream"
         }
@@ -126,7 +137,6 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
     
     public func load(_ path: String) {
         let u = URL(string: POPUP_PROTOCOL + "://" + path)
-        //self.webView.load(d!, mimeType: "text/html", characterEncodingName: "utf8", baseURL: u!)
         webView.load(URLRequest(url: u!))
         
         bridge.registerPopup(popup: webView)
@@ -146,90 +156,3 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
         }
     }
 }
-
-
-
-//
-// how to get extension id in swift
-//
-
-/*        let haveId = NSCondition()
-var u = ""
-let ct = Thread.current
-
-func getId() {
-    NSLog("dispaught")
-    SFSafariExtension.getBaseURI { baseUrl in
-        guard let burl = baseUrl else {
-            NSLog("yipiyee about:blank")
-            u = "oh well"
-            haveId.lock()
-            haveId.signal()
-            haveId.unlock()
-            return
-        }
-        NSLog("yipiyee " + burl.absoluteString)
-        u = "very well"
-        haveId.lock()
-        haveId.signal()
-        haveId.unlock()
-    }
-}
-
-if Thread.isMainThread {
-    NSLog("on main thread")
-    SFSafariExtension.getBaseURI { baseUrl in
-        if Thread.current == ct {
-            NSLog("current thread")
-        }
-        else {
-            NSLog("some other thread")
-            NSLog(Thread.isMainThread ? "main" : "non main")
-        }
-        NSLog(baseUrl != nil ? baseUrl!.absoluteString : "about:blank")
-        if baseUrl != nil && !Thread.isMainThread {
-            DispatchQueue.main.async {
-                //self.webView.loadHTMLString("<html><body>Hello popup!</body></html>", baseURL: baseUrl!)
-                let d = "<html><body>Hello popup!</body></html>".data(using: .utf8)
-                //var u = baseUrl!
-                //u.appendPathComponent("dialog.html")
-                let u = URL(string: "topee://dialog.html")
-                self.webView.load(d!, mimeType: "text/html", characterEncodingName: "utf8", baseURL: u!)
-            }
-        }
-    }
-}
-else {
-    NSLog("on some other thread")
-    NSLog("dispatch")
-    DispatchQueue.main.async {
-        getId()
-    }
-    NSLog("lock")
-    haveId.lock()
-    while u == "" {
-        NSLog("wait")
-        haveId.wait()
-    }
-    NSLog("unlock")
-    haveId.unlock()
-    NSLog("got the id: " + u)
-    if Thread.current == ct {
-        NSLog("current thread")
-    }
-    else {
-        NSLog("some other thread")
-    }
-}*/
-
-
-
-/*SFSafariExtension.getBaseURI { baseUrl in
-    guard let burl = baseUrl else {
-        self.webView.loadHTMLString("<html><body>Hello popup!</body></html>", baseURL: URL(string: "about:blank"))
-        return
-    }
-        self.webView.loadHTMLString("<html><body>Hello popup!</body></html>", baseURL: burl)
-}*/
-
-
