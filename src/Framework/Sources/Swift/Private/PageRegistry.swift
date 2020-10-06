@@ -63,7 +63,7 @@ class PageRegistry<Page: Equatable> {
 
     private func recentlyClosedPage(tabId: UInt64?, referrer: String, historyLength: Int64) -> Int? {
         if tabId != nil {
-            if let i = recentlyByedPages.index(where: { $0.tabId == tabId }) {
+            if let i = recentlyByedPages.firstIndex(where: { $0.tabId == tabId }) {
                 return i
             }
             return nil
@@ -71,7 +71,7 @@ class PageRegistry<Page: Equatable> {
 
         // Match by referrer (+ history lenght check)
         if referrer != "" {
-            if let i = recentlyByedPages.index(where: { $0.url.hasPrefix(referrer) }) {
+            if let i = recentlyByedPages.firstIndex(where: { $0.url.hasPrefix(referrer) }) {
                 let match = recentlyByedPages[i]
                 if match.historyLength <= historyLength {
                     return i
@@ -80,12 +80,12 @@ class PageRegistry<Page: Equatable> {
         }
 
         // Match by history length only (navigation forward)
-        if let i = recentlyByedPages.index(where: { $0.historyLength == historyLength - 1 }) {
+        if let i = recentlyByedPages.firstIndex(where: { $0.historyLength == historyLength - 1 }) {
             return i
         }
 
         // User may have navigated few pages back and then visited new page thus shortening history
-        if let i = recentlyByedPages.index(where: { $0.historyLength >= historyLength }) {
+        if let i = recentlyByedPages.firstIndex(where: { $0.historyLength >= historyLength }) {
             return i
         }
 

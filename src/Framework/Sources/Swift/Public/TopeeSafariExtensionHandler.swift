@@ -45,7 +45,7 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
         guard let browserAction = extensionDictionary["SFSafariToolbarItem"] as? [String: String] else {
             return PopupViewController.shared
         }
-        guard let popupPath = browserAction["PopoverPath"] as? String else {
+        guard let popupPath = browserAction["PopoverPath"] else {
             return PopupViewController.shared
         }
 

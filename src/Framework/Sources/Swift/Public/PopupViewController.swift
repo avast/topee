@@ -28,7 +28,6 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
             urlString.index(urlString.startIndex, offsetBy: tld!.count + 1)  // count slash in
             : urlString.index(urlString.startIndex, offsetBy: POPUP_PROTOCOL.count + "://".count)
         let file = String(urlString[index..<urlString.endIndex])
-        let path = (file as NSString).deletingPathExtension
         let ext = (file as NSString).pathExtension
         
         var d: Data
