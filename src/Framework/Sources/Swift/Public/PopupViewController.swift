@@ -107,6 +107,12 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
     init() {
         super.init(nibName: nil, bundle: nil)
         NSLog("Expected PopupViewController instantiation")
+
+        let dict = Bundle.main.infoDictionary!
+        let extensionDictionary = dict["NSExtension", default: [String: Any]()] as! [String: Any]
+        let browserAction = extensionDictionary["SFSafariToolbarItem", default: [String: String]()] as! [String: String]
+        let popupWidth:Int = (browserAction["Width"] == nil ? nil : Int(browserAction["Width"]!)) ?? 360
+        let popupHeight:Int = (browserAction["Height"] == nil ? nil : Int(browserAction["Height"]!)) ?? 442
         
         let popupURL = Bundle(for: SafariExtensionBridge.self)
             .url(forResource: "topee-popup", withExtension: "js")!
@@ -117,7 +123,7 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
         contentController.addUserScript(script)
         contentController.add(bridge, name: MessageHandler.background.rawValue)
 
-        self.preferredContentSize = NSMakeSize(360, 442)
+        self.preferredContentSize = NSMakeSize(CGFloat(popupWidth), CGFloat(popupHeight))
         let config = WKWebViewConfiguration()
         config.setURLSchemeHandler(self, forURLScheme: POPUP_PROTOCOL)
         config.userContentController = contentController
