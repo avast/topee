@@ -209,9 +209,9 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
             payload!["tabId"] = tabId
             var tabIdInfo: [String: Any] = ["tabId": tabId]
-            #if DEBUG
-            tabIdInfo["debug"] = ["log": true]
-            #endif
+            //#if DEBUG
+            //tabIdInfo["debug"] = ["log": true]
+            //#endif
             tabIdInfo["locale"] = readLocales()
             tabIdInfo["manifest_version"] = manifest.version
             tabIdInfo["manifest_name"] = manifest.name
