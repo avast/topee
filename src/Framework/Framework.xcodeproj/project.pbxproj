@@ -518,8 +518,8 @@
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
-				DEVELOPMENT_TEAM = 5696C7SX37;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				DEVELOPMENT_TEAM = 4JU7TJ7JXU;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 			};
 			name = Debug;
 		};
@@ -528,8 +528,9 @@
 			baseConfigurationReference = EF80A77C210F2C37002C6F3F /* Release.xcconfig */;
 			buildSettings = {
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				DEVELOPMENT_TEAM = 5696C7SX37;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				DEVELOPMENT_TEAM = 4JU7TJ7JXU;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 			};
 			name = Release;
 		};
@@ -537,6 +538,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EF80A77D210F2C37002C6F3F /* Tests.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4JU7TJ7JXU;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -544,6 +549,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = EF80A77D210F2C37002C6F3F /* Tests.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 4JU7TJ7JXU;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};
