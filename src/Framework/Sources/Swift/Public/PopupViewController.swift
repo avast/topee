@@ -110,9 +110,9 @@ class PopupViewController: SFSafariExtensionViewController, WKURLSchemeHandler {
 
         let dict = Bundle.main.infoDictionary!
         let extensionDictionary = dict["NSExtension", default: [String: Any]()] as! [String: Any]
-        let browserAction = extensionDictionary["SFSafariToolbarItem", default: [String: String]()] as! [String: String]
-        let popupWidth:Int = (browserAction["Width"] == nil ? nil : Int(browserAction["Width"]!)) ?? 360
-        let popupHeight:Int = (browserAction["Height"] == nil ? nil : Int(browserAction["Height"]!)) ?? 442
+        let browserAction = extensionDictionary["SFSafariToolbarItem"] as! [String: Any]
+        let popupWidth = browserAction["Width"] as? Int ?? 360
+        let popupHeight = browserAction["Height"] as? Int ?? 442
         
         let popupURL = Bundle(for: SafariExtensionBridge.self)
             .url(forResource: "topee-popup", withExtension: "js")!
