@@ -4,6 +4,27 @@
 
 import SafariServices
 
+class EmptyPopup: SFSafariExtensionViewController {
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        self.preferredContentSize = NSMakeSize(CGFloat(0.1), CGFloat(0.1))
+
+        self.view = NSView()
+        let height = NSLayoutConstraint(item: self.view, attribute: .height, relatedBy: .equal, toItem: self.view, attribute: .height, multiplier: 1, constant: 0)
+        let width = NSLayoutConstraint(item: self.view, attribute: .width, relatedBy: .equal, toItem: self.view, attribute: .width, multiplier: 1, constant: 0)
+        self.view.addConstraints([height,width])
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(nibName: nil, bundle: nil)
+        self.view = NSView()
+    }
+
+    override func viewWillAppear() {
+        dismissPopover()
+    }
+}
+
 open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
 
     // MARK: - Public Members
@@ -40,12 +61,21 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
     open override func popoverViewController() -> SFSafariExtensionViewController {
         let dict = Bundle.main.infoDictionary!
         guard let extensionDictionary = dict["NSExtension"] as? [String: Any] else {
-            return PopupViewController.shared
+            return EmptyPopup()
         }
         guard let browserAction = extensionDictionary["SFSafariToolbarItem"] as? [String: Any] else {
-            return PopupViewController.shared
+            return EmptyPopup()
         }
         guard let popupPath = browserAction["PopoverPath"] as? String else {
+            return EmptyPopup()
+        }
+        
+        let inactivePopupPath = browserAction["InactivePopoverPath"] as? String
+        if inactivePopupPath != nil && !bridge.backgroundScriptStarted() {
+            if inactivePopupPath!.isEmpty {
+                return EmptyPopup()
+            }
+            PopupViewController.shared.load(inactivePopupPath!)
             return PopupViewController.shared
         }
 

@@ -11,6 +11,7 @@ public protocol SafariExtensionBridgeType: WKScriptMessageHandler {
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
+    func backgroundScriptStarted() -> Bool
     func registerPopup(popup: WKWebView)
     func unregisterPopup()
     func readLocales() -> String
@@ -82,6 +83,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         if backgroudScriptDebugDelaySec > 0 {
             startBackgroundScriptIfNotRunning(userAgent: "Topee")
         }
+    }
+    
+    public func backgroundScriptStarted() -> Bool {
+        return webView != nil
     }
 
     private func startBackgroundScriptIfNotRunning(userAgent: String) {
