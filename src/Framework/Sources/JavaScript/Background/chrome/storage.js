@@ -68,7 +68,7 @@ function storage(storageArea) {
             }
             callbackFunc(result);
         },
-        set(items) {
+        set(items, callbackFunc) {
             const changes = {};
             for (const key of Object.keys(items)) {
                 const oldValue = localStorage.getItem(key);
@@ -100,6 +100,7 @@ function storage(storageArea) {
                     });
                 });
             });
+            callbackFunc && callbackFunc();
         },
         remove,
         /**
