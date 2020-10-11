@@ -156,6 +156,18 @@ function query(queryInfo, callback) {
         });
     }
 
+    if (tabs.length === 0 && Object.keys(browserTabs).length === 0 && !queryInfo.url) {
+        // no tab opened
+        tabs = [{
+            id: 0,
+            url: 'favorites://',
+            hasFocus: true,
+            isVisible: true,
+            status: 'complete'
+    
+        }];
+    }
+
     callback(tabs);
 }
 
