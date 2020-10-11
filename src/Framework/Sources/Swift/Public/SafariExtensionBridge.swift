@@ -7,7 +7,7 @@ import SafariServices
 import WebKit
 
 public protocol SafariExtensionBridgeType: WKScriptMessageHandler {
-    func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger: TopeeLogger?, backgroudScriptDebugDelaySec: Int)
+    func setup(webViewURL: URL, manifest: TopeeExtensionManifest, userAgent: String?, logger: TopeeLogger?, backgroudScriptDebugDelaySec: Int)
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
@@ -21,9 +21,15 @@ public extension SafariExtensionBridgeType {
     /// Setup method with default parameters
     func setup(webViewURL: URL = URL(string: "http://topee.local")!,
                manifest: TopeeExtensionManifest = TopeeExtensionManifest(),
+               userAgent: String? = nil,
                logger: TopeeLogger? = nil,
                backgroudScriptDebugDelaySec: Int = 0) {
-        setup(webViewURL: webViewURL, manifest: manifest, logger: logger, backgroudScriptDebugDelaySec: backgroudScriptDebugDelaySec)
+        setup(
+            webViewURL: webViewURL,
+            manifest: manifest,
+            userAgent: userAgent,
+            logger: logger,
+            backgroudScriptDebugDelaySec: backgroudScriptDebugDelaySec)
     }
 }
 
@@ -58,7 +64,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         super.init()
     }
 
-    public func setup(webViewURL: URL, manifest: TopeeExtensionManifest, logger injectedLogger: TopeeLogger?, backgroudScriptDebugDelaySec: Int = 0) {
+    public func setup(webViewURL: URL, manifest: TopeeExtensionManifest, userAgent: String?, logger injectedLogger: TopeeLogger?, backgroudScriptDebugDelaySec: Int = 0) {
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
             if webViewURL != self.webViewURL {
@@ -81,7 +87,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         self.pageRegistry.logger = logger
         self.backgroudScriptDebugDelaySec = backgroudScriptDebugDelaySec
         if backgroudScriptDebugDelaySec > 0 {
-            startBackgroundScriptIfNotRunning(userAgent: "Topee")
+            startBackgroundScriptIfNotRunning(userAgent: userAgent ?? "Topee")
+        }
+        else if userAgent != nil {
+            startBackgroundScriptIfNotRunning(userAgent: userAgent!)
         }
     }
     
@@ -135,12 +144,13 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
     }
     
-    private func injectExtensionId() {
+    private func injectExtensionId(_ callback: @escaping () -> Void) {
         // this is expected to run in the main thread
         SFSafariExtension.getBaseURI { baseUrl in
             if baseUrl != nil {
                 DispatchQueue.main.async {
                     self.webView!.evaluateJavaScript("chrome.runtime.id='\(baseUrl!)'.substr('\(baseUrl!)'.indexOf('://')+3)") { result, error in
+                        callback()
                         guard error == nil else {
                             self.logger.error("Received JS error: \(error! as NSError)")
                             return
@@ -276,9 +286,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             switch type {
             case .ready:
                 isBackgroundReady = true
-                injectExtensionId()
-                messageQueue.forEach { sendMessageToBackgroundScript(payload: $0) }
-                messageQueue = []
+                injectExtensionId({ ()->Void in
+                    self.messageQueue.forEach { self.sendMessageToBackgroundScript(payload: $0) }
+                    self.messageQueue = []
+                })
             case .setIconTitle:
                 guard let title = userInfo["title"] as? String else { return }
                 safariHelper.setToolbarIconTitle(title)
