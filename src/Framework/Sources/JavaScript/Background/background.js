@@ -61,7 +61,8 @@ function manageRequest(payload) {
     }
 
     if (payload.eventName === 'storage.set') {
-        chrome.storage[payload.message.area].set(payload.message.items, sendResponse);
+        chrome.storage[payload.message.area].set(payload.message.items);
+        sendResponse();
     }
 
     if (payload.eventName === 'storage.remove') {

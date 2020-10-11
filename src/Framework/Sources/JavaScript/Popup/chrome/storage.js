@@ -24,7 +24,7 @@ function storage(storageArea) {
                 (resp) => callback(resp)
             );
         },
-        set(items, callback) {
+        set(items) {
             window.topee.dispatchRequest(
                 0,
                 {
@@ -33,8 +33,8 @@ function storage(storageArea) {
                         area: storageArea,
                         items
                     }
-                },
-                () => callback()
+                }
+                // (resp) => callback(resp)
             );
         },
         remove(keys, callback) {
