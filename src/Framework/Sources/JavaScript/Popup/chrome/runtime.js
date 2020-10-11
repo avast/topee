@@ -13,7 +13,7 @@ runtime.onMessage = {
 }
 
 runtime.getURL = function (path) {
-    return "topee://" + path.startsWith('/') ? path.substr(1) : path;
+    return "topee://" + (path.startsWith('/') ? path.substr(1) : path);
 };
 
 runtime.id = 'topee://';  // in sync with POPUP_PROTOCOL@PopupViewCOntroller.swift
