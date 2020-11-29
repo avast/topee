@@ -47,6 +47,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var webViewURL: URL = URL(string: "http://topee.local")!
     private var logger: TopeeLogger = DefaultLogger()
     private let topeeVersion = Bundle.current.shortVersionString!
+    private var safariExtensionUrl: URL? = nil
     private var backgroudScriptDebugDelaySec = 0
 
     private var safariHelper: SFSafariApplicationHelper = SFSafariApplicationHelper()
@@ -155,11 +156,17 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                             self.logger.error("Received JS error: \(error! as NSError)")
                             return
                         }
+                        self.safariExtensionUrl = baseUrl
                     }
                 }
             }
         }
+    }
 
+    private func injectExtensionIdIfMissing() {
+        if safariExtensionUrl == nil && webView != nil {
+            injectExtensionId({ () in })
+        }
     }
 
     public func registerPopup(popup: WKWebView) {
@@ -211,6 +218,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             if backgroudScriptDebugDelaySec <= 0 {
                 startBackgroundScriptIfNotRunning(userAgent: userAgent)
             }
+            injectExtensionIdIfMissing()
 
             // Messages may come out of order, e.g. request is faster than hello here
             // so let's handle them in same way.
@@ -317,6 +325,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
         case .background:
             guard let message = userInfo["message"] as? [String: Any] else { return }
+            injectExtensionIdIfMissing()
             sendMessageToBackgroundScript(payload: message)
         case .popup:
             //guard let message = userInfo["body"] as? [String: Any] else { return }
