@@ -35,6 +35,9 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
 
     public override init() {
         super.init()
+        bridge.registerBackgoundMessageHandler({ userInfo in
+            self.messageReceivedFromBackground(userInfo)
+        })
         self.setupBridge()
     }
 
@@ -52,6 +55,10 @@ open class TopeeSafariExtensionHandler: SFSafariExtensionHandler {
 
     open override func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?) {
         bridge.messageReceived(withName: messageName, from: page, userInfo: userInfo)
+    }
+    
+    open func messageReceivedFromBackground(_ userInfo: [String : Any])
+    {
     }
 
     open override func toolbarItemClicked(in window: SFSafariWindow) {

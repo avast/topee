@@ -21,5 +21,6 @@ enum Message {
         case createTab
         case removeTab
         case createWindow
+        case userMessage
     }
 }

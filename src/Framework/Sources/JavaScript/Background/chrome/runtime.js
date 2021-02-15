@@ -39,6 +39,14 @@ runtime.getURL = function (path) {
     return 'safari-extension://' + runtime.id + path;
 };
 
+// no other purpose than interception by messageReceivedFromBackground
+runtime.sendMessage = function(message) {
+    window.webkit.messageHandlers.appex.postMessage({
+        type: 'userMessage',
+        data: message
+    });
+};
+
 var VERSION_INFO = '__topee_extension_version';
 
 // you get the installed / updated notification basically once once per a run

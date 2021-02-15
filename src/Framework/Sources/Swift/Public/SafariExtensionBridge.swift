@@ -14,6 +14,7 @@ public protocol SafariExtensionBridgeType: WKScriptMessageHandler {
     func backgroundScriptStarted() -> Bool
     func registerPopup(popup: WKWebView)
     func unregisterPopup()
+    func registerBackgoundMessageHandler(_ handler: @escaping ([String: Any]) -> Void)
     func readLocales() -> String
 }
 
@@ -58,6 +59,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var messageQueue: [String] = []
     
     private var popup: WKWebView? = nil
+    
+    private var backgoundMessageHandler: (([String: Any]) -> Void)? = nil
     
     private var localeCache: String = ""
 
@@ -176,6 +179,11 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     public func unregisterPopup() {
         self.popup = nil
     }
+    
+    public func registerBackgoundMessageHandler(_ handler: @escaping ([String: Any]) -> Void) {
+        self.backgoundMessageHandler = handler
+    }
+
 
 
     public func toolbarItemClicked(in window: SFSafariWindow) {
@@ -322,6 +330,11 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 guard let url = userInfo["url"] as? String else { return }
                 guard let windowUrl = URL(string: url) else { return }
                 SFSafariApplication.openWindow(with: windowUrl, completionHandler: { win in })
+            case .userMessage:
+                guard let messageData = userInfo["data"] as? [String: Any] else { return }
+                if backgoundMessageHandler != nil {
+                    backgoundMessageHandler!(messageData)
+                }
             }
         case .background:
             guard let message = userInfo["message"] as? [String: Any] else { return }
