@@ -171,13 +171,30 @@ function query(queryInfo, callback) {
     callback(tabs);
 }
 
+var QUERY_RETRY = 500;
+var MAX_TAB_WAIT = 3000;
+var waitForHellosTime = Date.now() + MAX_TAB_WAIT;
+
 // when chrome.tabs.query is called before the background script finishes loading,
 // query would propagate faster than hello and return nothing
 tabs.query = function(queryInfo, callback) {
-    setTimeout(function () {
+    setTimeout(deferredQuery, 0);
+
+    function deferredQuery() {
+        var now = Date.now();
+        if (Object.keys(browserTabs).length === 0 && now < waitForHellosTime) {
+            var retryTime = now + QUERY_RETRY;
+            if (retryTime > waitForHellosTime) {
+                retryTime = waitForHellosTime;
+            }
+            retryTime -= now;
+            
+            setTimeout(deferredQuery, retryTime);
+            return;
+        }
         query(queryInfo, callback);
         tabs.query = query;
-    }, 0);
+    }
 };
 
 // this could be implement in SafariExtensionBridge.swift,
