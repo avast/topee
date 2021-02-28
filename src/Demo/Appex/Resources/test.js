@@ -338,6 +338,10 @@ const STORAGE_AREAS = ['local', 'sync']
 for(const area of STORAGE_AREAS) {
     const storageArea = chrome.storage[area]
     describe(`chrome.storage.${area}`, function() {
+        afterEach(function () {
+          storageArea.clear();
+        });
+
         it('sets and reads single key:value', function (done) {
             const key = randomString()
             const value = randomString()
@@ -380,8 +384,6 @@ for(const area of STORAGE_AREAS) {
             storageArea.get((result) => {
                 // key which we just set should be there
                 expect(result[key]).toEqual(value)
-                // there should be other keys
-                expect(Object.keys(result).length).toBeGreaterThan(1)
                 done()
             })
         });

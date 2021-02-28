@@ -34,7 +34,12 @@ function storage(storageArea) {
             throw new Error('Invalid "keys" argument type');
         }
         for (const key of keysToRemove) {
-            localStorage.removeItem(keyName(key));
+            const fullKey = keyName(key);
+            window.webkit.messageHandlers.appex.postMessage({
+                type: 'chromeStorage',
+                key: btoa(fullKey)
+            });
+        localStorage.removeItem(fullKey);
         }
         callbackFunc && callbackFunc();
     }
@@ -73,7 +78,16 @@ function storage(storageArea) {
             for (const key of Object.keys(items)) {
                 const oldValue = localStorage.getItem(key);
                 const newValue = items[key];
-                localStorage.setItem(keyName(key), JSON.stringify(items[key]));
+                const fullKey = keyName(key);
+                const strValue = JSON.stringify(items[key]);
+
+                window.webkit.messageHandlers.appex.postMessage({
+                    type: 'chromeStorage',
+                    key: btoa(fullKey),
+                    value: btoa(strValue)
+                });
+            
+                localStorage.setItem(fullKey, strValue);
                 changes[key] = { oldValue, newValue };
             }
 

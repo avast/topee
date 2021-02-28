@@ -21,6 +21,7 @@ enum Message {
         case createTab
         case removeTab
         case createWindow
+        case chromeStorage
         case userMessage
     }
 }

@@ -51,7 +51,7 @@ function storage(storageArea) {
                         keys
                     }
                 },
-                () => callback()
+                () => callback && callback()
             );
         },
         clear(callback) {
@@ -62,7 +62,7 @@ function storage(storageArea) {
                         area: storageArea,
                     }
                 },
-                () => callback()
+                () => callback && callback()
             );
         },
     };

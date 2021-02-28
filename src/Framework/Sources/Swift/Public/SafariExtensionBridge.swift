@@ -55,6 +55,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
     private var pageRegistry: SFSafariPageRegistry = SFSafariPageRegistry(thread: Thread.main)
     private var webView: WKWebView?
     private var isBackgroundReady: Bool = false
+    private var chromeStorage: UserDefaults?
     // Accumulates messages until the background scripts informs us that is ready
     private var messageQueue: [String] = []
     
@@ -66,6 +67,8 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     override init() {
         super.init()
+        let bundleId = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as? String ?? ""
+        chromeStorage = UserDefaults(suiteName: bundleId + ".chrome.storage")
     }
 
     public func setup(webViewURL: URL, manifest: TopeeExtensionManifest, userAgent: String?, logger injectedLogger: TopeeLogger?, backgroudScriptDebugDelaySec: Int = 0) {
@@ -113,8 +116,10 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             let backgroundURL = Bundle(for: SafariExtensionBridge.self)
                 .url(forResource: "topee-background", withExtension: "js")!
             let bgLocale = "(function () { chrome.i18n._locale=" + readLocales() + "; })();"
+            let localStorage = loadStorageScript()
 
             let scripts = [readFile(backgroundURL), buildManifestScript()]
+                + [localStorage]
                 + [bgLocale]
                 + readFiles(backgroundScriptURLs())
                 + [readFile(backgroundEndURL)]
@@ -171,7 +176,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             injectExtensionId({ () in })
         }
     }
-
+    
     public func registerPopup(popup: WKWebView) {
         self.popup = popup
     }
@@ -330,6 +335,16 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
                 guard let url = userInfo["url"] as? String else { return }
                 guard let windowUrl = URL(string: url) else { return }
                 SFSafariApplication.openWindow(with: windowUrl, completionHandler: { win in })
+            case .chromeStorage:
+                guard chromeStorage != nil else { return }
+                guard let key = userInfo["key"] as? String else { return }
+                let value = userInfo["value"] as? String
+                if value == nil {
+                    chromeStorage!.removeObject(forKey: "topee" + key)
+                }
+                else {
+                    chromeStorage!.set(value, forKey: "topee" + key)
+                }
             case .userMessage:
                 guard let messageData = userInfo["data"] as? [String: Any] else { return }
                 if backgoundMessageHandler != nil {
@@ -394,6 +409,35 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
         
         return localeCache
+    }
+    
+    private func loadStorageScript() -> String {
+        guard chromeStorage != nil else {
+            self.logger.error("Could not initialize chromeStorage UserDefaults")
+            return ""
+        }
+        
+        let items = chromeStorage!.dictionaryRepresentation()
+        
+        guard items.count > 0 else { return "" }
+        
+        var itemJson = "{"
+        for (key, anyValue) in items {
+            let value = anyValue as? String
+            if value == nil || !key.starts(with: "topee") {
+                chromeStorage!.removeObject(forKey: key)
+            }
+            else {
+                if itemJson.count > 1 {
+                    itemJson += ","
+                }
+                var unprefixed = key
+                unprefixed.removeFirst(5)  // remove the "topee" prefix
+                itemJson += #""\#(unprefixed)":"\#(value!)""#
+            }
+        }
+        itemJson += "}"
+        return "(function () {var storageItems=" + itemJson + "; for (var key in storageItems){localStorage.setItem(atob(key), atob(storageItems[key]));}})();";
     }
 
     private func sendMessageToBackgroundScript(payload: String) {
