@@ -7,7 +7,7 @@ const changeEmitter = new EventEmitter();
 window._storageData = window._storageData || {};
 
 function storage(storageArea) {
-    const STORAGE_KEY_PREFIX = '__topee_internal.' + storageArea + '.';
+    const STORAGE_KEY_PREFIX = storageArea + '.';
     function keyName(key) {
         return STORAGE_KEY_PREFIX + key;
     }
@@ -78,7 +78,7 @@ function storage(storageArea) {
         set(items, callbackFunc) {
             const changes = {};
             for (const key of Object.keys(items)) {
-                const oldValue = window._storageData[key];
+                const oldValue = window._storageData[key] ? JSON.parse(window._storageData[key]) : null;
                 const newValue = items[key];
                 const fullKey = keyName(key);
                 const strValue = JSON.stringify(items[key]);
