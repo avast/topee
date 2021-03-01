@@ -4,6 +4,8 @@ const tabs = require('./tabs.js');
 const EventEmitter = require('events');
 const changeEmitter = new EventEmitter();
 
+window._storageData = window._storageData || {};
+
 function storage(storageArea) {
     const STORAGE_KEY_PREFIX = '__topee_internal.' + storageArea + '.';
     function keyName(key) {
@@ -11,7 +13,7 @@ function storage(storageArea) {
     }
 
     function getAllKeys() {
-        return Object.keys(localStorage)
+        return Object.keys(window._storageData)
             .filter(function (key) {
                 return key.startsWith(STORAGE_KEY_PREFIX);
             })
@@ -39,7 +41,7 @@ function storage(storageArea) {
                 type: 'chromeStorage',
                 key: btoa(fullKey)
             });
-        localStorage.removeItem(fullKey);
+            delete window._storageData[fullKey];
         }
         callbackFunc && callbackFunc();
     }
@@ -68,7 +70,7 @@ function storage(storageArea) {
             }
             const result = {};
             for (const key of keysToFetch) {
-                const inStorage = localStorage.getItem(keyName(key));
+                const inStorage = window._storageData[keyName(key)];
                 result[key] = inStorage ? JSON.parse(inStorage) : defaults[key] || null;
             }
             callbackFunc(result);
@@ -76,7 +78,7 @@ function storage(storageArea) {
         set(items, callbackFunc) {
             const changes = {};
             for (const key of Object.keys(items)) {
-                const oldValue = localStorage.getItem(key);
+                const oldValue = window._storageData[key];
                 const newValue = items[key];
                 const fullKey = keyName(key);
                 const strValue = JSON.stringify(items[key]);
@@ -87,7 +89,7 @@ function storage(storageArea) {
                     value: btoa(strValue)
                 });
             
-                localStorage.setItem(fullKey, strValue);
+                window._storageData[fullKey] = strValue;
                 changes[key] = { oldValue, newValue };
             }
 
