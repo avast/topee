@@ -7,7 +7,7 @@ const changeEmitter = new EventEmitter();
 window._storageData = window._storageData || {};
 
 function storage(storageArea) {
-    const STORAGE_KEY_PREFIX = storageArea + '.';
+    const STORAGE_KEY_PREFIX = '__topee_internal.' + storageArea + '.';
     function keyName(key) {
         return STORAGE_KEY_PREFIX + key;
     }
