@@ -12,6 +12,7 @@ public protocol SafariExtensionBridgeType: WKScriptMessageHandler {
     func toolbarItemClicked(in window: SFSafariWindow)
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
     func backgroundScriptStarted() -> Bool
+    func sendMessageToBackgroundScript(payload: [String: Any])
     func registerPopup(popup: WKWebView)
     func unregisterPopup()
     func registerBackgoundMessageHandler(_ handler: @escaping ([String: Any]) -> Void)
@@ -468,7 +469,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         }
     }
 
-    private func sendMessageToBackgroundScript(payload: [String: Any]) {
+    public func sendMessageToBackgroundScript(payload: [String: Any]) {
         if payload["eventName"] == nil || payload["eventName"] as? String == nil || payload["eventName"] as! String != "alive" {
           logger.debug("#appex(->background): message { payload: \(prettyPrintJSObject(payload)) }")
         }
