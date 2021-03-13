@@ -7,7 +7,7 @@ import SafariServices
 import WebKit
 
 public protocol SafariExtensionBridgeType: WKScriptMessageHandler {
-    func setup(webViewURL: URL, manifest: TopeeExtensionManifest, userAgent: String?, logger: TopeeLogger?, backgroudScriptDebugDelaySec: Int)
+    func setup(webViewURL: URL, manifest: TopeeExtensionManifest, userAgent: String?, logger: TopeeLogger?, storageSuiteName: String?, backgroudScriptDebugDelaySec: Int)
     func messageReceived(withName messageName: String, from page: SFSafariPage, userInfo: [String: Any]?)
     func toolbarItemClicked(in window: SFSafariWindow)
     func toolbarItemNeedsUpdate(in window: SFSafariWindow)
@@ -25,12 +25,14 @@ public extension SafariExtensionBridgeType {
                manifest: TopeeExtensionManifest = TopeeExtensionManifest(),
                userAgent: String? = nil,
                logger: TopeeLogger? = nil,
+               storageSuiteName: String? = nil,
                backgroudScriptDebugDelaySec: Int = 0) {
         setup(
             webViewURL: webViewURL,
             manifest: manifest,
             userAgent: userAgent,
             logger: logger,
+            storageSuiteName: storageSuiteName,
             backgroudScriptDebugDelaySec: backgroudScriptDebugDelaySec)
     }
 }
@@ -68,11 +70,18 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
 
     override init() {
         super.init()
-        let bundleId = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as? String ?? ""
-        chromeStorage = UserDefaults(suiteName: bundleId + ".chrome.storage")
     }
 
-    public func setup(webViewURL: URL, manifest: TopeeExtensionManifest, userAgent: String?, logger injectedLogger: TopeeLogger?, backgroudScriptDebugDelaySec: Int = 0) {
+    public func setup(webViewURL: URL, manifest: TopeeExtensionManifest, userAgent: String?, logger injectedLogger: TopeeLogger?, storageSuiteName: String?, backgroudScriptDebugDelaySec: Int = 0) {
+        
+        if (storageSuiteName != nil) {
+            chromeStorage = UserDefaults(suiteName: storageSuiteName)
+        }
+        else {
+            let bundleId = Bundle.main.object(forInfoDictionaryKey: "CFBundleIdentifier") as? String ?? ""
+            chromeStorage = UserDefaults(suiteName: bundleId + ".chrome.storage")
+        }
+        
         if webView != nil {
             // Setup has been already called, so let's just check if configuration matches.
             if webViewURL != self.webViewURL {
