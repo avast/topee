@@ -447,7 +447,7 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
             }
         }
         itemJson += "}"
-        return "(function () {window._storageData={};var storageItems=" + itemJson + "; for (var key in storageItems){window._storageData[atob(key)]=atob(storageItems[key]);}})();";
+        return "(function () {window._storageData={};var storageItems=" + itemJson + "; for (var key in storageItems){window._storageData[decodeURIComponent(atob(key))]=decodeURIComponent(atob(storageItems[key]));}})();";
     }
 
     private func sendMessageToBackgroundScript(payload: String) {

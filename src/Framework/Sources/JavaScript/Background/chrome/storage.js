@@ -39,7 +39,7 @@ function storage(storageArea) {
             const fullKey = keyName(key);
             window.webkit.messageHandlers.appex.postMessage({
                 type: 'chromeStorage',
-                key: btoa(fullKey)
+                key: btoa(encodeURIComponent(fullKey))
             });
             delete window._storageData[fullKey];
         }
@@ -85,8 +85,8 @@ function storage(storageArea) {
 
                 window.webkit.messageHandlers.appex.postMessage({
                     type: 'chromeStorage',
-                    key: btoa(fullKey),
-                    value: btoa(strValue)
+                    key: btoa(encodeURIComponent(fullKey)),
+                    value: btoa(encodeURIComponent(strValue))
                 });
             
                 window._storageData[fullKey] = strValue;
