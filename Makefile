@@ -12,6 +12,7 @@ build:
 	@xcodebuild\
 		-workspace "$(WORKSPACE)"\
 		-scheme "$(SCHEME)" clean build\
+		ONLY_ACTIVE_ARCH=NO \
 		CONFIGURATION="$(CONFIGURATION)"\
 		BUILD_DIR="$(BUILD_DIR)"\
 		DEBUG_INFORMATION_FORMAT="dwarf-with-dsym"
