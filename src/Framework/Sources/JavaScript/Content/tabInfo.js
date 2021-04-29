@@ -88,6 +88,15 @@ function init() {
                     chrome.runtime._manifest.name= event.message.manifest_name;
                     sessionStorage.setItem('topee_manifest_name', event.message.manifest_name);
                 }
+                if (event.message.content_scripts) {
+                    try {
+                        chrome.runtime._manifest.content_scripts = JSON.parse(event.message.content_scripts);
+                        sessionStorage.setItem('topee_content_scripts', event.message.content_scripts);
+                    }
+                    catch (ex) {
+                        console.log('Cannot parse content_scripts:', ex);
+                    }
+                }
 
                 storedTabId = event.message.tabId;
                 sessionStorage.setItem('topee_tabId', storedTabId);

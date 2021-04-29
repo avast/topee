@@ -595,6 +595,37 @@ describe('iframe message', function () {
   });
 });
 
+describe('chrome.runtime.getManifest', function () {
+  it('returns the content_scripts', function () {
+    const { content_scripts } = chrome.runtime.getManifest();
+    expect(content_scripts).toEqual(jasmine.arrayContaining([
+      jasmine.objectContaining({
+        "all_frames":true,
+        "run_at":"document_end",
+        "js":jasmine.arrayContaining([
+          "topee-content.js",
+          "demo-content.js"
+        ])
+      }),
+      jasmine.objectContaining({
+        "all_frames":true,
+        "run_at":"document_end",
+        "js":jasmine.arrayContaining([
+          "jasmine.dist.js",
+          "test.js"
+        ])
+      }),
+      jasmine.objectContaining({
+        "all_frames":true,
+        "run_at":"document_end",
+        "css":jasmine.arrayContaining([
+          "jasmine.css"
+        ])
+      })
+    ]));
+  });
+});
+
 function getCurrentTabId () {
   var tabIdFuture = new Future();
   chrome.runtime.sendMessage({type: 'test.whoami'}, ({tabId, frameId}) => {

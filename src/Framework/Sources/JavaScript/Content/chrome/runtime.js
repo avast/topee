@@ -23,6 +23,13 @@ if (name) {
     runtime._manifest.name = name;
 }
 
+try {
+    runtime._manifest.content_scripts = JSON.parse(sessionStorage.getItem('topee_content_scripts'));
+}
+catch (ex) {
+    // ignore
+}
+
 runtime.sendMessage = function(message, callback) {
     background.dispatchRequest({
         eventName: 'sendMessage',
