@@ -596,6 +596,12 @@ public class SafariExtensionBridge: NSObject, SafariExtensionBridgeType, WKScrip
         "name": "\(manifest.name)",
         "id": "\(manifest.bundleId)"
         };
+        try {
+            chrome.runtime._manifest.content_scripts = JSON.parse('\(manifest.contentScripts)');
+        }
+        catch (ex) {
+            console.log('Cannot parse content_scripts:', ex);
+        }
         """
     }
 

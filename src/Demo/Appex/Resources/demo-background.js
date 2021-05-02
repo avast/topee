@@ -231,6 +231,11 @@ describe('iframe message', function () {
     });
 });
 
+describe('chrome.runtime.getManifest', function () {
+    body('returns the content_scripts in the background script', function () {
+        return chrome.runtime.getManifest();
+    });
+});
 
 
 /* background bodies of tests defined in content test.js */

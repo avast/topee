@@ -596,8 +596,37 @@ describe('iframe message', function () {
 });
 
 describe('chrome.runtime.getManifest', function () {
-  it('returns the content_scripts', function () {
+  it('returns the content_scripts in a content script', function () {
     const { content_scripts } = chrome.runtime.getManifest();
+    expect(content_scripts).toEqual(jasmine.arrayContaining([
+      jasmine.objectContaining({
+        "all_frames":true,
+        "run_at":"document_end",
+        "js":jasmine.arrayContaining([
+          "topee-content.js",
+          "demo-content.js"
+        ])
+      }),
+      jasmine.objectContaining({
+        "all_frames":true,
+        "run_at":"document_end",
+        "js":jasmine.arrayContaining([
+          "jasmine.dist.js",
+          "test.js"
+        ])
+      }),
+      jasmine.objectContaining({
+        "all_frames":true,
+        "run_at":"document_end",
+        "css":jasmine.arrayContaining([
+          "jasmine.css"
+        ])
+      })
+    ]));
+  });
+
+  it('returns the content_scripts in the background script', async function () {
+    const { content_scripts } = await performOnBackground();
     expect(content_scripts).toEqual(jasmine.arrayContaining([
       jasmine.objectContaining({
         "all_frames":true,
