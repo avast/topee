@@ -83,6 +83,13 @@ function storage(storageArea) {
                 const fullKey = keyName(key);
                 const strValue = JSON.stringify(items[key]);
 
+                changes[key] = { oldValue, newValue };
+
+                if (newValue === undefined) {
+                    remove(key);
+                    continue;
+                }
+
                 window.webkit.messageHandlers.appex.postMessage({
                     type: 'chromeStorage',
                     key: btoa(encodeURIComponent(fullKey)),
@@ -90,7 +97,6 @@ function storage(storageArea) {
                 });
             
                 window._storageData[fullKey] = strValue;
-                changes[key] = { oldValue, newValue };
             }
 
             changeEmitter.emit('storage', changes, storageArea);
