@@ -1,6 +1,7 @@
 
 'use strict';
 
+const sessionStorage = require('../../Common/dummySessionStorage');
 const EventEmitter = require('events');
 const changeEmitter = new EventEmitter();
 
@@ -73,6 +74,7 @@ module.exports = {
     managed: {
         get: storage('managed').get
     },
+    session: sessionStorage(),
     onChanged: {
         addListener(callback) {
             if (!runtimeListenerAdded) {

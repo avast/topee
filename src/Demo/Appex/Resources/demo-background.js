@@ -237,6 +237,47 @@ describe('chrome.runtime.getManifest', function () {
     });
 });
 
+describe('chrome.storage.session', function() {
+    function randomString() {
+        return 'x' + Math.random().toString()
+    }
+
+    body('sets and reads single key:value', async function () {
+        const key = randomString();
+        const value = randomString();
+        await chrome.storage.session.set({ [key]: value });
+        const r = await chrome.storage.session.get(key);
+        return r && r[key] === value;
+    });
+
+    body('gets array of keys', async function () {
+        const key1 = randomString();
+        const key2 = randomString();
+        const value1 = randomString();
+        const value2 = randomString();
+        await chrome.storage.session.set({ [key1]: value1, [key2]: value2 });
+        const result = await chrome.storage.session.get([key1, key2]);
+        return result[key1] == value1 && result[key2] == value2;
+    });
+
+    body('removes multiple keys', async function () {
+        const key = randomString();
+        const value = randomString();
+        await chrome.storage.session.set({ [key]: value });
+        await chrome.storage.session.remove(key);
+        const r = await chrome.storage.session.get(key);
+        return r && r[key] === null;
+    });
+
+    body('clears storage area', async function () {
+        const key = randomString();
+        const value = randomString();
+        await chrome.storage.session.set({ [key]: value });
+        await chrome.storage.session.clear();
+        const contents = await chrome.storage.session.get();
+        return Object.keys(contents).length === 0;
+    });
+});
 
 /* background bodies of tests defined in content test.js */
 function describe(name, describeBody) {

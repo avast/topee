@@ -472,6 +472,28 @@ for(const area of STORAGE_AREAS) {
     });
 }
 
+describe('chrome.storage.session', function() {
+  it('sets and reads single key:value', async function () {
+    var result = await performOnBackground();
+    expect(result).toBe(true);
+  });
+
+  it('gets array of keys', async function () {
+    var result = await performOnBackground();
+    expect(result).toBe(true);
+  });
+
+  it('removes multiple keys', async function () {
+    var result = await performOnBackground();
+    expect(result).toBe(true);
+  });
+
+  it('clears storage area', async function () {
+    var result = await performOnBackground();
+    expect(result).toBe(true);
+  });
+});
+
 describe('chrome.storage.onChanged', function() {
     it('get old and new values for each changed key', function (done) {
         const key = 'onchange-test-' + randomString()

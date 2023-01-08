@@ -134,6 +134,104 @@ function storage(storageArea) {
     };
 }
 
+function sessionStorage() {
+    const memoryStorage = {};
+    function duplicate(data) {
+        return JSON.parse(JSON.stringify(data));
+    }
+    return {
+        get: function(keys) {
+            const callback = arguments.length > 0 && typeof arguments[arguments.length - 1] === 'function' ? arguments[arguments.length - 1] : null;
+
+            if (!keys || typeof keys === 'function') {
+                if (callback) {
+                    callback(duplicate(memoryStorage));
+                    return;
+                }
+                return Promise.resolve(duplicate(memoryStorage));
+            }
+
+            let keysToFetch = [];
+            let defaults = {};
+            if (Array.isArray(keys)) {
+                keysToFetch = keys;
+            } else if (typeof keys === 'string') {
+                keysToFetch = [keys];
+            } else if (typeof keys === 'object') {
+                keysToFetch = Object.keys(keys);
+                defaults = keys;
+            } else {
+                console.log('storage.get keys:', keys);
+                throw new Error('storage.getinvalid type of argument: ' + typeof keys);
+            }
+            const result = {};
+            for (const key of keysToFetch) {
+                const keyData = memoryStorage[key] || defaults[key];
+                result[key] = keyData !== null && typeof keyData != 'undefined' ? duplicate(keyData) : null;
+            }
+            if (callback) {
+                callback(result);
+                return;
+            }
+            return Promise.resolve(result);
+        },
+        set: function(items, cb) {
+            const changes = {};
+            for (const key of Object.keys(items)) {
+                // no need to duplicate because we are throwing it away anyway
+                const oldValue = typeof memoryStorage[key] !== 'undefined' ? memoryStorage[key] : null;
+                const newValue = items[key];
+
+                changes[key] = { oldValue, newValue };
+
+                if (newValue === undefined) {
+                    delete memoryStorage[key];
+                }
+                else {
+                    memoryStorage[key] = duplicate(items[key]);
+                }
+            }
+
+            changeEmitter.emit('storage', changes, 'session');
+
+            if (cb) {
+                cb();
+                return;
+            }
+            return Promise.resolve();
+        },
+        remove: function(keys, cb) {
+            let keysToRemove;
+            if (typeof keys === 'string') {
+                keysToRemove = [keys];
+            } else if (Array.isArray(keys)) {
+                keysToRemove = keys;
+            } else {
+                throw new Error('Invalid "keys" argument type');
+            }
+
+            for (const key of keysToRemove) {
+                delete memoryStorage[key];
+            }
+
+            if (cb) {
+                cb();
+                return;
+            }
+            return Promise.resolve();
+        },
+        clear: function(cb) {
+            for (const key in memoryStorage) {
+                delete memoryStorage[key];
+            }
+            if (cb) {
+                cb();
+                return;
+            }
+            return Promise.resolve();
+        }
+    };
+}
 
 module.exports = {
     local: storage('local'),
@@ -141,6 +239,7 @@ module.exports = {
     managed: {
         get: storage('managed').get
     },
+    session: sessionStorage(),
     onChanged: {
         addListener(callback) {
             changeEmitter.on('storage', callback);
