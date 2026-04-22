@@ -1,14 +1,5 @@
 <img align="right" src="logo.png" width="300px"/>
 
-Are you a JavaScript developer?
--------------------------------
-
-Write Swiftless Safari Extensions using Chrome API
-==================================================
-
-| :speaking_head: Looking for a JS + Swift developer to provide a commercial support. Please contact [@pavelstudeny](https://www.linkedin.com/in/pavel-studen%C3%BD-9b937741/) for more info.|
-|------------------------------------------------------------------------|
-
 Topee provides Chrome Extension API. You can have the same codebase for all browsers.
 -------------------------------------------------------------------------------------
 
